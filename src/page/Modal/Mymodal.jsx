@@ -8,6 +8,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useNavigate } from "react-router-dom";
+import Stack from '@mui/material/Stack';
 
 const style = {
     position:'absolute',
@@ -16,11 +17,10 @@ const style = {
     transform: 'translate(-50%, -50%)',
     width: 400,
     bgcolor: 'background.paper',
-    border: '2px solid #000',
+    border: '1px solid #000',
     boxShadow: 24,
     p: 4,
-    display:'flex',
-    flexDirection:'column'
+     
 };
 
 function Mymodal() {
@@ -49,11 +49,18 @@ function Mymodal() {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                    <Typography id="modal-modal-title" variant="h6" component="h2" align="center">
                         비회원
                     </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2}} container direction="column">
+                    <Typography id="modal-modal-description" 
+                                sx={{ 
+                                    mt: 2,
+                                    textAlign:"center"
+                                }}  
+                    >
+                    <Stack spacing={2} direction="column">
                         <Button 
+                            color="secondary"
                             variant="outlined" 
                             size="large" 
                             startIcon={<LoginIcon />}
@@ -62,6 +69,7 @@ function Mymodal() {
                             로그인
                         </Button>
                         <Button 
+                            color="secondary"
                             variant="outlined"
                             size="large" 
                             startIcon={<PersonAddIcon />}
@@ -69,6 +77,7 @@ function Mymodal() {
                         >
                             회원가입
                         </Button>
+                    </Stack>
                     </Typography>
                 </Box>
             </Modal>
