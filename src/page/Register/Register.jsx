@@ -98,7 +98,7 @@ function Register() {
                                 <Grid item xs={12}>
                                     <FormControlLabel
                                         control={<Checkbox onChange={handleAgree} color="primary" />}
-                                        label="회원가입 약관에 동의합니다."
+                                        label="회원가입에 동의합니다."
                                     />
                                 </Grid>
                             </Grid>

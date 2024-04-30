@@ -30,7 +30,8 @@ function Header () {
                         <ListItem key={text} disablePadding
                         sx={{'&:hover':{
                             backgroundColor:'lightgray'
-                        }}}>
+                           },
+                           pb:2}}>
                         <ListItemText primary={text} />
                         </ListItem>
                         
