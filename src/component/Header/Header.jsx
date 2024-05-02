@@ -3,9 +3,11 @@ import React,{useState} from "react";
 import './Header.css';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import ListItem from '@mui/material/ListItem';
+import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from '@mui/material/ListItemText';
 import { useNavigate,BrowserRouter, Routes, Route,Link } from "react-router-dom";
 import MenuIcon from '@mui/icons-material/Menu';
@@ -19,6 +21,19 @@ function Header () {
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
     };
+    const navigate=useNavigate();
+    const navigateToNotice = () => {
+        navigate("/Notice");
+    }
+    const navigateToBenefit = () => {
+        navigate("/Benefit");
+    }
+    const navigateToHome = () => {
+        navigate("/");
+    }
+    const navigateToSearch = () => {
+        navigate("/Search");
+    }
     const DrawerList = (
         
         <Box 
@@ -26,16 +41,31 @@ function Header () {
             role="presentation"
             onClick={toggleDrawer(false)}>
                 <List>
-                    {['홈','공지','혜택','지역별 착한가게'].map((text) => (
+                    <ListItemButton onClick={navigateToHome}>
+                        <ListItemText primary="홈" />       
+                    </ListItemButton>
+                    <ListItemButton onClick={navigateToNotice}>
+                        <ListItemText primary="공지" />       
+                    </ListItemButton>
+                    <ListItemButton onClick={navigateToBenefit}>
+                        <ListItemText primary="혜택" />       
+                    </ListItemButton>
+                    <ListItemButton onClick={navigateToSearch}>
+                        <ListItemText primary="지역별 착한가게" />       
+                    </ListItemButton>
+                </List>
+                <Divider />
+                <List>
+                    {['고객센터','버전'].map((text)=>(
                         <ListItem key={text} disablePadding
                         sx={{'&:hover':{
                             backgroundColor:'lightgray'
-                           },
-                           pb:2}}>
+                        },
+                        pb:2}}>
                         <ListItemText primary={text} />
                         </ListItem>
-                        
                     ))}
+                
                 </List>
         </Box>
     )
