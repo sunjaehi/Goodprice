@@ -76,6 +76,18 @@ function Login(props) {
                         >
                             로그인
                         </Button>
+                        <Grid container>
+                            <Grid item xs>
+                                <Link href="/" variant="body2">
+                                    비밀번호 찾기
+                                </Link>
+                            </Grid>
+                            <Grid item>
+                                <Link href="/" variant="body2">
+                                    아직 회원이 아니신가요? 회원가입
+                                </Link>
+                            </Grid>
+                        </Grid>
                     </Box>
                 </Box>
             </Container>

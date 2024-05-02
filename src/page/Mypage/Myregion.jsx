@@ -1,10 +1,10 @@
 import React from "react";
 
-function MyRegion() {
+function Myregion() {
     return (
         <div>
             Myregion
         </div>
     );
 }
-export default MyRegion;
+export default Myregion;
