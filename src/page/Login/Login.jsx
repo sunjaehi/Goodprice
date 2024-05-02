@@ -1,4 +1,4 @@
-import React,{ useState } from "react";
+import React from "react";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -16,7 +16,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const defaultTheme = createTheme();
 
-function Login() {
+function Login(props) {
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -76,13 +76,6 @@ function Login() {
                         >
                             로그인
                         </Button>
-                        <Grid container>
-                            <Grid item xs>
-                                <Link href="/" variant="body2">
-                                    회원가입
-                                </Link>
-                            </Grid>
-                        </Grid>
                     </Box>
                 </Box>
             </Container>
