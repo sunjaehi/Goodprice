@@ -23,6 +23,7 @@ function App() {
         <Route path="/Myregion" element={<Myregion />}></Route>
         <Route path="/Mysector" element={<Mysector />}></Route>
       </Routes>
+      <Myregion />
     </BrowserRouter>
       
   );

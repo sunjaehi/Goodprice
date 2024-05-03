@@ -8,6 +8,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+import LoginIcon from '@mui/icons-material/Login';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
@@ -38,10 +39,10 @@ function Login(props) {
                     }}
                 >
                     <Avatar sx={{m:1, bgcolor:'secondary.main'}}>
-                        <LockOutlinedIcon />
+                        <LoginIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        회원가입
+                        로그인
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt:1}}>
                         <TextField
@@ -65,8 +66,8 @@ function Login(props) {
                             autoComplete="current-password"
                         />
                         <FormControlLabel
-                            cotrol={<Checkbox value="remember" color="primary" />}
-                            label="Remember me"
+                            control={<Checkbox value="remember" color="primary" />}
+                            label="아이디/비밀번호 저장"
                         />
                         <Button 
                             type="submit"
@@ -83,7 +84,7 @@ function Login(props) {
                                 </Link>
                             </Grid>
                             <Grid item>
-                                <Link href="/" variant="body2">
+                                <Link href="/Register" variant="body2">
                                     아직 회원이 아니신가요? 회원가입
                                 </Link>
                             </Grid>
