@@ -26,7 +26,7 @@ function Header () {
         navigate("/Notice");
     }
     const navigateToBenefit = () => {
-        navigate("/Benefit");
+        navigate("/MyRegion");
     }
     const navigateToHome = () => {
         navigate("/");

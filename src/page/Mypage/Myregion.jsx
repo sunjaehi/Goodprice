@@ -30,7 +30,8 @@ function Myregion() {
             onSubmit={handleSubmit}
         >
             <FormLabel sx={{
-                
+                fontSize:"20px",
+                color:"black"
             }}>관심 지역 관리</FormLabel>
             <Button 
                 variant="outlined" 
