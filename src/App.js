@@ -9,11 +9,13 @@ import Search from './page/Search/Search';
 import Benefit from './page/Benefit/Benefit';
 import Mysector from './page/Mypage/Mysector';
 import Myregion from './page/Mypage/Myregion';
+import Mainpage from './page/Mainpage/Mainpage';
 
 function App() {
   return (
     <BrowserRouter>
       <Header />
+      <Mainpage />
       <Routes>
         <Route path="/Register" element={<Register />}></Route>
         <Route path="/Login" element={<Login />}></Route>

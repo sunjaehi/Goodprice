@@ -12,7 +12,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { useNavigate,BrowserRouter, Routes, Route,Link } from "react-router-dom";
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import Mymodal from "../../page/Modal/Mymodal";
+import Mymodal from "../Modal/Mymodal";
 
 
 function Header () {
