@@ -21,9 +21,7 @@ function Quitdialog() {
   };
 /*
   const handleSubmit = () => {
-    // 선택된 체크리스트를 서버로 전송하는 로직을 작성합니다.
     console.log("Selected items:", checkedItems);
-    // 서버로 데이터를 전송하는 코드를 추가하세요.
     setOpen(false);
   };
   */
@@ -32,7 +30,7 @@ function Quitdialog() {
     if (allChecked) {
         console.log("Cancel success");
     } else {
-        console.log("Please complelte the checklist");
+        console.log("Please complete the checklist");
     }
     setOpen(false);
   }
@@ -58,7 +56,7 @@ function Quitdialog() {
                 onChange={handleToggle('sameEmail')}
               />
             }
-            label="동일한 이메일로 가입 불가능"
+            label="동일한 이메일로 재가입이 불가능합니다"
           />
           <FormControlLabel
             control={
