@@ -1,3 +1,11 @@
 .map {
     margin:10px
 }
+.wrap {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.btn {
+    border-radius: 50px;
+}

@@ -10,6 +10,11 @@ import Benefit from './page/Benefit/Benefit';
 import Mysector from './page/Mypage/Mysector';
 import Myregion from './page/Mypage/Myregion';
 import Mainpage from './page/Mainpage/Mainpage';
+import Findpassword from './page/Findpassword/Findpassword';
+import Myfavorite from './page/Mypage/Myfavorite';
+import Myprofile from './page/Mypage/Myprofile';
+import Mypage from './page/Mypage/Mypage';
+import Entercorrection from './page/Mypage/Entercorrection';
 
 function App() {
   return (
@@ -24,6 +29,11 @@ function App() {
         <Route path="/Search" element={<Search />}></Route>
         <Route path="/Myregion" element={<Myregion />}></Route>
         <Route path="/Mysector" element={<Mysector />}></Route>
+        <Route path="/Findpassword" element={<Findpassword />}></Route>
+        <Route path="/Myfavorite" element={<Myfavorite />}></Route>
+        <Route path="/Myprofile" element={<Myprofile />}></Route>
+        <Route path="/Mypage" element={<Mypage />}></Route>
+        <Route path="/Entercorrection" element={<Entercorrection />}></Route>
       </Routes>
     </BrowserRouter>
       

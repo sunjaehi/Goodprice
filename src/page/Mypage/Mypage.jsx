@@ -16,8 +16,19 @@ function Mypage() {
     const navigateToMySector = () => {
         navigate("/Mysector");
     }
-    const List =(
-        <>
+    const navigateToMyfavorite = () => {
+        navigate("/Myfavorite");
+    }
+    const navigateToEntercorrection = () => {
+        navigate("/Entercorrection");
+    }
+
+    return (
+        <Box sx={{
+            alignContent:"center",
+            display:"flex",
+
+        }}>
         <List>
             <ListItemButton onClick={navigateToMySector}>
                 <ListItemText primary="관심 업종 관리" />
@@ -25,14 +36,17 @@ function Mypage() {
             <ListItemButton onClick={navigateToMyRegion}>
                 <ListItemText primary="관심 지역 관리" />
             </ListItemButton>
+            <ListItemButton onClick={navigateToMyfavorite}>
+                <ListItemText primary="즐겨찾기 관리" />
+            </ListItemButton>
+            <ListItemButton onClick={navigateToEntercorrection}>
+                <ListItemText primary="개인 정보 수정" />
+            </ListItemButton>
+            
         </List>
-    </>
-    )
-    return (
-        <>
-            <List />
-        </>
-    )
+        </Box>
+    );
+    
     
     
     

@@ -72,6 +72,7 @@ function Login(props) {
                         <Button 
                             type="submit"
                             fullWidth
+                            color="secondary"
                             variant="contained"
                             sx={{mt:3,mb:2}}
                         >
@@ -79,7 +80,7 @@ function Login(props) {
                         </Button>
                         <Grid container>
                             <Grid item xs>
-                                <Link href="/" variant="body2">
+                                <Link href="/Findpassword" variant="body2">
                                     비밀번호 찾기
                                 </Link>
                             </Grid>

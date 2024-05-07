@@ -200,9 +200,7 @@ function Search() {
                             }
                             
                         />
-                        </ListItemButton>
-                        
-                      
+                        </ListItemButton> 
                     ))}
                     
                 </ListItem>

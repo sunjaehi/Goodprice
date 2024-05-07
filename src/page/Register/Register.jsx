@@ -181,6 +181,7 @@ function Register() {
                             <Button 
                                 type="submit"
                                 fullWidth
+                                color="secondary"
                                 variant="contained"
                                 sx={{mt:3, mb:2}}
                                 size="large"

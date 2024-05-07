@@ -34,6 +34,11 @@ function Header () {
     const navigateToSearch = () => {
         navigate("/Search");
     }
+    /*
+    const navigateToMypage = () => {
+        navigate("/Mypage");
+    }
+    */
     const DrawerList = (
         
         <Box 
@@ -51,7 +56,7 @@ function Header () {
                         <ListItemText primary="혜택" />       
                     </ListItemButton>
                     <ListItemButton onClick={navigateToSearch}>
-                        <ListItemText primary="지역별 착한가게" />       
+                        <ListItemText primary="지역별로 찾기" />       
                     </ListItemButton>
                 </List>
                 <Divider />
