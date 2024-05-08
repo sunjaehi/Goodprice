@@ -37,7 +37,8 @@ function Quitdialog() {
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={() => setOpen(true)}>
+      
+      <Button sx={{mt:10}} variant="contained" color="inherit" fullWidth onClick={() => setOpen(true)}>
         회원 탈퇴
       </Button>
       <Dialog open={open} onClose={() => setOpen(false)}>

@@ -39,6 +39,9 @@ function Header () {
         navigate("/Mypage");
     }
     */
+   const navigateToServicecenter = () => {
+        navigate("/Servicecenter");
+   }
     const DrawerList = (
         
         <Box 
@@ -61,16 +64,9 @@ function Header () {
                 </List>
                 <Divider />
                 <List>
-                    {['고객센터','버전'].map((text)=>(
-                        <ListItem key={text} disablePadding
-                        sx={{'&:hover':{
-                            backgroundColor:'lightgray'
-                        },
-                        pb:2}}>
-                        <ListItemText primary={text} />
-                        </ListItem>
-                    ))}
-                
+                <ListItemButton onClick={navigateToServicecenter}>
+                        <ListItemText primary="고객센터" />       
+                    </ListItemButton>
                 </List>
         </Box>
     )

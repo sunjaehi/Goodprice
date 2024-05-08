@@ -15,12 +15,14 @@ import Myfavorite from './page/Mypage/Myfavorite';
 import Myprofile from './page/Mypage/Myprofile';
 import Mypage from './page/Mypage/Mypage';
 import Entercorrection from './page/Mypage/Entercorrection';
+import Quitdialog from './component/Dialog/Quitdialog';
+import Servicecenter from './page/Servicecenter/Servicecenter';
 
 function App() {
   return (
     <BrowserRouter>
       <Header />
-      <Mainpage />
+      <Myprofile />
       <Routes>
         <Route path="/Register" element={<Register />}></Route>
         <Route path="/Login" element={<Login />}></Route>
@@ -34,7 +36,8 @@ function App() {
         <Route path="/Myprofile" element={<Myprofile />}></Route>
         <Route path="/Mypage" element={<Mypage />}></Route>
         <Route path="/Entercorrection" element={<Entercorrection />}></Route>
-      </Routes>
+        <Route path="/Servicecenter" element={<Servicecenter />}></Route>
+      </Routes> 
     </BrowserRouter>
       
   );
