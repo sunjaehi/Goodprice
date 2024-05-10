@@ -22,7 +22,7 @@ function App() {
   return (
     <BrowserRouter>
       <Header />
-      <Myprofile />
+      
       <Routes>
         <Route path="/Register" element={<Register />}></Route>
         <Route path="/Login" element={<Login />}></Route>

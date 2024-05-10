@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,20 +13,44 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useNavigate } from "react-router-dom";
 
 
 const defaultTheme = createTheme();
 
 function Login(props) {
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email:data.get('email'),
-            password:data.get('password'),
-        });
-    };
+    const navigate=useNavigate();
+    const API = "http://localhost:8080/api/v1/login";
+    const [userEmail, setUseremail] = useState('');
+    const [userPw, setUserpw] = useState('');
     
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        fetch(API, {
+            method: "POST",
+            headers: {
+                'Content-Type':'application/json; charset=utf-8;'
+            },
+            body: JSON.stringify({
+                email:email,
+                password:password
+            }),
+        }) //만약 method:'POST'로 요청하는 경우, headers에 필수로 담아야 함
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (data.token) {navigate("/")}
+                else {
+                    alert("ID 혹은 비밀번호를 확인해주세요")
+                }
+            });
+    };
+    /*
+    checkToken = () => {
+        const token = localStorage.getItem("token");
+        alert(token);
+    }
+    */
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
@@ -55,6 +79,7 @@ function Login(props) {
                             name="email"
                             autoComplete="email"
                             autoFocus
+                            //onChange={(e)=>setUseremail(e.target.value)}
                         />
                         <TextField
                             margin="normal"
@@ -65,6 +90,7 @@ function Login(props) {
                             type="password"
                             id="password"
                             autoComplete="current-password"
+                            //onChange={(e)=>setUserpw(e.target.value)}
                         />
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
@@ -76,6 +102,8 @@ function Login(props) {
                             color="secondary"
                             variant="contained"
                             sx={{mt:3,mb:2}}
+                            //disabled={this.state.ID.includes('@') && PW.length>=5 ? false : true}
+                            onClick={handleSubmit}
                         >
                             로그인
                         </Button>
