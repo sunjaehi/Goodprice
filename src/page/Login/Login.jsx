@@ -14,6 +14,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
+import session from "redux-persist/lib/storage/session";
 
 
 const defaultTheme = createTheme();
@@ -23,19 +24,34 @@ function Login(props) {
     const API = "http://localhost:8080/api/v1/login";
     const [userEmail, setUseremail] = useState('');
     const [userPw, setUserpw] = useState('');
+    const [loginCheck, setLoginCheck] = useState(false);
     
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
-        fetch(API, {
+        //await new Promise((r)=setTimeout(r,1000));
+        const response = await fetch(API, {
             method: "POST",
             headers: {
                 'Content-Type':'application/json; charset=utf-8;'
             },
             body: JSON.stringify({
-                email:email,
-                password:password
+                email:userEmail,
+                password:userPw
             }),
         }) //만약 method:'POST'로 요청하는 경우, headers에 필수로 담아야 함
+        const result = await response.json();
+
+        if(response.status === 200) {
+            setLoginCheck(false);
+            sessionStorage.setItem("token", result.token);
+            sessionStorage.setItem("email", result.email);
+            sessionStorage.setItem("role", result.role);
+            //sessionStorage.setItem("token", result.token);
+            console.log("로그인성공,이메일주소:"+result.emil);
+        } else {
+            setLoginCheck(true);
+        }}
+        /*
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -45,7 +61,7 @@ function Login(props) {
                 }
             });
     };
-    /*
+    
     checkToken = () => {
         const token = localStorage.getItem("token");
         alert(token);
@@ -79,7 +95,7 @@ function Login(props) {
                             name="email"
                             autoComplete="email"
                             autoFocus
-                            //onChange={(e)=>setUseremail(e.target.value)}
+                            onChange={(e)=>setUseremail(e.target.value)}
                         />
                         <TextField
                             margin="normal"
@@ -90,7 +106,7 @@ function Login(props) {
                             type="password"
                             id="password"
                             autoComplete="current-password"
-                            //onChange={(e)=>setUserpw(e.target.value)}
+                            onChange={(e)=>setUserpw(e.target.value)}
                         />
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
