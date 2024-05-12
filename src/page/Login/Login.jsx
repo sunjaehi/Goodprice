@@ -15,77 +15,86 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
 import session from "redux-persist/lib/storage/session";
-
+import base64 from 'base-64';
 
 const defaultTheme = createTheme();
 
 function Login(props) {
-    const navigate=useNavigate();
-    const API = "http://localhost:8080/api/v1/login";
+    const navigate = useNavigate();
+    const API = "http://localhost:8080/api/v1/member/login";
     const [userEmail, setUseremail] = useState('');
     const [userPw, setUserpw] = useState('');
     const [loginCheck, setLoginCheck] = useState(false);
-    
-    const handleSubmit = async(e) => {
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         //await new Promise((r)=setTimeout(r,1000));
         const response = await fetch(API, {
             method: "POST",
             headers: {
-                'Content-Type':'application/json; charset=utf-8;'
+                'Content-Type': 'application/json; charset=utf-8;'
             },
             body: JSON.stringify({
-                email:userEmail,
-                password:userPw
+                email: userEmail,
+                password: userPw
             }),
         }) //만약 method:'POST'로 요청하는 경우, headers에 필수로 담아야 함
         const result = await response.json();
 
-        if(response.status === 200) {
+        if (response.status === 200) {
             setLoginCheck(false);
             sessionStorage.setItem("token", result.token);
             sessionStorage.setItem("email", result.email);
             sessionStorage.setItem("role", result.role);
             //sessionStorage.setItem("token", result.token);
-            console.log("로그인성공,이메일주소:"+result.emil);
+            console.log(result);
+            const atk = result.accessToken;
+            let payload = atk.substring(atk.indexOf('.') + 1, atk.lastIndexOf('.'));
+            console.log(payload);
+            let decoded = JSON.parse(base64.decode(payload));
+            console.log(decoded);
+            console.log(decoded.id);
+            console.log(decoded.nickname); //한글 깨짐. 수정 필요
+            console.log(decoded.auth);
         } else {
             setLoginCheck(true);
-        }}
-        /*
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                if (data.token) {navigate("/")}
-                else {
-                    alert("ID 혹은 비밀번호를 확인해주세요")
-                }
-            });
-    };
-    
-    checkToken = () => {
-        const token = localStorage.getItem("token");
-        alert(token);
+        }
     }
-    */
+    /*
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            if (data.token) {navigate("/")}
+            else {
+                alert("ID 혹은 비밀번호를 확인해주세요")
+            }
+        });
+};
+ 
+checkToken = () => {
+    const token = localStorage.getItem("token");
+    alert(token);
+}
+*/
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
-                <Box    
+                <Box
                     sx={{
-                        marginTop:8,
-                        display:'flex',
-                        flexDirection:'column',
-                        alignItems:'center',
+                        marginTop: 8,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{m:1, bgcolor:'secondary.main'}}>
+                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                         <LoginIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         로그인
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt:1}}>
+                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                         <TextField
                             margin="normal"
                             required
@@ -95,7 +104,7 @@ function Login(props) {
                             name="email"
                             autoComplete="email"
                             autoFocus
-                            onChange={(e)=>setUseremail(e.target.value)}
+                            onChange={(e) => setUseremail(e.target.value)}
                         />
                         <TextField
                             margin="normal"
@@ -106,18 +115,18 @@ function Login(props) {
                             type="password"
                             id="password"
                             autoComplete="current-password"
-                            onChange={(e)=>setUserpw(e.target.value)}
+                            onChange={(e) => setUserpw(e.target.value)}
                         />
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
                             label="아이디/비밀번호 저장"
                         />
-                        <Button 
+                        <Button
                             type="submit"
                             fullWidth
                             color="secondary"
                             variant="contained"
-                            sx={{mt:3,mb:2}}
+                            sx={{ mt: 3, mb: 2 }}
                             //disabled={this.state.ID.includes('@') && PW.length>=5 ? false : true}
                             onClick={handleSubmit}
                         >
