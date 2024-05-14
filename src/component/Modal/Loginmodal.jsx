@@ -9,6 +9,7 @@ import LoginIcon from '@mui/icons-material/Login';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useNavigate } from "react-router-dom";
 import Stack from '@mui/material/Stack';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useSelector } from "react-redux";
 
 const style = {
@@ -23,21 +24,20 @@ const style = {
     p: 4,
      
 };
-//const data = useSelector(state.Member);
-function Mymodal() {
+
+function Loginmodal() {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const navigate=useNavigate();
     //const { user } = useSelector(state => state.user);
 
-    const navigateToRegister = () => {
+    const navigateToMypage = () => {
         handleClose();
-        navigate("/Register");
+        navigate("/Myapge");
     }
-    const navigateToLogin = () => {
-        handleClose();
-        navigate("/Login");
+    const logOut = () => {
+        
     }
 
     return (
@@ -52,7 +52,7 @@ function Mymodal() {
             >
                 <Box sx={style}>
                     <Typography id="modal-modal-title" variant="h6" component="h2" align="center">
-                        비회원
+                        회원
                     </Typography>
                     <Typography id="modal-modal-description" 
                                 sx={{ 
@@ -61,24 +61,23 @@ function Mymodal() {
                                 }}  
                     >
                     <Stack spacing={2} direction="column">
-                        
                         <Button 
                             color="secondary"
                             variant="outlined" 
                             size="large" 
-                            startIcon={<LoginIcon />}
-                            onClick={navigateToLogin}
+                            startIcon={<LockOutlinedIcon />}
+                            //onClick={logOut}
                         >
-                            로그인
+                            로그아웃
                         </Button>
                         <Button 
                             color="secondary"
                             variant="outlined"
                             size="large" 
                             startIcon={<PersonAddIcon />}
-                            onClick={navigateToRegister}
+                            onClick={navigateToMypage}
                         >
-                            회원가입
+                            마이페이지
                         </Button>
                     </Stack>
                     </Typography>
@@ -87,4 +86,4 @@ function Mymodal() {
         </div>
     );
 }
-export default Mymodal;
+export default Loginmodal;

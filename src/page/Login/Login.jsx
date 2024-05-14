@@ -9,18 +9,20 @@ import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LoginIcon from '@mui/icons-material/Login';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
-import session from "redux-persist/lib/storage/session";
+import {useDispatch} from 'react-redux';
 import base64 from 'base-64';
+import sessionStorage from "redux-persist/es/storage/session";
+import localStorage from "redux-persist/es/storage";
 
 const defaultTheme = createTheme();
 
 function Login(props) {
     const navigate = useNavigate();
+    //const dispatch = useDispatch();
     const API = "http://localhost:8080/api/v1/member/login";
     const [userEmail, setUseremail] = useState('');
     const [userPw, setUserpw] = useState('');
@@ -28,6 +30,7 @@ function Login(props) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        //const user = {userEmail, userPw};
         //await new Promise((r)=setTimeout(r,1000));
         const response = await fetch(API, {
             method: "POST",
@@ -43,22 +46,30 @@ function Login(props) {
 
         if (response.status === 200) {
             setLoginCheck(false);
-            sessionStorage.setItem("token", result.token);
-            sessionStorage.setItem("email", result.email);
-            sessionStorage.setItem("role", result.role);
-            //sessionStorage.setItem("token", result.token);
             console.log(result);
             const atk = result.accessToken;
+            // sessionStorage.setItem("email",result.email);
+            // sessionStorage.setItem("password",result.password);
             let payload = atk.substring(atk.indexOf('.') + 1, atk.lastIndexOf('.'));
-            console.log(payload);
             let decoded = JSON.parse(base64.decode(payload));
-            console.log(decoded);
-            console.log(decoded.id);
-            console.log(decoded.nickname); //한글 깨짐. 수정 필요
-            console.log(decoded.auth);
-        } else {
+            const loginedEmail = decoded.id;
+            const loginedPassword = decoded.password;
+            // const loginedNickname = decoded.nickname;
+            // const loginedAuth = decoded.auth;
+
+            sessionStorage.setItem("email", loginedEmail);
+            sessionStorage.setItem("pw", loginedPassword);
+            alert('로그인 성공!');
+            navigate("/");
+        } else if(response.status === 401) {
+            alert(
+                '로그인에 실패했어요. 아이디와 패스워드를 확인하세요'
+            );
             setLoginCheck(true);
+        }else{
+            alert('서버 오류. 나중에 시도하시오');
         }
+        
     }
     /*
         .then(response => response.json())

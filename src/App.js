@@ -16,14 +16,17 @@ import Myprofile from './page/Mypage/Myprofile';
 import Mypage from './page/Mypage/Mypage';
 import Entercorrection from './page/Mypage/Entercorrection';
 import Quitdialog from './component/Dialog/Quitdialog';
+import { useSelector, useDispatch } from 'react-redux';
 import Servicecenter from './page/Servicecenter/Servicecenter';
 
 function App() {
-  return (
+  //const userStore = useSelector((state)=>state);
+  // console.log(userStore);
+  return (  
     <BrowserRouter>
-      <Header />
-      
+    <Header />
       <Routes>
+        <Route path="/" element={<Mainpage />}></Route>
         <Route path="/Register" element={<Register />}></Route>
         <Route path="/Login" element={<Login />}></Route>
         <Route path="/Notice" element={<Notice />}></Route>

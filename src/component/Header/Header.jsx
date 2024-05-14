@@ -13,10 +13,13 @@ import { useNavigate,BrowserRouter, Routes, Route,Link } from "react-router-dom"
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Mymodal from "../Modal/Mymodal";
+import Loginmodal from "../Modal/Loginmodal";
+import { useSelector } from "react-redux";
 
 
 function Header () {
     const [open, setOpen] = useState(false);
+    const { member } = useSelector(state => state.member);
 
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
@@ -85,6 +88,12 @@ function Header () {
                 <h1 className="name">Title</h1>
             </Link>
             <Mymodal />
+
+            {/*<>
+                <input value={member.token ? <Loginmodal /> : <Mymodal /> } />
+            </>
+    */}
+            
             
         </div>
    
