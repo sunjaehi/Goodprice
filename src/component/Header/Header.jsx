@@ -19,7 +19,7 @@ import { useSelector } from "react-redux";
 
 function Header () {
     const [open, setOpen] = useState(false);
-    const { member } = useSelector(state => state.member);
+    const member = sessionStorage.getItem('atk');
 
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
@@ -87,12 +87,14 @@ function Header () {
             <Link to="/" className="link">
                 <h1 className="name">Title</h1>
             </Link>
-            <Mymodal />
+            
+            {/*<Mymodal />*/}
 
-            {/*<>
-                <input value={member.token ? <Loginmodal /> : <Mymodal /> } />
-            </>
-    */}
+        <>
+            {member ? (<Loginmodal /> ): (<Mymodal /> )}
+        </>
+            
+    
             
             
         </div>

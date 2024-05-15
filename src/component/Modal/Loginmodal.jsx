@@ -34,10 +34,12 @@ function Loginmodal() {
 
     const navigateToMypage = () => {
         handleClose();
-        navigate("/Myapge");
+        navigate("/Mypage");
     }
     const logOut = () => {
-        
+        sessionStorage.removeItem('atk');
+        alert('로그아웃 성공');
+        navigate("/");
     }
 
     return (
@@ -66,7 +68,7 @@ function Loginmodal() {
                             variant="outlined" 
                             size="large" 
                             startIcon={<LockOutlinedIcon />}
-                            //onClick={logOut}
+                            onClick={logOut}
                         >
                             로그아웃
                         </Button>

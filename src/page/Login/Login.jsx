@@ -48,6 +48,7 @@ function Login(props) {
             setLoginCheck(false);
             console.log(result);
             const atk = result.accessToken;
+            
             // sessionStorage.setItem("email",result.email);
             // sessionStorage.setItem("password",result.password);
             let payload = atk.substring(atk.indexOf('.') + 1, atk.lastIndexOf('.'));
@@ -59,6 +60,8 @@ function Login(props) {
 
             sessionStorage.setItem("email", loginedEmail);
             sessionStorage.setItem("pw", loginedPassword);
+            sessionStorage.setItem("atk",atk);
+            
             alert('로그인 성공!');
             navigate("/");
         } else if(response.status === 401) {
