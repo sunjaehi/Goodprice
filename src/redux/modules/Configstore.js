@@ -1,5 +1,5 @@
 import { createStore } from 'redux';
-import Member from '../modules/Member';
+import UserSlice from './Userslice';
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistReducer,persistStore } from 'redux-persist';
 import storageSession from 'redux-persist/lib/storage/session';
@@ -8,21 +8,25 @@ import storageSession from 'redux-persist/lib/storage/session';
 //combinereducers는 독립적인 reducer의 반환 값을 하나의 상태 객체로 만들어줌
 
 
+const rootReducer = combineReducers({
+    member : UserSlice.reducer,
+});
+
 const persistConfig = {
     key:'root',
     storage:storageSession,
     whitelist:['member'] //유지하고 싶은 값을 배열로 전달 <->blacklist
 };
-const rootReducer = combineReducers({
-    member : Member,
-});
+
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 const store = configureStore({
     reducer: persistedReducer,
+    /*
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: false,
         })
+        */
 });
 //persistGate 사용을 위한 persistor
 //const persistor = persistStore(store);
