@@ -20,12 +20,14 @@ import Servicecenter from './page/Servicecenter/Servicecenter';
 import { Details } from '@mui/icons-material';
 import ShopDetail from './page/ShopDetail/ShopDetail';
 import Review from './page/Review/Review';
+import Shoptable from './admin/section/Shoptable';
+import Mainadmin from './admin/page/Mainadmin';
 
 function App() {
   return (
     <BrowserRouter>
       <Header />
-
+      <Mainadmin />
       <Routes>
         <Route path="/Register" element={<Register />}></Route>
         <Route path="/Detail/:shopId" element={<ShopDetail />}></Route>
