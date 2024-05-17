@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import { BrowserRouter,Routes,Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './component/Header/Header';
 import Register from './page/Register/Register';
 import Login from './page/Login/Login';
@@ -16,18 +16,20 @@ import Myprofile from './page/Mypage/Myprofile';
 import Mypage from './page/Mypage/Mypage';
 import Entercorrection from './page/Mypage/Entercorrection';
 import Quitdialog from './component/Dialog/Quitdialog';
-import { useSelector, useDispatch } from 'react-redux';
 import Servicecenter from './page/Servicecenter/Servicecenter';
+import { Details } from '@mui/icons-material';
+import ShopDetail from './page/ShopDetail/ShopDetail';
+import Review from './page/Review/Review';
 
 function App() {
-  //const userStore = useSelector((state)=>state);
-  // console.log(userStore);
-  return (  
+  return (
     <BrowserRouter>
-    <Header />
+      <Header />
+
       <Routes>
-        <Route path="/" element={<Mainpage />}></Route>
         <Route path="/Register" element={<Register />}></Route>
+        <Route path="/Detail/:shopId" element={<ShopDetail />}></Route>
+        <Route path="/Review" element={<Review />}></Route>
         <Route path="/Login" element={<Login />}></Route>
         <Route path="/Notice" element={<Notice />}></Route>
         <Route path="/Benefit" element={<Benefit />}></Route>
@@ -40,9 +42,9 @@ function App() {
         <Route path="/Mypage" element={<Mypage />}></Route>
         <Route path="/Entercorrection" element={<Entercorrection />}></Route>
         <Route path="/Servicecenter" element={<Servicecenter />}></Route>
-      </Routes> 
+      </Routes>
     </BrowserRouter>
-      
+
   );
 }
 
