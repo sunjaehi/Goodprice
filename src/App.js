@@ -16,17 +16,19 @@ import Myprofile from './page/Mypage/Myprofile';
 import Mypage from './page/Mypage/Mypage';
 import Entercorrection from './page/Mypage/Entercorrection';
 import Quitdialog from './component/Dialog/Quitdialog';
-import { useSelector, useDispatch } from 'react-redux';
+//import { useSelector, useDispatch } from 'react-redux';
 import Servicecenter from './page/Servicecenter/Servicecenter';
+import Reviewinput from './page/Review/Reviewinput';
+import Mainadmin from './admin/Mainadmin';
 
 function App() {
   //const userStore = useSelector((state)=>state);
-  // console.log(userStore);
+  //console.log(userStore);
   return (  
     <BrowserRouter>
     <Header />
       <Routes>
-        <Route path="/" element={<Mainpage />}></Route>
+        <Route path="/"></Route>
         <Route path="/Register" element={<Register />}></Route>
         <Route path="/Login" element={<Login />}></Route>
         <Route path="/Notice" element={<Notice />}></Route>
@@ -40,6 +42,7 @@ function App() {
         <Route path="/Mypage" element={<Mypage />}></Route>
         <Route path="/Entercorrection" element={<Entercorrection />}></Route>
         <Route path="/Servicecenter" element={<Servicecenter />}></Route>
+        <Route path="/Mainadmin" element={<Mainadmin />}></Route>
       </Routes> 
     </BrowserRouter>
       
