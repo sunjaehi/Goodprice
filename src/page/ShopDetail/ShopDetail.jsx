@@ -11,7 +11,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { Chip, Container, Paper, Tab, Tabs } from "@mui/material";
 import Carousel from "react-material-ui-carousel";
 import { styled } from '@mui/material/styles';
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Box from '@mui/material/Box';
 import PropTypes from 'prop-types';
 
@@ -53,6 +53,7 @@ CustomTabPanel.propTypes = {
 };
 
 function ShopDetail() {
+    const navigate = useNavigate();
     const [datas, setDatas] = useState(null);
     const [productDatas, setProductDatas] = useState(null);
     const [reviewSummary, setReviewSummary] = useState(null);
@@ -71,39 +72,42 @@ function ShopDetail() {
         isLoading: true,
 
     });
-
     useEffect(() => {
-        fetch(`http://localhost:8080/api/v1/shopLocation/${shopId}`)
-            .then(result => result.json())
-            .then(json => {
+        const fetchData = async () => {
+            try {
+                let result = await fetch(`http://localhost:8080/api/v1/shop/${shopId}`);
+                if (result.status === 200) {
+                    const json = await result.json();
+                    setDatas(json);
+                } else if (result.status === 404) {
+                    alert("존재하지 않는 가게입니다");
+                    navigate(-1);
+                    return;
+                }
+
+                result = await fetch(`http://localhost:8080/api/v1/shopLocation/${shopId}`);
+                let json = await result.json();
                 setState({
                     center: {
                         lat: json.latitude,
                         lng: json.longitude
                     }
                 });
-            });
 
-        fetch(`http://localhost:8080/api/v1/shop/${shopId}`)
-            .then(result => result.json())
-            .then(json => {
-                setDatas(json);
-            })
-
-        fetch(`http://localhost:8080/api/v1/product/?shopId=${shopId}`)
-            .then(result => result.json())
-            .then(json => {
+                result = await fetch(`http://localhost:8080/api/v1/product/?shopId=${shopId}`);
+                json = await result.json();
                 console.log(json);
                 setProductDatas(json);
-            })
 
-        fetch(`http://localhost:8080/api/v1/review/summary?shopId=${shopId}`)
-            .then(result => result.json())
-            .then(json => {
+                result = await fetch(`http://localhost:8080/api/v1/review/summary?shopId=${shopId}`);
+                json = await result.json();
                 console.log(json);
                 setReviewSummary(json);
-            })
-    }, []);
+            } catch (error) {
+            }
+        };
+        fetchData();
+    }, [shopId, navigate]);
     const [level, setLevel] = useState(5);
     const mapRef = useRef();
 
