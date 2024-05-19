@@ -1,84 +1,79 @@
-import React,{ useRef,useEffect, useCallback,useState } from "react";
+import React, { useRef, useState } from "react";
 import FormGroup from '@mui/material/FormGroup';
 import TextField from '@mui/material/TextField';
 import FormLabel from "@mui/material/FormLabel";
-import { Divider, IconButton } from "@mui/material";
+import { Divider } from "@mui/material";
 import Button from '@mui/material/Button';
 import { Box } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
-import { useNavigate } from "react-router-dom";
-import { styled } from '@mui/material/styles';
+import { useNavigate, useParams } from "react-router-dom";
 import './Reviewinput.css';
-import { set } from "react-hook-form";
 
 function Reviewinput() {
     const imageInput = useRef(null);
+    const commentInput = useRef(null);
     const [imageSrc, setImageSrc] = useState('');
-    
+    const { shopId } = useParams();
+
     const navigate = useNavigate();
-    const navigateToHome = () => {
-        navigate("/");
-    }
-    // const uploadFile = useCallback(() => {
-    //     imageInput.current.click();
-    // },[imageInput.current]);
-    // const handleChange = useCallback(() => {
-    //     if (!imageInput.current) {
-    //         return;
-    //     }
-    //     imageInput.current.click();
-    // },[]);
     const uploadFile = (fileBlob) => {
         const reader = new FileReader();
         reader.readAsDataURL(fileBlob);
-        return new Promise((resolve)=>{
+        return new Promise((resolve) => {
             reader.onload = () => {
                 setImageSrc(reader.result);
                 resolve();
             };
         });
     };
-    const reviewForm = document.getElementById('review');
+
     const reviewSubmit = (e) => {
+        const formData = new FormData();
+        formData.append('comment', commentInput.current.value);
+        formData.append('shopId', shopId);
+
         e.preventDefault();
-        
-        fetch("API주소", {
-            method:"POST",
-            headers : {
-                "Contend-Type":"multipart/form-data",
+        fetch(`http://localhost:8080/api/v1/review/`, {
+            method: "POST",
+            headers: {
+                "Contend-Type": "multipart/form-data",
+                "Authorization": "Bearer " + sessionStorage.getItem("atk")
             },
-            body:new FormData(reviewForm),
+            body: formData,
         })
             .then((response) => {
-                if (response.ok === true) {
-                    return response.json();
+                if (response.status === 201) {
+                    alert('리뷰 등록 성공')
+                } else {
+                    alert('리뷰 등록 실패')
                 }
-                throw new Error('리뷰 작성 실패ㅠ !');
+                navigate(-1);
             })
-            
+
     };
-    
-    
+
+
     return (
         <FormGroup sx={{
-            display:"flex",
-            id:"reviewForm"
+            display: "flex",
+            id: "reviewForm"
 
         }}>
             <FormLabel sx={{
-                fontSize:"20px",
-                color:"black",
-                justifyContent:"flex-start",
-                margin:"10px",
+                fontSize: "20px",
+                color: "black",
+                justifyContent: "flex-start",
+                margin: "10px",
 
             }}>리뷰</FormLabel>
             <Divider />
             <TextField
                 sx={{
-                    margin:"10px" 
+                    margin: "10px"
                 }}
                 id="review"
+                inputRef={commentInput}
                 //label="리뷰"
                 minRows={10}
                 name="input"
@@ -91,18 +86,18 @@ function Reviewinput() {
                 <label for="file">
                     <div className="btn-upload"><AddIcon /></div>
                 </label>
-                <input type="file" multiple={true} accept="image/*" ref={imageInput} id="file" onChange={(e)=>{uploadFile(e.target.files[0])}}/>
+                <input type="file" multiple={true} accept="image/*" ref={imageInput} id="file" onChange={(e) => { uploadFile(e.target.files[0]) }} />
                 <div className="preview">
                     {imageSrc && <img src={imageSrc} alt="preview-img" />}
                 </div>
             </Stack>
-            
-            <Box 
+
+            <Box
                 sx={{
-                    display:"flex",
-                    margin:"10px",
-                    flexDirection:"column",
-                    alignItems:"center",
+                    display: "flex",
+                    margin: "10px",
+                    flexDirection: "column",
+                    alignItems: "center",
                     //m:2
                 }}
             >
@@ -110,13 +105,13 @@ function Reviewinput() {
                     variant="outlined"
                     type="submit"
                     sx={{
-                        backgroundColor:"black",
-                        color:"white",
-                        borderColor:"black",
-                        mx:"10px",
-                        width:"100%",
-                        ":hover":{
-                            backgroundColor:"gray"
+                        backgroundColor: "black",
+                        color: "white",
+                        borderColor: "black",
+                        mx: "10px",
+                        width: "100%",
+                        ":hover": {
+                            backgroundColor: "gray"
                         }
                     }}
                     onClick={reviewSubmit}
@@ -125,13 +120,13 @@ function Reviewinput() {
                     variant="outlined"
                     type="submit"
                     sx={{
-                        backgroundColor:"lightgray",
-                        color:"black",
-                        borderColor:"lightgray",
-                        margin:"10px",
-                        width:"100%"
+                        backgroundColor: "lightgray",
+                        color: "black",
+                        borderColor: "lightgray",
+                        margin: "10px",
+                        width: "100%"
                     }}
-                    onClick={navigateToHome}
+                    onClick={navigate('/')}
                 >취소</Button>
             </Box>
         </FormGroup>
