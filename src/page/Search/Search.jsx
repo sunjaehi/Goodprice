@@ -18,8 +18,9 @@ import SendIcon from '@mui/icons-material/Send';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import { sectorSample } from "../../data/sectorSample";
 import { ListItemAvatar, responsiveFontSizes } from "@mui/material";
-const { kakao } = window;
+import { Link } from 'react-router-dom';
 
+const { kakao } = window;
 
 function Search() {
     const [datas, setData] = useState(null);
@@ -178,17 +179,20 @@ function Search() {
                 </Button>
             </FormControl>
             <List sx={{ minWidth: 360, bgcolor: 'background.paper' }}>
-                <ListItem sx={{ flexDirection: 'column' }}>
-                    {datas && datas.map((data) => (
-                        <ListItemButton>
-                            <ListItemAvatar>
-                                <Avatar
-                                    id={data.id}
+                {datas && datas.map((data) => (
+                    <ListItem>
+                        <ListItemButton component={Link} to={`/detail/${data.id}`} >
+                            <ListItemAvatar sx={{ width: 100, height: 100, overflow: 'hidden', marginRight: 2 }}>
+                                <img
                                     alt={data.name}
-                                    sx={{ width: 50, height: 50 }}
                                     src={data.imgUrl}
-                                >
-                                </Avatar>
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                        objectPosition: 'center'
+                                    }}
+                                />
                             </ListItemAvatar>
                             <ListItemText
                                 primary={`${data.name}`}
@@ -202,7 +206,7 @@ function Search() {
                                         >
                                             {`${data.address}`}
                                         </Typography>
-                                        <a href='tel:`${data.phone}`'>{data.phone}</a>
+                                        {data.phone.length > 5 ? <a href='tel:`${ data.phone }`'>{data.phone}</a> : "연락처 정보가 없습니다"}
                                         <Typography
                                             sx={{ display: 'block' }}
                                             component="span"
@@ -226,11 +230,12 @@ function Search() {
 
                             />
                         </ListItemButton>
-                    ))}
+                    </ListItem>
 
-                </ListItem>
+                ))}
+
             </List>
-        </div>
+        </div >
     )
 }
 export default Search;
