@@ -17,21 +17,23 @@ import Mypage from './page/Mypage/Mypage';
 import Entercorrection from './page/Mypage/Entercorrection';
 import Quitdialog from './component/Dialog/Quitdialog';
 import Servicecenter from './page/Servicecenter/Servicecenter';
-import { Details } from '@mui/icons-material';
 import ShopDetail from './page/ShopDetail/ShopDetail';
 import Review from './page/Review/Review';
 import Shoptable from './admin/section/Shoptable';
 import Mainadmin from './admin/page/Mainadmin';
+import Reviewinput from './page/Review/Reviewinput';
 
 function App() {
   return (
     <BrowserRouter>
       <Header />
-      <Mainadmin />
       <Routes>
+        <Route path='/' element={<Mainpage />}></Route>
         <Route path="/Register" element={<Register />}></Route>
         <Route path="/Detail/:shopId" element={<ShopDetail />}></Route>
-        <Route path="/Review" element={<Review />}></Route>
+        <Route path="/Review/:shopId" element={<Review />}></Route>
+        <Route path="/ReviewInput/:shopId" element={<Reviewinput />}></Route>
+
         <Route path="/Login" element={<Login />}></Route>
         <Route path="/Notice" element={<Notice />}></Route>
         <Route path="/Benefit" element={<Benefit />}></Route>
@@ -45,8 +47,7 @@ function App() {
         <Route path="/Entercorrection" element={<Entercorrection />}></Route>
         <Route path="/Servicecenter" element={<Servicecenter />}></Route>
       </Routes>
-    </BrowserRouter>
-
+    </BrowserRouter >
   );
 }
 
