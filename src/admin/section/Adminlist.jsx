@@ -1,25 +1,30 @@
 import React,{ useState } from "react";
 import ListSubheader from '@mui/material/ListSubheader';
 import List from '@mui/material/List';
+import { Box } from "@mui/material";
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Collapse from '@mui/material/Collapse';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-import StarBorder from '@mui/icons-material/StarBorder';
+import { useNavigate } from "react-router-dom";
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 
 export default function Adminlist() {
     const [opend, setOpen] = useState(true);
-
+    const navigate=useNavigate();
+    const navigateToProposalmanage = () => {
+        navigate("/Proposalmanage");
+    }
     // const handleclick = () => {
     //     setOpen(!open);
     // };
     return (
-        <List
-            sx={{width:'50%', maxWidth:200, bgcolor:'background.paper'}}
+        <Box sx={{
+            width:"15%"
+            
+        }}>
+            <List
+            sx={{maxWidth:"100%", bgcolor:'background.paper'}}
             component="nav"
             aria-labelledby='nested-list-subheader'
             subheader={
@@ -28,7 +33,7 @@ export default function Adminlist() {
                 </ListSubheader>
             }
         >
-            <ListItemButton>
+            <ListItemButton onClick={navigateToProposalmanage}>
                 <ListItemIcon>
                     <HomeOutlinedIcon />
                 </ListItemIcon>
@@ -41,5 +46,7 @@ export default function Adminlist() {
                 <ListItemText primary="공지사항 관리" />
             </ListItemButton>
         </List>
+        </Box>
+        
     );
 }
