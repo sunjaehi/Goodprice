@@ -12,6 +12,8 @@ function Mainpage() {
     const [newShopDatas, setNewShopDatas] = useState(null);
     const [sectors, setSectors] = useState(null);
     const [bestShops, setBestShops] = useState(null);
+    const [dailyShops, setDailyShops] = useState(null);
+
     const navigate = useNavigate();
 
     const handleCardClick = (link) => {
@@ -21,16 +23,15 @@ function Mainpage() {
         fetch('http://localhost:8080/api/v1/sector/')
             .then(result => result.json())
             .then(json => setSectors(json));
-
         fetch('http://localhost:8080/api/v1/shop/best')
             .then(result => result.json())
-
-            .then(json => { console.log(bestShops); setBestShops(json) });
+            .then(json => setBestShops(json));
         fetch('http://localhost:8080/api/v1/newShop/')
             .then(result => result.json())
-            .then(json => {
-                console.log(json); setNewShopDatas(json)
-            });
+            .then(json => setNewShopDatas(json));
+        fetch('http://localhost:8080/api/v1/dailyShop/')
+            .then(result => result.json())
+            .then(json => setDailyShops(json));
     }, []);
 
 
@@ -60,11 +61,15 @@ function Mainpage() {
                                 <Card key={newShopData.shopId}>
                                     <CardActionArea onClick={() => handleCardClick(`/detail/${newShopData.shopId}`)}>
                                         <CardMedia
-                                            style={{ height: '100%' }}
-                                            component="img"
-                                            image="https://placehold.co/100x100"
+                                            style={{
+                                                width: '100%',
+                                                paddingTop: '100%',
+                                                position: 'relative',
+                                            }}
+                                            image={newShopData.imgUrl}
                                             alt="상점 이미지"
                                         />
+
                                         <CardContent>
                                             <Typography variant='h5'>{newShopData.name}</Typography>
                                             <Typography variant="body1">최고의 맛집</Typography>
@@ -80,66 +85,30 @@ function Mainpage() {
                 오늘의 착한 가격 업소
             </Typography>
             <Grid container spacing={2}>
-                <Grid item xs={12} sm={4}>
-                    <Card>
-                        <CardActionArea>
-                            <CardMedia
-                                component="img"
-                                height="140"
-                                image="https://placehold.co/100x100"
-                                alt="green iguana"
-                            />
-                            <CardContent>
-                                <Typography gutterBottom variant="h5" component="div">
-                                    가게 이름
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    가게 주소
-                                </Typography>
-                            </CardContent>
-                        </CardActionArea>
-                    </Card>
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                    <Card>
-                        <CardActionArea>
-                            <CardMedia
-                                component="img"
-                                height="140"
-                                image="https://placehold.co/100x100"
-                                alt="green iguana"
-                            />
-                            <CardContent>
-                                <Typography gutterBottom variant="h5" component="div">
-                                    가게 이름
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    가게 주소
-                                </Typography>
-                            </CardContent>
-                        </CardActionArea>
-                    </Card>
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                    <Card>
-                        <CardActionArea>
-                            <CardMedia
-                                component="img"
-                                height="140"
-                                image="https://placehold.co/100x100"
-                                alt="green iguana"
-                            />
-                            <CardContent>
-                                <Typography gutterBottom variant="h5" component="div">
-                                    가게 이름
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    가게 주소
-                                </Typography>
-                            </CardContent>
-                        </CardActionArea>
-                    </Card>
-                </Grid>
+                {
+                    dailyShops && dailyShops.map(dailyShop => (
+                        <Grid item xs={12} sm={4}>
+                            <Card>
+                                <CardActionArea>
+                                    <CardMedia
+                                        component="img"
+                                        height="140"
+                                        image={dailyShop.imgUrl}
+                                        alt="green iguana"
+                                    />
+                                    <CardContent>
+                                        <Typography gutterBottom variant="h5" component="div">
+                                            {dailyShop.name}
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            {dailyShop.address}
+                                        </Typography>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
+                        </Grid>
+                    ))
+                }
             </Grid>
             <Typography gutterBottom variant="h5" component="div">
                 업종별 베스트 가게
@@ -156,7 +125,7 @@ function Mainpage() {
                                     <CardMedia
                                         component="img"
                                         height="140"
-                                        image="https://placehold.co/100x100"
+                                        image={bestShop.imgUrl}
                                         alt={bestShop.name}
                                     />
                                     <CardContent>
