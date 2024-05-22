@@ -7,6 +7,8 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Box,Stack,Typography,Button } from '@mui/material';
+import Adminlist from './Adminlist';
+import { useNavigate } from "react-router-dom";
 
 function createData(ID,name,status,number ,criteria) {
     return { ID,name,status,number ,criteria };
@@ -18,13 +20,22 @@ const rows = [
     createData('000004','서서울 양식','지정','5465','2024-06'),
 ];
 export default function Shoptable() {
-
+    const navigate = useNavigate();
+    const navigateToRegistershop = () => {
+        navigate("/Registershop");
+    }
     return (
-        <Box>
-            <Stack direction="row" alignItems="center" justifyContent="space-between" mt={3}>
+        
+        <Box sx={{
+            display:"flex",
+            flexDirection:"column",
+            width:"70%"
+            
+        }}>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mt={3}>
         <Typography variant="h4">가게 관리</Typography>
             <Stack direction="row" justifyContent="flex-end" spacing={2}>
-            <Button variant="contained" color="inherit" >
+            <Button variant="contained" color="inherit" onClick={navigateToRegistershop}>
                 신규 가게 등록
             </Button>
             <Button variant="contained" color="inherit" >
@@ -33,7 +44,7 @@ export default function Shoptable() {
         </Stack>
         </Stack>
         <TableContainer component={Paper}>
-            <Table sx={{minWidth:650}} aria-label="simple table">
+            <Table width="70%" sx={{minWidth:650}} aria-label="simple table">
                 <TableHead>
                     <TableRow>
                         <TableCell>가게 ID</TableCell>

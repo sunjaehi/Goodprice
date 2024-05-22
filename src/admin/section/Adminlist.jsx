@@ -20,8 +20,9 @@ export default function Adminlist() {
     // };
     return (
         <Box sx={{
-            width:"15%"
-            
+            width:"15%",
+            // position:"fixed",
+            // height:"100%"
         }}>
             <List
             sx={{maxWidth:"100%", bgcolor:'background.paper'}}

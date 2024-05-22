@@ -22,11 +22,14 @@ import Review from './page/Review/Review';
 import Shoptable from './admin/section/Shoptable';
 import Mainadmin from './admin/page/Mainadmin';
 import Reviewinput from './page/Review/Reviewinput';
+import Proposalmanage from './admin/page/Proposalmanage';
+import Registershop from './admin/page/Registershop';
 
 function App() {
   return (
     <BrowserRouter>
       <Header />
+      <Mainadmin />
       <Routes>
         <Route path='/' element={<Mainpage />}></Route>
         <Route path="/Register" element={<Register />}></Route>
@@ -46,6 +49,8 @@ function App() {
         <Route path="/Mypage" element={<Mypage />}></Route>
         <Route path="/Entercorrection" element={<Entercorrection />}></Route>
         <Route path="/Servicecenter" element={<Servicecenter />}></Route>
+        <Route path="/Proposalmanage" element={<Proposalmanage />}></Route>
+        <Route path="/Registershop" element={<Registershop />}></Route>
       </Routes>
     </BrowserRouter >
   );

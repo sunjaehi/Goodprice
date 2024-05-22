@@ -66,7 +66,7 @@ function Registershop() {
             }}
         >
             <Adminlist />
-            <Stack 
+        <Stack 
             component="form"
             spacing={3}
             autoComplete="off"
@@ -75,28 +75,28 @@ function Registershop() {
             margin={5}
             ml={10}
         >
-            <TextField 
-                id="zipcode"
-                label="가게 ID"
-                multiline
-                variant="standard"
-            />
-            <Box
-                sx={{
-                    display:"flex",
-                    minWidth:"100",
-                    flexDirection:"row",
-                    gap:3
-                }}
-            >
-                <TextField
-                    id="shopname"
-                    label="상호명"
-                    multiline
-                    //maxrows
-                    variant="standard"
-                    sx={{width:'50%'}}
-                />
+        <TextField 
+            id="zipcode"
+            label="가게 ID"
+            multiline
+            variant="standard"
+        />
+        <Box
+            sx={{
+                display:"flex",
+                minWidth:"100",
+                flexDirection:"row",
+                gap:3
+            }}
+        >
+        <TextField
+            id="shopname"
+            label="상호명"
+            multiline
+            //maxrows
+            variant="standard"
+            sx={{width:'50%'}}
+        />
                 {/* <InputLabel id="sector">업종별</InputLabel> */}
                 <FormControl sx={{width:'50%'}}>
                 <InputLabel id="select-label">업종 분류</InputLabel>
@@ -129,6 +129,7 @@ function Registershop() {
                     multiline
                     //maxrows
                     variant="standard"
+                    sx={{width:"80%"}}
             />
                 <Button
                     onClick={handleSearch}
@@ -138,13 +139,13 @@ function Registershop() {
                                
                 
             </Box>
-            {/* <TextField
-                    id="detailAddress"
-                    label="가게 주소"
-                    multiline
-                    //maxrows
-                    variant="standard"
-            /> */}
+            <TextField
+                id="detailAddress"
+                label="가게 주소"
+                multiline
+                //maxrows
+                variant="standard"
+            />
             {/* <DaumPostcode /> */}
             <TextField
                     id="shopPhone"
