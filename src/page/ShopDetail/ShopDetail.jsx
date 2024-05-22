@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import { Chip, Container, Paper, Tab, Tabs } from "@mui/material";
+import { Chip, Container, ImageList, Paper, Rating, Tab, Tabs } from "@mui/material";
 import Carousel from "react-material-ui-carousel";
 import { styled } from '@mui/material/styles';
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -158,6 +158,7 @@ function ShopDetail() {
                             <Typography gutterBottom variant="h5" component="div">
                                 {datas.shopName}
                             </Typography>
+                            <Typography variant="body2" color="text.secondary">{datas.sector}</Typography>
                             <Tabs value={value} onChange={handleChange} centered variant="fullWidth">
                                 <Tab label="홈" />
                                 <Tab label="지도" />
@@ -166,8 +167,6 @@ function ShopDetail() {
                             <CustomTabPanel value={value} index={0}>
                                 <Typography>주소</Typography>
                                 <Typography variant="body2" color="text.secondary">{datas.address}</Typography>
-                                <Typography>업종</Typography>
-                                <Typography variant="body2" color="text.secondary">{datas.sector}</Typography>
                                 <Typography>연락처</Typography>
                                 <Typography variant="body2" color="text.secondary">{datas.phone.length < 5 ? "연락처 정보가 없습니다" : datas.phone}</Typography>
                                 <Typography>영업시간</Typography>
@@ -175,7 +174,7 @@ function ShopDetail() {
                                     {datas.businessHours && datas.businessHours.length < 5 ? "영업시간 정보가 없습니다." : datas.businessHours} (자세한 정보는 기타 정보를 참고하시길 바랍니다.)
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                    {datas.businessHours && datas.businessHours.length >= 5 && isOpen ? "영업중입니다" : ""}
+                                    {datas.businessHours && datas.businessHours.length >= 5 && isOpen ? "영업중입니다" : "영업중이 아닙니다 "}
                                 </Typography>
                                 {datas.isLocalFranchise == 1 && (<Chip label="서울지역사랑상품권 가맹점입니다." variant="outlined" color="primary" />)}
                             </CustomTabPanel>
@@ -221,17 +220,19 @@ function ShopDetail() {
                 <h2>상품</h2>
                 <hr />
                 <List>
+                    {(!productDatas || productDatas.length === 0) && <p>아직 상품이 없어요</p>}
                     {productDatas && productDatas.map(product => {
                         return (
                             <ListItem divider>
-                                <img src="https://placehold.co/100x100" />
+                                {
+                                    productDatas.imgUrl && <img src={productDatas.imgUrl} />
+                                }
                                 <ListItemText primary={product.name} secondary={product.price} />
                             </ListItem>
                         )
                     })}
                 </List>
                 <h2>리뷰</h2>
-                <hr />
                 <List>
                     {(!reviewSummary || reviewSummary.length == 0) && <p>아직 리뷰가 없어요. 가게를 방문해보셨다면 리뷰를 남겨보세요</p>}
                     <Button variant="contained" component={Link} to={`/review/${shopId}`}>전체 리뷰보기</Button>
@@ -239,10 +240,22 @@ function ShopDetail() {
                     {reviewSummary && reviewSummary.map(reviewSummary => {
                         return (
                             <>
-                                <ListItem divider>
-                                    <img src="https://placehold.co/100x100" />
-                                    <ListItemText primary={reviewSummary.comment} secondary={reviewSummary.writer} />
-                                </ListItem>
+                                <hr />
+                                <h3>{reviewSummary.writer}</h3>
+                                <p>{reviewSummary.comment}</p>
+                                <p>{reviewSummary.createdAt}</p>
+                                <Rating name="read-only" value={reviewSummary.score} precision={0.5} readOnly />
+                                {reviewSummary.attachmentIndices.length > 0 &&
+                                    <ImageList sx={{ width: '100%', display: 'flex', flexDirection: 'row', overflowX: 'auto' }}>
+                                        {reviewSummary.attachmentIndices.map(index => {
+                                            return (
+                                                <a key={index} href={`http://localhost:8080/api/v1/attachment/${index}`} style={{ marginRight: '10px' }}>
+                                                    <img src={`http://localhost:8080/api/v1/attachment/${index}`} width={160} height={90} />
+                                                </a>
+                                            )
+                                        })}
+                                    </ImageList>
+                                }
                             </>
                         )
                     })}
