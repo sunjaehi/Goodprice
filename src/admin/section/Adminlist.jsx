@@ -7,7 +7,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { useNavigate } from "react-router-dom";
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
+import AssignmentLateOutlinedIcon from '@mui/icons-material/AssignmentLateOutlined';
 
 export default function Adminlist() {
     const [opend, setOpen] = useState(true);
@@ -34,17 +35,23 @@ export default function Adminlist() {
                 </ListSubheader>
             }
         >
-            <ListItemButton onClick={navigateToProposalmanage}>
+            <ListItemButton >
                 <ListItemIcon>
                     <HomeOutlinedIcon />
                 </ListItemIcon>
                 <ListItemText primary="가게 관리" />
             </ListItemButton>
-            <ListItemButton>
+            <ListItemButton onClick={navigateToProposalmanage}>
                 <ListItemIcon>
-                    <SearchOutlinedIcon />
+                    <AssignmentLateOutlinedIcon />
                 </ListItemIcon>
                 <ListItemText primary="공지사항 관리" />
+            </ListItemButton>
+            <ListItemButton onClick={navigateToProposalmanage}>
+                <ListItemIcon>
+                    <MessageOutlinedIcon />
+                </ListItemIcon>
+                <ListItemText primary="회원 리뷰 관리" />
             </ListItemButton>
         </List>
         </Box>
