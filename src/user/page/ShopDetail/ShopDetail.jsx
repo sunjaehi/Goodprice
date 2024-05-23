@@ -14,6 +14,7 @@ import { styled } from '@mui/material/styles';
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Box from '@mui/material/Box';
 import PropTypes from 'prop-types';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 
 const { kakao } = window;
 const ImageContainer = styled('div')({
@@ -59,6 +60,7 @@ function ShopDetail() {
     const [reviewSummary, setReviewSummary] = useState(null);
     const [value, setValue] = React.useState(0);
     const [isOpen, setIsOpen] = useState(false);
+    const atk = sessionStorage.getItem('atk');
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -159,6 +161,8 @@ function ShopDetail() {
                                 {datas.shopName}
                             </Typography>
                             <Typography variant="body2" color="text.secondary">{datas.sector}</Typography>
+                            <ThumbUpIcon />{datas.recommend}<br />
+                            <Rating readOnly value={datas.rate} precision={0.1} /> {datas.rate.toFixed(2)}
                             <Tabs value={value} onChange={handleChange} centered variant="fullWidth">
                                 <Tab label="홈" />
                                 <Tab label="지도" />
@@ -174,9 +178,10 @@ function ShopDetail() {
                                     {datas.businessHours && datas.businessHours.length < 5 ? "영업시간 정보가 없습니다." : datas.businessHours} (자세한 정보는 기타 정보를 참고하시길 바랍니다.)
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                    {datas.businessHours && datas.businessHours.length >= 5 && isOpen ? "영업중입니다" : "영업중이 아닙니다 "}
+                                    {datas.businessHours && datas.businessHours.length >= 5 && isOpen ? "영업중입니다" : (datas.businessHours && "영업중이 아닙니다 ")}
                                 </Typography>
-                                {datas.isLocalFranchise == 1 && (<Chip label="서울지역사랑상품권 가맹점입니다." variant="outlined" color="primary" />)}
+                                <br />
+                                {datas.isLocalFranchise == 1 && (<Chip label="서울사랑상품권" variant="outlined" color="primary" />)}
                             </CustomTabPanel>
                             <CustomTabPanel value={value} index={1}>
                                 <Map
@@ -211,8 +216,8 @@ function ShopDetail() {
                             </CustomTabPanel>
                         </CardContent>
                         <CardActions>
-                            <Button size="small" onClick={recommend}>추천</Button>
-                            <Button size="small">관심 가게 목록에 추가</Button>
+                            <Button size="small" onClick={recommend} disabled={atk === null}>추천</Button>
+                            <Button size="small" disabled={atk === null}>관심 가게 목록에 추가</Button>
                         </CardActions>
                     </Card>
                     }
