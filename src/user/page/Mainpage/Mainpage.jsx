@@ -89,7 +89,7 @@ function Mainpage() {
                     dailyShops && dailyShops.map(dailyShop => (
                         <Grid item xs={12} sm={4}>
                             <Card>
-                                <CardActionArea>
+                                <CardActionArea onClick={() => handleCardClick(`/detail/${dailyShop.shopId}`)}>
                                     <CardMedia
                                         component="img"
                                         height="140"
@@ -121,7 +121,7 @@ function Mainpage() {
                                 {sectors.find(sector => sector.id === bestShop.sector).name}
                             </Typography>
                             <Card>
-                                <CardActionArea>
+                                <CardActionArea onClick={() => handleCardClick(`/detail/${bestShop.shopId}`)}>
                                     <CardMedia
                                         component="img"
                                         height="140"
