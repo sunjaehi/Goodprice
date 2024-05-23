@@ -51,6 +51,7 @@ function App() {
         <Route path="/Servicecenter" element={<Servicecenter />}></Route>
         <Route path="/Proposalmanage" element={<Proposalmanage />}></Route>
         <Route path="/Registershop" element={<Registershop />}></Route>
+        <Route path="/Mainadmin" element={<Mainadmin />}></Route>
       </Routes>
     </BrowserRouter >
   );
