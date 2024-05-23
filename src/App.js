@@ -29,7 +29,7 @@ function App() {
   return (
     <BrowserRouter>
       <Header />
-      {/* <Registershop /> */}
+      <Servicecenter />
       <Routes>
         <Route path='/' element={<Mainpage />}></Route>
         <Route path="/Register" element={<Register />}></Route>
