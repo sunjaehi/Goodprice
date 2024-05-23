@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { TextField, Box, MenuItem } from "@mui/material";
+import { TextField, Box, MenuItem, FormControlLabel, Checkbox } from "@mui/material";
 import Stack from '@mui/material/Stack';
 import AddIcon from '@mui/icons-material/Add';
 import InputLabel from '@mui/material/InputLabel';
@@ -14,6 +14,7 @@ import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { Check, CheckBox } from "@mui/icons-material";
 
 function Registershop() {
     const [sectors, setSectors] = useState(null);
@@ -24,6 +25,8 @@ function Registershop() {
 
     const [startTime, setStartTime] = useState(dayjs('2024-05-20T09:00'));
     const [endTime, setEndTime] = useState(dayjs());
+    const [allday, setAllday] = useState(false);
+    const [isLocalFranchise, setIsLocalFranchise] = useState(false);
     const idInput = useRef(null);
     const nameInput = useRef(null);
     const phoneInput = useRef(null);
@@ -38,7 +41,6 @@ function Registershop() {
         setSector(e.target.value);
     }
     const navigate = useNavigate();
-    const formData = new FormData();
 
     useEffect(() => {
         fetch('http://localhost:8080/api/v1/sector/')
@@ -79,7 +81,9 @@ function Registershop() {
     }
     function submit(event) {
         event.preventDefault();
-        alert(sector);
+        const businessHours = allday ? `00:00 - 24:00` : `${formatTime(startTime)} - ${formatTime(endTime)}`
+
+        const formData = new FormData();
         formData.append('id', idInput.current.value);
         formData.append('name', nameInput.current.value);
         formData.append('address', address);
@@ -88,8 +92,9 @@ function Registershop() {
         formData.append('phone', phoneInput.current.value);
         formData.append('boast', boastInput.current.value);
         formData.append('info', infoInput.current.value);
-        formData.append('businessHours', `${formatTime(startTime)} - ${formatTime(endTime)}`);
-        selectedFiles.forEach(file => formData.append('files',file));
+        formData.append('businessHours', businessHours);
+        formData.append('isLocalFranchise', isLocalFranchise ? 1 : 0);
+        selectedFiles.forEach(file => formData.append('files', file));
 
         fetch(`http://localhost:8080/api/v1/shop/register`, {
             method: "POST",
@@ -99,10 +104,11 @@ function Registershop() {
             body: formData,
         }).then(response => {
             if (response.status === 200) {
-                alert("등록 성공");
                 navigate('/');
             }
-            else alert("등록 실패");
+            else {
+                alert("등록 실패");
+            }
         })
     }
 
@@ -211,19 +217,27 @@ function Registershop() {
                         <TimePicker
                             label="시작시간"
                             defaultValue={startTime}
+                            disabled={allday}
                             onChange={handleStartTimeChange}
                             sx={{ width: '50%' }}
                         />
                         <TimePicker
                             label="종료시간"
                             value={endTime}
+                            disabled={allday}
                             onChange={handleEndTimeChange}
                             sx={{ width: '50%' }}
                         />
                     </div>
-                    <div>
-                        {`${formatTime(startTime)} - ${formatTime(endTime)}`}
-                    </div>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={allday}
+                                onChange={(e) => setAllday(e.target.checked)}
+                            />
+                        }
+                        label="24시간"
+                    />
                 </LocalizationProvider>
                 <TextField
                     id="reason"
@@ -238,6 +252,15 @@ function Registershop() {
                     multiline
                     inputRef={infoInput}
                     variant="standard"
+                />
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            checked={isLocalFranchise}
+                            onChange={(e) => setIsLocalFranchise(e.target.checked)}
+                        />
+                    }
+                    label="서울사랑상품권 사용 가능"
                 />
                 <Box
                     flexDirection="row"
@@ -270,25 +293,25 @@ function Registershop() {
                     ref={imageInput}
                     id="file"
                     onChange={onChangeFile}
-                    style={{display:"none"}}
+                    style={{ display: "none" }}
                 />
                 <Button startIcon={<AddIcon />} variant="contained"
                     sx={{
-                        color:"black", backgroundColor:"lightgrey", borderRadius:"10px", mt:"10px",ml:"5px",height:"50px",
-                        ":hover" : {
-                            backgroundColor:"grey"
+                        color: "black", backgroundColor: "lightgrey", borderRadius: "10px", mt: "10px", ml: "5px", height: "50px",
+                        ":hover": {
+                            backgroundColor: "grey"
                         }
                     }}
-                    onClick={()=>imageInput.current.click()}
+                    onClick={() => imageInput.current.click()}
                 >사진 추가</Button>
             </Box>
             <div className="preview">
-                {previews.map((preview,index)=>(
+                {previews.map((preview, index) => (
                     <img
                         key={index}
                         alt="미리보기 제공 불가"
                         src={preview}
-                        style={{width:'100px', height:'100px',objectFit:'cover', margin:'10px'}}
+                        style={{ width: '100px', height: '100px', objectFit: 'cover', margin: '10px' }}
                     />
                 ))}
             </div>
