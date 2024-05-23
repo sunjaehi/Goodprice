@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Map, MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
-import { sampleDatas } from "../../data/sampleDatas";
 import './Search.css';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -16,7 +15,7 @@ import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
-import { sectorSample } from "../../data/sectorSample";
+import { sectorSample } from '../../../data/sectorSample';
 import { ListItemAvatar, responsiveFontSizes } from "@mui/material";
 import { Link } from 'react-router-dom';
 

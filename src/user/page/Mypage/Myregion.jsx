@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Switch from '@mui/material/Switch';
 import Button from '@mui/material/Button';
-import { regionSample } from "../../data/regionSample";
+import { regionSample } from "../../../data/regionSample";
 import { Container, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 
 function Myregion() {
