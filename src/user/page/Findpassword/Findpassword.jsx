@@ -8,9 +8,11 @@ import Box from '@mui/material/Box';
 import Typography from "@mui/material/Typography";
 import Container from '@mui/material/Container';
 import PinIcon from '@mui/icons-material/Pin';
+import { useNavigate } from "react-router-dom";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 
 const defaultTheme = createTheme(); 
+
 
 function Findpassword(props) {
     const handleSubmit = (event) => {
@@ -20,6 +22,10 @@ function Findpassword(props) {
             password:data.get('password'),
         });
     };
+    const navigate = useNavigate();
+    const navigateToLogin = () => {
+        navigate("/Login");
+    }
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
@@ -55,8 +61,9 @@ function Findpassword(props) {
                             color="secondary"
                             variant="contained"
                             sx={{mt:3, mb:2}}
+                            onClick={navigateToLogin}
                         >임시 비밀번호 요청하기</Button>
-                            </Box>
+                        </Box>
                 </Box>
             </Container>
         </ThemeProvider>

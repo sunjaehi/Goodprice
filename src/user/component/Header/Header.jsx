@@ -14,12 +14,15 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Mymodal from "../Modal/Mymodal";
 import Loginmodal from "../Modal/Loginmodal";
+import Adminmodal from "../Modal/Adminmodal";
 import { useSelector } from "react-redux";
 
 
 function Header () {
     const [open, setOpen] = useState(false);
-    const member = sessionStorage.getItem('atk');
+    //const member = sessionStorage.getItem('atk');
+    const admin = sessionStorage.getItem('role');
+    
 
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
@@ -91,7 +94,10 @@ function Header () {
             {/*<Mymodal />*/}
 
         <>
-            {member ? (<Loginmodal /> ): (<Mymodal /> )}
+            {(admin === 'ROLE_USER') ? (<Loginmodal /> )
+                : (admin === 'ROLE_ADMIN') ? (<Adminmodal />)
+                : (<Mymodal /> )
+            }
         </>
             
     

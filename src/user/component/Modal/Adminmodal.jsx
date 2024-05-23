@@ -5,10 +5,10 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useNavigate } from "react-router-dom";
 import Stack from '@mui/material/Stack';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useSelector } from "react-redux";
 
 const style = {
@@ -23,22 +23,23 @@ const style = {
     p: 4,
      
 };
-
-function Loginmodal() {
+//const data = useSelector(state.Member);
+function Mymodal() {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const navigate=useNavigate();
     //const { user } = useSelector(state => state.user);
 
-    const navigateToMypage = () => {
-        handleClose();
-        navigate("/Mypage");
-    }
     const logOut = () => {
         sessionStorage.removeItem('atk');
+        sessionStorage.removeItem('role');
         alert('로그아웃 성공');
         navigate("/");
+    }
+    const navigateToAdmin = () => {
+        handleClose();
+        navigate("/Mainadmin");
     }
 
     return (
@@ -53,7 +54,7 @@ function Loginmodal() {
             >
                 <Box sx={style}>
                     <Typography id="modal-modal-title" variant="h6" component="h2" align="center">
-                        회원
+                        관리자
                     </Typography>
                     <Typography id="modal-modal-description" 
                                 sx={{ 
@@ -62,6 +63,7 @@ function Loginmodal() {
                                 }}  
                     >
                     <Stack spacing={2} direction="column">
+                        
                         <Button 
                             color="secondary"
                             variant="outlined" 
@@ -76,9 +78,9 @@ function Loginmodal() {
                             variant="outlined"
                             size="large" 
                             startIcon={<PersonAddIcon />}
-                            onClick={navigateToMypage}
+                            onClick={navigateToAdmin}
                         >
-                            마이페이지
+                            관리자 페이지
                         </Button>
                     </Stack>
                     </Typography>
@@ -87,4 +89,4 @@ function Loginmodal() {
         </div>
     );
 }
-export default Loginmodal;
+export default Mymodal;

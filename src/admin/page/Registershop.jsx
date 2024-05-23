@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { TextField, Box, MenuItem } from "@mui/material";
 import Stack from '@mui/material/Stack';
+import AddIcon from '@mui/icons-material/Add';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import FormControl from "@mui/material/FormControl";
@@ -28,6 +29,10 @@ function Registershop() {
     const phoneInput = useRef(null);
     const boastInput = useRef(null);
     const infoInput = useRef(null);
+    const imageInput = useRef(null);
+
+    const [selectedFiles, setSelectedFiles] = useState([]);
+    const [previews, setPreviews] = useState([]);
 
     const handleChange = (e) => {
         setSector(e.target.value);
@@ -64,7 +69,14 @@ function Registershop() {
     const formatTime = (time) => {
         return time.format('HH:mm');
     };
-
+    const onChangeFile = (e) => {
+        let files = Array.from(e.target.files);
+        setSelectedFiles(files);
+        const previews = files.map(file => {
+            return URL.createObjectURL(file);
+        });
+        setPreviews(previews);
+    }
     function submit(event) {
         event.preventDefault();
         alert(sector);
@@ -76,7 +88,8 @@ function Registershop() {
         formData.append('phone', phoneInput.current.value);
         formData.append('boast', boastInput.current.value);
         formData.append('info', infoInput.current.value);
-        formData.append('businessHours', `${formatTime(startTime)} - ${formatTime(endTime)}`)
+        formData.append('businessHours', `${formatTime(startTime)} - ${formatTime(endTime)}`);
+        selectedFiles.forEach(file => formData.append('files',file));
 
         fetch(`http://localhost:8080/api/v1/shop/register`, {
             method: "POST",
@@ -250,8 +263,35 @@ function Registershop() {
                 display="flex"
                 mt={5}
             >
-                사진 첨부
+                <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    ref={imageInput}
+                    id="file"
+                    onChange={onChangeFile}
+                    style={{display:"none"}}
+                />
+                <Button startIcon={<AddIcon />} variant="contained"
+                    sx={{
+                        color:"black", backgroundColor:"lightgrey", borderRadius:"10px", mt:"10px",ml:"5px",height:"50px",
+                        ":hover" : {
+                            backgroundColor:"grey"
+                        }
+                    }}
+                    onClick={()=>imageInput.current.click()}
+                >사진 추가</Button>
             </Box>
+            <div className="preview">
+                {previews.map((preview,index)=>(
+                    <img
+                        key={index}
+                        alt="미리보기 제공 불가"
+                        src={preview}
+                        style={{width:'100px', height:'100px',objectFit:'cover', margin:'10px'}}
+                    />
+                ))}
+            </div>
         </Box>
     );
 

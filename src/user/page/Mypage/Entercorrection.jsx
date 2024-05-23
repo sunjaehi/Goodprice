@@ -20,7 +20,7 @@ import PinIcon from '@mui/icons-material/Pin';
 function Entercorrection() {
     const navigate=useNavigate();
 
-    const navaigateToMyprofile = () => {
+    const navigateToMyprofile = () => {
         navigate("/Myprofile");
     }
     const [showPassword, setShowPassword] = useState(false);
@@ -84,6 +84,7 @@ function Entercorrection() {
             type='submit'
             color='inherit'
             sx={{width:'50%',mt:5}}
+            onClick={navigateToMyprofile}
         >비밀번호 확인</Button>
         </ThemeProvider>
            

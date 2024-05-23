@@ -16,7 +16,6 @@ import { useNavigate } from "react-router-dom";
 import {useDispatch} from 'react-redux';
 import base64 from 'base-64';
 import sessionStorage from "redux-persist/es/storage/session";
-import localStorage from "redux-persist/es/storage";
 
 const defaultTheme = createTheme();
 
@@ -59,7 +58,7 @@ function Login(props) {
             // const loginedAuth = decoded.auth;
 
             sessionStorage.setItem("email", loginedEmail);
-            sessionStorage.setItem("pw", loginedPassword);
+            sessionStorage.setItem("role", decoded.auth);
             sessionStorage.setItem("atk",atk);
             
             alert('로그인 성공!');

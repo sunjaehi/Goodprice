@@ -1,27 +1,27 @@
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Header from './component/Header/Header';
-import Register from './page/Register/Register';
-import Login from './page/Login/Login';
-import Notice from './page/Notice/Notice';
-import Search from './page/Search/Search';
-import Benefit from './page/Benefit/Benefit';
+import Header from './user/component/Header/Header';
+import Register from './user/page/Register/Register';
+import Login from './user/page/Login/Login';
+import Notice from './user/page/Notice';
+import Search from './user/page/Search';
+import Benefit from './user/page/Benefit/Benefit';
 import Mysector from './page/Mypage/Mysector';
-import Myregion from './page/Mypage/Myregion';
-import Mainpage from './page/Mainpage/Mainpage';
-import Findpassword from './page/Findpassword/Findpassword';
-import Myfavorite from './page/Mypage/Myfavorite';
-import Myprofile from './page/Mypage/Myprofile';
-import Mypage from './page/Mypage/Mypage';
-import Entercorrection from './page/Mypage/Entercorrection';
-import Quitdialog from './component/Dialog/Quitdialog';
-import Servicecenter from './page/Servicecenter/Servicecenter';
-import ShopDetail from './page/ShopDetail/ShopDetail';
-import Review from './page/Review/Review';
+import Myregion from './user/page/Mypage/Myregion';
+import Mainpage from './user/page/Mainpage/Mainpage';
+import Findpassword from './user/page/Findpassword/Findpassword';
+import Myfavorite from './user/page/Mypage/Myfavorite';
+import Myprofile from './user/page/Mypage/Myprofile';
+import Mypage from './user/page/Mypage/Mypage';
+import Entercorrection from './user/page/Mypage/Entercorrection';
+import Quitdialog from './user/component/Dialog/Quitdialog';
+import Servicecenter from './user/page/Servicecenter/Servicecenter';
+import ShopDetail from './user/page/ShopDetail/ShopDetail';
+import Review from './user/page/Review/Review';
 import Shoptable from './admin/section/Shoptable';
 import Mainadmin from './admin/page/Mainadmin';
-import Reviewinput from './page/Review/Reviewinput';
+import Reviewinput from './user/page/Review/Reviewinput';
 import Proposalmanage from './admin/page/Proposalmanage';
 import Registershop from './admin/page/Registershop';
 
@@ -29,7 +29,7 @@ function App() {
   return (
     <BrowserRouter>
       <Header />
-      <Mainadmin />
+      {/* <Registershop /> */}
       <Routes>
         <Route path='/' element={<Mainpage />}></Route>
         <Route path="/Register" element={<Register />}></Route>
