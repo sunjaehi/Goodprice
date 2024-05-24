@@ -77,11 +77,14 @@ function Reviewinput() {
                     multiline
                     placeholder="리뷰를 작성해주세요"
                 />
-                <p>별점을 남겨주세요</p>
-                <Rating name="half-rating" defaultValue={0.0} precision={0.5} onChange={(event, newScore) => { setScore(newScore) }} />
-                <label htmlFor="file">
+                <Box sx={{flexDirection:"row", display:"flex"}}>
+                <p id="star">별점을 남겨주세요</p>
+                <Rating sx={{margin:"10px"}} name="half-rating" defaultValue={0.0} precision={0.5} onChange={(event, newScore) => { setScore(newScore) }} />
+                {/* <label htmlFor="file">
                     <div className="btn-upload"><AddIcon /></div>
-                </label>
+                </label> */}
+
+                </Box>
                 <input
                     type="file"
                     multiple
@@ -91,6 +94,16 @@ function Reviewinput() {
                     onChange={onChangeFile}
                     style={{ display: "none" }}
                 />
+                <Button startIcon={<AddIcon />} variant="contained"
+                    sx={{
+                        color:"black", backgroundColor:"lightgrey", 
+                        margin:"10px",
+                        ":hover" : {
+                            backgroundColor:"grey"
+                        }
+                    }}
+                    onClick={()=>imageInput.current.click()}
+                >이미지 추가</Button>
                 <div className="preview">
                     {previews.map((preview, index) => (
                         <img
