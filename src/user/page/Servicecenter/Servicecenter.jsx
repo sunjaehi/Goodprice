@@ -20,7 +20,26 @@ import { TimePicker } from "@mui/x-date-pickers";
 
 function Servicecenter() {
     const navigate = useNavigate();
-
+    const [inputItem, setInputItems] = useState({
+        shopname : '',
+        sector : '',
+        postcode : '',
+        detailAddress : '',
+        shopPhone : '',
+        reason : ''
+    });
+    //상태가 변경될 때 호출되는
+    const handleInput = (e) => {
+        const {id, value} = e.target;
+        setInputItems((prevData) => ({
+            ...prevData,
+            [id] : value,
+        }));
+    };
+    const isFormValid = () => {
+        return inputItem.shopname && 
+        inputItem.shopPhone && inputItem.reason;
+    }
     const [sectors, setSectors] = useState(null);
     const [sector, setSector] = useState(null);
     const [address, setAddress] = useState(null);
@@ -135,13 +154,15 @@ function Servicecenter() {
                         label="상호명"
                         //variant="standard"
                         inputRef={nameInput}
+                        value={inputItem.shopname}
+                        onChange={handleInput}
                     />
                     <FormControl>
                         <InputLabel id="select-label">업종 선택</InputLabel>
                         <Select
                             labelId="sector-label"
                             id="sector"
-                            value={sector}
+                            value={inputItem.sector}
                             label="업종 선택"
                             onChange={handleChange}
                             fullWidth
@@ -172,8 +193,9 @@ function Servicecenter() {
                         inputProps={{readOnly:true, disableUnderline:true}}
                         value={zipcode}
                         sx={{width:"50%",
-                            
+                                                    
                         }}
+                        // onChange={handleInput}
                     />
                     <Button 
                         onClick={handleSearch}
@@ -194,6 +216,7 @@ function Servicecenter() {
                     multiline
                     value={address}
                     fullWidth
+                    // onChange={handleInput}
                 />
                 <TextField
                     id="shopPhone"
@@ -201,6 +224,8 @@ function Servicecenter() {
                     multiline
                     inputRef={phoneInput}
                     fullWidth
+                    value={inputItem.shopPhone}
+                    onChange={handleInput}
                 />
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <Stack fullWidth gap={1}>
@@ -230,6 +255,8 @@ function Servicecenter() {
                     rows={3}
                     inputRef={boastInput}
                     fullWidth
+                    value={inputItem.reason}
+                    onChange={handleInput}
                 />
                 {/* <TextField
                     id="info"
@@ -282,6 +309,7 @@ function Servicecenter() {
                         type="submit"
                         sx={{mr:'5px'}}
                         onClick={submit}
+                        disabled={!isFormValid()}
                     >등록</Button>
                     <Button
                         variant="contained"

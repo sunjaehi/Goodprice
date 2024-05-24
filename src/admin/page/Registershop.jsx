@@ -34,6 +34,25 @@ function Registershop() {
     const infoInput = useRef(null);
     const imageInput = useRef(null);
 
+    const [formItem, setFormItem] = useState({
+        zipcode:'',
+        shopname:'',
+        shopPhone:'',
+        reason:'',
+        info:'',
+    });
+    const handleInput = (e) => {
+        const {id,value} = e.target;
+        setFormItem((prevData) => ({
+            ...prevData,
+            [id] : value,
+        }));
+    };
+    const isFormValid = () => {
+        return formItem.zipcode && formItem.shopname && formItem.shopPhone
+        && formItem.reason && formItem.info;
+    }
+
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [previews, setPreviews] = useState([]);
 
@@ -135,6 +154,8 @@ function Registershop() {
                     multiline
                     variant="standard"
                     inputRef={idInput}
+                    value={formItem.zipcode}
+                    onChange={handleInput}
                 />
                 <Box
                     sx={{
@@ -152,6 +173,8 @@ function Registershop() {
                         variant="standard"
                         inputRef={nameInput}
                         sx={{ width: '50%' }}
+                        value={formItem.shopname}
+                        onChange={handleInput}
                     />
                     {/* <InputLabel id="sector">업종별</InputLabel> */}
                     <FormControl sx={{ width: '50%' }}>
@@ -211,6 +234,8 @@ function Registershop() {
                     multiline
                     inputRef={phoneInput}
                     variant="standard"
+                    value={formItem.shopPhone}
+                    onChange={handleInput}
                 />
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <div>
@@ -245,6 +270,8 @@ function Registershop() {
                     multiline
                     inputRef={boastInput}
                     variant="standard"
+                    value={formItem.reason}
+                    onChange={handleInput}
                 />
                 <TextField
                     id="info"
@@ -252,6 +279,8 @@ function Registershop() {
                     multiline
                     inputRef={infoInput}
                     variant="standard"
+                    value={formItem.info}
+                    onChange={handleInput}
                 />
                 <FormControlLabel
                     control={
@@ -274,6 +303,7 @@ function Registershop() {
                             mr: '5px'
                         }}
                         onClick={submit}
+                        disabled={!isFormValid()}
                     >등록
                     </Button>
                     <Button
