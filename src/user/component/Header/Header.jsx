@@ -16,12 +16,14 @@ import Mymodal from "../Modal/Mymodal";
 import Loginmodal from "../Modal/Loginmodal";
 import Adminmodal from "../Modal/Adminmodal";
 import { useSelector } from "react-redux";
+import { Typography, createTheme } from "@mui/material";
 
 
 function Header () {
     const [open, setOpen] = useState(false);
     //const member = sessionStorage.getItem('atk');
     const admin = sessionStorage.getItem('role');
+    const defaultTheme = createTheme
     
 
     const toggleDrawer = (newOpen) => () => {
@@ -88,7 +90,7 @@ function Header () {
             </Drawer>
             </div>
             <Link to="/" className="link">
-                <h1 className="name">Title</h1>
+                <Typography color='black' variant="h5">착한 동행</Typography>
             </Link>
             
             {/*<Mymodal />*/}
