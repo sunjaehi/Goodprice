@@ -229,9 +229,21 @@ function ShopDetail() {
                     {productDatas && productDatas.map(product => {
                         return (
                             <ListItem divider>
-                                {
-                                    productDatas.imgUrl && <img src={productDatas.imgUrl} />
-                                }
+                                {product.imgUrl && (
+                                    <img
+                                        src={product.imgUrl}
+                                        style={{
+                                            width: '100px',
+                                            height: '100px',
+                                            objectFit: 'cover',
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            overflowX: 'auto',
+                                            marginRight: '16px'
+                                        }}
+                                        alt="상품 이미지"
+                                    />
+                                )}
                                 <ListItemText primary={product.name} secondary={product.price} />
                             </ListItem>
                         )
