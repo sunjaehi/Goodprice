@@ -7,7 +7,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import AddIcon from '@mui/icons-material/Add';
 
-export default function Proposalinput() {
+export default function Noticeinput() {
     const navigate = useNavigate();
     const navigateToMainadmin = () => {
         navigate("/Mainadmin");
