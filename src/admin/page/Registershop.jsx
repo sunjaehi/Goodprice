@@ -35,22 +35,22 @@ function Registershop() {
     const imageInput = useRef(null);
 
     const [formItem, setFormItem] = useState({
-        zipcode:'',
-        shopname:'',
-        shopPhone:'',
-        reason:'',
-        info:'',
+        zipcode: '',
+        shopname: '',
+        shopPhone: '',
+        reason: '',
+        info: '',
     });
     const handleInput = (e) => {
-        const {id,value} = e.target;
+        const { id, value } = e.target;
         setFormItem((prevData) => ({
             ...prevData,
-            [id] : value,
+            [id]: value,
         }));
     };
     const isFormValid = () => {
         return formItem.zipcode && formItem.shopname && formItem.shopPhone
-        && formItem.reason && formItem.info;
+            && formItem.reason && formItem.info;
     }
 
     const [selectedFiles, setSelectedFiles] = useState([]);
@@ -113,6 +113,7 @@ function Registershop() {
         formData.append('info', infoInput.current.value);
         formData.append('businessHours', businessHours);
         formData.append('isLocalFranchise', isLocalFranchise ? 1 : 0);
+        formData.append('zipcode', zipcode);
         selectedFiles.forEach(file => formData.append('files', file));
 
         fetch(`http://localhost:8080/api/v1/shop/register`, {

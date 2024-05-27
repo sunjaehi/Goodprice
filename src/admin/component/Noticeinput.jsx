@@ -7,7 +7,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import AddIcon from '@mui/icons-material/Add';
 
-export default function Proposalinput() {
+export default function Noticeinput() {
     const navigate = useNavigate();
     const navigateToMainadmin = () => {
         navigate("/Mainadmin");
@@ -18,20 +18,20 @@ export default function Proposalinput() {
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [previews, setPreviews] = useState([]);
     const formData = new FormData();
-    // const [formItem, setFormItem] = useState({
-    //     title:'',
-    //     content:''
-    // });
-    // const handleInput = (e) => {
-    //     const {id, value} = e.target;
-    //     setFormItem((prevData) => ({
-    //         ...prevData,
-    //         [id] : value,
-    //     }));
-    // }
-    function handleInput() {
-        contentInput.current.disabled=true;
-        titleInput.current.disabled=true;
+
+    const [formItem, setFormItem] = useState({
+        title: '',
+        content: ''
+    });
+    const handleInput = (e) => {
+        const { id, value } = e.target;
+        setFormItem((prevData) => ({
+            ...prevData,
+            [id]: value,
+        }));
+    }
+    const isFormValid = () => {
+        return formItem.title && formItem.content;
     }
 
     const noticeSubmit = (e) => {
@@ -58,13 +58,18 @@ export default function Proposalinput() {
             });
     };
     const onChangeFile = (e) => {
-        let files = Array.from(e.target.files);
-        setSelectedFiles(files);
-        const previews = files.map(file => {
-            return URL.createObjectURL(file);
-        });
-        setPreviews(previews);
+        let newFiles = Array.from(e.target.files);
+        setSelectedFiles(prevFiles => [...prevFiles, ...newFiles]);
+
+        const newPreviews = newFiles.map(file => URL.createObjectURL(file));
+        setPreviews(prevPreviews => [...prevPreviews, ...newPreviews]);
     }
+
+    const removeImage = (index) => {
+        setSelectedFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
+        setPreviews(prevPreviews => prevPreviews.filter((_, i) => i !== index));
+    }
+
     return (
         <form>
             <Box
@@ -128,17 +133,28 @@ export default function Proposalinput() {
                             }
                         }}
                         onClick={() => imageInput.current.click()}
-                    >사진 추가</Button>
+                    >
+                        사진 추가
+                    </Button>
                 </>
 
-                <div className="preview">
+                <div className="preview" style={{ display: 'flex', flexWrap: 'wrap', marginTop: '10px' }}>
                     {previews.map((preview, index) => (
-                        <img
-                            key={index}
-                            alt="미리보기 제공 불가"
-                            src={preview}
-                            style={{ width: '100px', height: '100px', objectFit: 'cover', margin: "10px" }}
-                        />
+                        <div key={index} style={{ position: 'relative', margin: '10px' }}>
+                            <img
+                                alt="미리보기 제공 불가"
+                                src={preview}
+                                style={{ width: '100px', height: '100px', objectFit: 'cover', margin: '10px' }}
+                            />
+                            <Button
+                                variant="contained"
+                                color="error"
+                                onClick={() => removeImage(index)}
+                                style={{ position: 'absolute', top: '5px', right: '5px', minWidth: '30px', minHeight: '30px', padding: '5px' }}
+                            >
+                                X
+                            </Button>
+                        </div>
                     ))}
                 </div>
 
