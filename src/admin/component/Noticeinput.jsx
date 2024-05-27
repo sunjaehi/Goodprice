@@ -17,6 +17,7 @@ export default function Noticeinput() {
     const contentInput = useRef(null);
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [previews, setPreviews] = useState([]);
+    const [isImportant, setIsImportant] = useState(false);
     const formData = new FormData();
 
     const [formItem, setFormItem] = useState({
@@ -36,9 +37,9 @@ export default function Noticeinput() {
 
     const noticeSubmit = (e) => {
         e.preventDefault();
-
         formData.append('title', titleInput.current.value);
         formData.append('content', contentInput.current.value);
+        formData.append('isImportant', isImportant);
         selectedFiles.forEach(file => formData.append('files', file));
 
         fetch(`http://localhost:8080/api/v1/notice/new`, {
@@ -92,7 +93,7 @@ export default function Noticeinput() {
                         ml: "20px",
                     }}
                 >
-                    <TextField id="title" label="제목"  inputRef={titleInput} variant="outlined" fullWidth sx={{ mb: "20px" }} />
+                    <TextField id="title" label="제목" inputRef={titleInput} variant="outlined" fullWidth sx={{ mb: "20px" }} />
                     <TextField id="content" label="내용을 입력해주세요" inputRef={contentInput} variant="outlined" fullWidth multiline rows={15} />
                     <Stack spacing={3} direction="row-reverse" sx={{ mt: "5px" }}>
                         <Button variant="contained" sx={{
@@ -100,7 +101,7 @@ export default function Noticeinput() {
                             ":hover": { backgroundColor: "grey" }
                         }}
                             onClick={noticeSubmit}
-                            disabled={!handleInput()}
+                        // disabled={!handleInput()}
                         >등록</Button>
                         <Button variant="contained" sx={{
                             color: "white", backgroundColor: "grey", borderRadius: "20px",
@@ -108,13 +109,12 @@ export default function Noticeinput() {
                         }} onClick={navigateToMainadmin}>취소</Button>
                     </Stack>
                     <FormGroup>
-                        <FormControlLabel control={<Checkbox />} label="중요 (이 항목을 체크하면 사용자에게 PUSH알림이 전송됩니다)" />
+                        <FormControlLabel control={
+                            <Checkbox checked={isImportant} onChange={() => setIsImportant(!isImportant)} />
+                        } label="중요 (이 항목을 체크하면 사용자에게 PUSH알림이 전송됩니다)" />
                     </FormGroup>
 
                 </Box>
-                {/* <label htmlFor="file">
-                
-            </label> */}
                 <>
                     <input
                         type="file"
