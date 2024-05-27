@@ -18,19 +18,20 @@ export default function Proposalinput() {
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [previews, setPreviews] = useState([]);
     const formData = new FormData();
-    const [formItem, setFormItem] = useState({
-        title:'',
-        content:''
-    });
-    const handleInput = (e) => {
-        const {id, value} = e.target;
-        setFormItem((prevData) => ({
-            ...prevData,
-            [id] : value,
-        }));
-    }
-    const isFormValid = () => {
-        return formItem.title && formItem.content;
+    // const [formItem, setFormItem] = useState({
+    //     title:'',
+    //     content:''
+    // });
+    // const handleInput = (e) => {
+    //     const {id, value} = e.target;
+    //     setFormItem((prevData) => ({
+    //         ...prevData,
+    //         [id] : value,
+    //     }));
+    // }
+    function handleInput() {
+        contentInput.current.disabled=true;
+        titleInput.current.disabled=true;
     }
 
     const noticeSubmit = (e) => {
@@ -86,15 +87,15 @@ export default function Proposalinput() {
                         ml: "20px",
                     }}
                 >
-                    <TextField id="title" label="제목" value={formItem.title} onChange={handleInput} inputRef={titleInput} variant="outlined" fullWidth sx={{ mb: "20px" }} />
-                    <TextField id="content" label="내용을 입력해주세요" value={formItem.content} onChange={handleInput} inputRef={contentInput} variant="outlined" fullWidth multiline rows={15} />
+                    <TextField id="title" label="제목"  inputRef={titleInput} variant="outlined" fullWidth sx={{ mb: "20px" }} />
+                    <TextField id="content" label="내용을 입력해주세요" inputRef={contentInput} variant="outlined" fullWidth multiline rows={15} />
                     <Stack spacing={3} direction="row-reverse" sx={{ mt: "5px" }}>
                         <Button variant="contained" sx={{
                             color: "white", backgroundColor: "black", borderRadius: "20px",
                             ":hover": { backgroundColor: "grey" }
                         }}
                             onClick={noticeSubmit}
-                            disabled={!isFormValid()}
+                            disabled={!handleInput()}
                         >등록</Button>
                         <Button variant="contained" sx={{
                             color: "white", backgroundColor: "grey", borderRadius: "20px",
