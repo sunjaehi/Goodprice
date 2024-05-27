@@ -15,15 +15,17 @@ import Myfavorite from './user/page/Mypage/Myfavorite';
 import Myprofile from './user/page/Mypage/Myprofile';
 import Mypage from './user/page/Mypage/Mypage';
 import Entercorrection from './user/page/Mypage/Entercorrection';
-import Quitdialog from './user/component/Dialog/Quitdialog';
+import NoticeInput from './admin/component/Noticeinput';
 import Servicecenter from './user/page/Servicecenter/Servicecenter';
 import ShopDetail from './user/page/ShopDetail/ShopDetail';
 import Review from './user/page/Review/Review';
 import Shoptable from './admin/section/Shoptable';
 import Mainadmin from './admin/page/Mainadmin';
+import Shopmanage from './admin/component/Shopmanage';
 import Reviewinput from './user/page/Review/Reviewinput';
 import Proposalmanage from './admin/page/Proposalmanage';
 import Registershop from './admin/page/Registershop';
+
 
 function App() {
   return (
@@ -52,6 +54,9 @@ function App() {
         <Route path="/Proposalmanage" element={<Proposalmanage />}></Route>
         <Route path="/Registershop" element={<Registershop />}></Route>
         <Route path="/Mainadmin" element={<Mainadmin />}></Route>
+        <Route path="/NoticeInput" element={<NoticeInput />}></Route>
+        <Route path="/Shopmanage" element={<Shopmanage />}></Route>
+        <Route path="/Shoptable" element={<Shoptable />}></Route>
       </Routes>
     </BrowserRouter >
   );
