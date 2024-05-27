@@ -13,22 +13,51 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 
-function ProductDialog({ open, handleClose, onAddButtonClicked, nameInput, priceInput, onChangeFile }) {
-
+function ProductDialog({ open, handleClose, shopId }) {
+    const [selectedFiles, setSelectedFiles] = useState([]);
     const priceRef = useRef();
     const nameRef = useRef();
+
+    const onChangeFile = (e) => {
+        let files = Array.from(e.target.files);
+        setSelectedFiles(files);
+        const previews = files.map(file => URL.createObjectURL(file));
+    }
+
+    const registerProduct = async (e) => {
+        const formData = new FormData();
+        formData.append('shopId', shopId);
+        formData.append('name', nameRef.current.value);
+        formData.append('price', priceRef.current.value);
+        selectedFiles.forEach(file => formData.append('files', file));
+
+        const result = await fetch('http://localhost:8080/api/v1/product/new',
+            {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${sessionStorage.getItem('atk')}`
+                },
+                body: formData,
+            }
+        )
+        if (result.status === 201) {
+            alert('등록 성공!');
+            handleClose();
+        }
+    }
+
     return (
         <Dialog open={open} onClose={handleClose}>
             <DialogTitle>상품 추가</DialogTitle>
             <DialogContent>
                 <Stack direction="column" spacing={3}>
-                    <TextField label="상품명" fullWidth variant="outlined" margin="normal" inputRef={nameInput} />
-                    <TextField label="가격" fullWidth variant="outlined" margin="normal" inputRef={priceInput} />
+                    <TextField label="상품명" fullWidth variant="outlined" margin="normal" inputRef={nameRef} />
+                    <TextField label="가격" fullWidth variant="outlined" margin="normal" inputRef={priceRef} />
                     <input type="file" accept="image/*" onChange={onChangeFile} />
                 </Stack>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onAddButtonClicked}>추가</Button>
+                <Button onClick={registerProduct}>추가</Button>
                 <Button onClick={handleClose}>취소</Button>
             </DialogActions>
         </Dialog>
@@ -102,8 +131,6 @@ export default function Shopmanage() {
     const [endTime, setEndTime] = useState(null);
     const [is24Hours, setIs24Hours] = useState(false);
     const [open, setOpen] = useState(false);
-    const nameInput = useRef();
-    const priceInput = useRef();
     const [editFormOpen, setEditFormOpen] = useState(false);
     const defaultImageUrl = 'https://via.placeholder.com/150';
 
@@ -162,37 +189,6 @@ export default function Shopmanage() {
         setOpen(true);
     }
 
-    const [selectedFiles, setSelectedFiles] = useState([]);
-    const onChangeFile = (e) => {
-        let files = Array.from(e.target.files);
-        setSelectedFiles(files);
-        const previews = files.map(file => {
-            return URL.createObjectURL(file);
-        });
-    }
-
-    const handleAddButtonClicked = async (e) => {
-        const formData = new FormData();
-        formData.append('shopId', shopId);
-        formData.append('name', nameInput.current.value);
-        formData.append('price', priceInput.current.value);
-        selectedFiles.forEach(file => formData.append('files', file));
-
-        const result = await fetch('http://localhost:8080/api/v1/product/new',
-            {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${sessionStorage.getItem('atk')}`
-                },
-                body: formData,
-            }
-        )
-        if (result.status === 201) {
-            alert('등록 성공!');
-            setOpen(false);
-        }
-    }
-
     const onFormChange = (e) => {
         setShopInfo({ ...shopInfo, [e.target.name]: e.target.value });
     }
@@ -208,7 +204,6 @@ export default function Shopmanage() {
     const handleCloseEditForm = () => {
         setEditFormOpen(null);
     };
-
 
     return (
         <>
@@ -290,20 +285,6 @@ export default function Shopmanage() {
 
                         <Typography variant="h7">상품 목록</Typography>
                         <Button variant="outlined" onClick={handleOpen}>상품 추가</Button>
-                        <Dialog open={open} onClose={handleClose}>
-                            <DialogTitle>상품 추가</DialogTitle>
-                            <DialogContent>
-                                <Stack direction="column" spacing={3} style={{ marginTop: 8, marginBottom: 8 }}>
-                                    <TextField label="상품명" fullWidth variant="outlined" margin="normal" inputRef={nameInput} />
-                                    <TextField label="가격" fullWidth variant="outlined" margin="normal" inputRef={priceInput} />
-                                    <input type="file" accept="image/*" onChange={onChangeFile} />
-                                </Stack>
-                            </DialogContent>
-                            <DialogActions>
-                                <Button onClick={handleOpen}>추가</Button>
-                                <Button onClick={handleClose}>취소</Button>
-                            </DialogActions>
-                        </Dialog>
                         <Grid container spacing={3}>
                             {productInfo && productInfo.map(product => (
                                 <Grid item xs={12} sm={6} md={4} key={product.id}>
@@ -342,11 +323,7 @@ export default function Shopmanage() {
                         <ProductDialog
                             open={open}
                             handleClose={handleClose}
-                            onAddButtonClicked={handleAddButtonClicked}
-                            nameInput={nameInput}
-                            priceInput={priceInput}
-                            onChangeFile={onChangeFile}
-                            isModify={false}
+                            shopId={shopId}
                         />
 
                         <Stack
