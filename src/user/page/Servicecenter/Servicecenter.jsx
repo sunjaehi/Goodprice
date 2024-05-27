@@ -28,9 +28,10 @@ function Servicecenter() {
         shopPhone : '',
         reason : ''
     });
+    
     //상태가 변경될 때 호출되는
     const handleInput = (e) => {
-        const {id, value} = e.target;
+        const {id, value} = e.currentTarget;
         setInputItems((prevData) => ({
             ...prevData,
             [id] : value,
@@ -38,9 +39,11 @@ function Servicecenter() {
     };
     const isFormValid = () => {
         return inputItem.shopname && 
-        inputItem.shopPhone && inputItem.reason;
+        inputItem.shopPhone && inputItem.reason && inputItem.sector;
     }
     const [sectors, setSectors] = useState(null);
+
+
     const [sector, setSector] = useState(null);
     const [address, setAddress] = useState(null);
     const [zipcode,setZipcode] = useState(null);
@@ -60,7 +63,7 @@ function Servicecenter() {
     const formData = new FormData();
 
     useEffect(() => {
-        fetch()
+        fetch('http://localhost:8080/api/v1/sector/')
             .then(result => result.json())
             .then(json => setSectors(json));
     },[]);
@@ -84,7 +87,7 @@ function Servicecenter() {
         setEndTime(newValue);
     };
     const handleChange = (e) => {
-        setSector(e.target.value);
+        setSector(e.currentTarget.value);
     }
     const formatTime = (time) => {
         return time.format('HH:mm');
@@ -97,8 +100,8 @@ function Servicecenter() {
         });
         setPreviews(previews);
     }
-    function submit(event) {
-        event.preventDefault();
+    function submit(e) {
+        e.preventDefault();
         alert(sector);
         formData.append('name',nameInput.current.value);
         formData.append('address',address);
@@ -108,7 +111,7 @@ function Servicecenter() {
         formData.append('businessHours', `${formatTime(startTime)} - ${formatTime(endTime)}`);
         selectedFiles.forEach(file => formData.append('files',file));
 
-        fetch(`http://localhost:8080/api/v1/sector/`, {
+        fetch(`http://localhost:8080/api/v1/`, {
             method : "POST",
             headers : {
                 "Authorization" : "Bearer " + sessionStorage.getItem("atk")
@@ -148,7 +151,6 @@ function Servicecenter() {
                 {/* <Box component="form" noValidate sx={{mt:1,ml:5}} fullWidth> */}
                     <TextField
                         margin="normal"
-                        required
                         fullWidth
                         id="shopname"
                         label="상호명"
@@ -164,7 +166,10 @@ function Servicecenter() {
                             id="sector"
                             value={inputItem.sector}
                             label="업종 선택"
-                            onChange={handleChange}
+                            onChange={()=>{
+                                handleChange();
+                                handleInput();
+                            }}
                             fullWidth
                         >
                             {sectors && sectors.map((sector)=>(
