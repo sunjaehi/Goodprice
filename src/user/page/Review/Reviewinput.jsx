@@ -51,14 +51,16 @@ function Reviewinput() {
     };
 
     const onChangeFile = (event) => {
-        let files = Array.from(event.target.files);
-        setSelectedFiles(files);
-
-        const previews = files.map(file => {
-            return URL.createObjectURL(file);
-        });
-        setPreviews(previews);
-    };
+        let newFiles = Array.from(event.target.files);
+        setSelectedFiles(prevFiles => [...prevFiles, ...newFiles]);
+        
+        const newPreviews = newFiles.map(file=>URL.createObjectURL(file));
+        setPreviews(prevPreviews =>[...prevPreviews, ...newPreviews]);
+    }
+    const removeImage = (index) => {
+        setSelectedFiles(prevFiles => prevFiles.filter((_, i) => i !==index));
+        setPreviews(prevPreviews => prevPreviews.filter((_,i) => i !==index));                                                          
+    }
 
     return (
         <form onSubmit={reviewSubmit}>
@@ -104,14 +106,24 @@ function Reviewinput() {
                     }}
                     onClick={()=>imageInput.current.click()}
                 >이미지 추가</Button>
-                <div className="preview">
+                <div className="preview" style={{display:'flex', flexWrap:'wrap', marginTop:'10px'}}>
                     {previews.map((preview, index) => (
-                        <img
-                            key={index}
-                            alt="미리보기 제공 불가"
-                            src={preview}
-                            style={{ width: '100px', height: '100px', objectFit: 'cover', margin: '10px' }}
-                        />
+                        <div key={index} style={{position:'relative', margin:'10px'}}>
+                            <img
+                                //key={index}
+                                alt="미리보기 제공 불가"
+                                src={preview}
+                                style={{ width: '100px', height: '100px', objectFit: 'cover', margin: '10px' }}
+                            />
+                            <Button
+                                variant="contained"
+                                color="eror"
+                                onClick={() => removeImage(index)}
+                                style={{position:'absolute', top:'5px', right:'5px', minwidth:'30px', minheight:'30px',pading:'5px'}}
+                            >
+                                X
+                            </Button>
+                        </div>
                     ))}
                 </div>
                 <Box
