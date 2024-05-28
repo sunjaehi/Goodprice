@@ -25,13 +25,15 @@ import Shopmanage from './admin/component/Shopmanage';
 import Reviewinput from './user/page/Review/Reviewinput';
 import Proposalmanage from './admin/page/Proposalmanage';
 import Registershop from './admin/page/Registershop';
+import NoticeTable from './admin/section/NoticeTable';
+import NoticeManage from './admin/page/NoticeManage';
+import NoticeDetail from './user/page/Notice/NoticeDetail';
 
 
 function App() {
   return (
     <BrowserRouter>
       <Header />
-      <Servicecenter />
       <Routes>
         <Route path='/' element={<Mainpage />}></Route>
         <Route path="/Register" element={<Register />}></Route>
@@ -41,6 +43,7 @@ function App() {
 
         <Route path="/Login" element={<Login />}></Route>
         <Route path="/Notice" element={<Notice />}></Route>
+        <Route path="/NoticeDetail" element={<NoticeDetail />}></Route>
         <Route path="/Benefit" element={<Benefit />}></Route>
         <Route path="/Search" element={<Search />}></Route>
         <Route path="/Myregion" element={<Myregion />}></Route>
@@ -55,7 +58,8 @@ function App() {
         <Route path="/Registershop" element={<Registershop />}></Route>
         <Route path="/Mainadmin" element={<Mainadmin />}></Route>
         <Route path="/NoticeInput" element={<NoticeInput />}></Route>
-        <Route path="/Shopmanage" element={<Shopmanage />}></Route>
+        <Route path="/Shopmanage/:shopId" element={<Shopmanage />}></Route>
+        <Route path="/Noticemanage" element={<NoticeManage />}></Route>
         <Route path="/Shoptable" element={<Shoptable />}></Route>
       </Routes>
     </BrowserRouter >
