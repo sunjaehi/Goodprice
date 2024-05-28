@@ -35,7 +35,7 @@ export default function Shoptable() {
     }
 
     const handleRowClick = (shopId) => {
-        navigate(`/manageShop/${shopId}`);
+        navigate(`/shopManage/${shopId}`);
     };
     const handleChangePage = (event, newPage) => {
         fetch(`http://localhost:8080/api/v1/shop/list?page=${newPage}`)
