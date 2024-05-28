@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import FormGroup from '@mui/material/FormGroup';
 import TextField from '@mui/material/TextField';
 import FormLabel from "@mui/material/FormLabel";
@@ -18,6 +18,14 @@ function Reviewinput() {
     const { shopId } = useParams();
     const navigate = useNavigate();
     const formData = new FormData();
+
+    useEffect(() => {
+        const atk = sessionStorage.getItem('atk');
+        if (atk === null) {
+            alert('로그인 후 리뷰를 작성할 수 있습니다');
+            navigate(-1);
+        }
+    }, [])
 
     const reviewSubmit = (e) => {
         e.preventDefault();
