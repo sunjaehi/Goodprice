@@ -57,13 +57,10 @@ export default function NoticeTable() {
             width: "85%"
         }}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" mt={3} mr={3}>
-                <Typography variant="h4">가게 관리</Typography>
+                <Typography variant="h4">공지사항 관리</Typography>
                 <Stack direction="row" justifyContent="flex-end" spacing={2}>
-                    <Button variant="contained" color="inherit" onClick={navigateToRegistershop}>
-                        신규 가게 등록
-                    </Button>
-                    <Button variant="conptained" color="inherit" onClick={navigateToProposalmanage}>
-                        등록 요청 관리
+                    <Button variant="contained" color="inherit" onClick={() => navigate('/NoticeInput')}>
+                        공지사항 등록
                     </Button>
                 </Stack>
             </Stack>
