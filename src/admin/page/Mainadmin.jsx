@@ -10,22 +10,18 @@ import Shopmanage from '../component/Shopmanage';
 
 
 export default function Mainadmin() {
-    // return (
-    //     <Box sx={{
-    //         display:"flex",
-    //         flexDirection:"row",
-    //         //justifyContent:"center"
-
-    //     }}>
-    //         <Adminlist />
-    //         <Shoptable />
-
-    //     </Box>
-        
-    // )
     return (
-        <>
-            <Shopmanage />
-        </>
+        <Box sx={{
+            display: "flex",
+            flexDirection: "row",
+        }}>
+            <Adminlist />
+            <Shoptable />
+        </Box>
     )
+    // return (
+    //     <>
+    //         <Shoptable />
+    //     </>
+    // )
 }
