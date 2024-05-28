@@ -14,6 +14,8 @@ function Mainpage() {
     const [bestShops, setBestShops] = useState(null);
     const [dailyShops, setDailyShops] = useState(null);
 
+    const defaultImage = '/images/default_storeImage.png';
+
     const navigate = useNavigate();
 
     const handleCardClick = (link) => {
@@ -60,19 +62,27 @@ function Mainpage() {
                             {newShopDatas.map((newShopData) => (
                                 <Card key={newShopData.shopId}>
                                     <CardActionArea onClick={() => handleCardClick(`/detail/${newShopData.shopId}`)}>
-                                        <CardMedia
-                                            style={{
-                                                width: '100%',
-                                                paddingTop: '100%',
-                                                position: 'relative',
-                                            }}
-                                            image={newShopData.imgUrl}
-                                            alt="상점 이미지"
-                                        />
-
+                                        <div style={{ width: '100%', paddingTop: '100%', position: 'relative' }}>
+                                            <img
+                                                src={newShopData.imgUrl}
+                                                alt="상점 이미지"
+                                                style={{
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    left: 0,
+                                                    objectFit: 'cover'
+                                                }}
+                                                onError={(e) => {
+                                                    e.target.onerror = null; // prevents looping
+                                                    e.target.src = defaultImage;
+                                                }}
+                                            />
+                                        </div>
                                         <CardContent>
-                                            <Typography variant='h5'>{newShopData.name}</Typography>
-                                            <Typography variant="body1">최고의 맛집</Typography>
+                                            <Typography variant="h5">{newShopData.name}</Typography>
+                                            <Typography variant="body1">{newShopData.address}</Typography>
                                         </CardContent>
                                     </CardActionArea>
                                 </Card>
