@@ -91,13 +91,18 @@ function Registershop() {
         return time.format('HH:mm');
     };
     const onChangeFile = (e) => {
-        let files = Array.from(e.target.files);
-        setSelectedFiles(files);
-        const previews = files.map(file => {
-            return URL.createObjectURL(file);
-        });
-        setPreviews(previews);
+        let newFiles = Array.from(e.target.files);
+        setSelectedFiles(prevFiles => [...prevFiles, ...newFiles]);
+
+        const newPreviews = newFiles.map(file => URL.createObjectURL(file));
+        setPreviews(prevPreviews => [...prevPreviews, ...newPreviews]);
     }
+
+    const removeImage = (index) => {
+        setSelectedFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
+        setPreviews(prevPreviews => prevPreviews.filter((_, i) => i !== index));
+    }
+
     function submit(event) {
         event.preventDefault();
         const businessHours = allday ? `00:00 - 24:00` : `${formatTime(startTime)} - ${formatTime(endTime)}`
@@ -336,14 +341,23 @@ function Registershop() {
                     onClick={() => imageInput.current.click()}
                 >사진 추가</Button>
             </Box>
-            <div className="preview">
+            <div className="preview" style={{ display: 'flex', flexWrap: 'wrap', marginTop: '10px' }}>
                 {previews.map((preview, index) => (
-                    <img
-                        key={index}
-                        alt="미리보기 제공 불가"
-                        src={preview}
-                        style={{ width: '100px', height: '100px', objectFit: 'cover', margin: '10px' }}
-                    />
+                    <div key={index} style={{ position: 'relative', margin: '10px' }}>
+                        <img
+                            alt="미리보기 제공 불가"
+                            src={preview}
+                            style={{ width: '100px', height: '100px', objectFit: 'cover', margin: '10px' }}
+                        />
+                        <Button
+                            variant="contained"
+                            color="error"
+                            onClick={() => removeImage(index)}
+                            style={{ position: 'absolute', top: '5px', right: '5px', minWidth: '30px', minHeight: '30px', padding: '5px' }}
+                        >
+                            X
+                        </Button>
+                    </div>
                 ))}
             </div>
         </Box>
