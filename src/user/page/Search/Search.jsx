@@ -59,8 +59,6 @@ function Search() {
         });
         const currentLat = map.getCenter().getLat();
         const currentLng = map.getCenter().getLng();
-        console.log(currentLat);
-        console.log(currentLng);
 
         //서버와 연결할 때에는 아래 주석을 해제하세요.
         fetch(`http://localhost:8080/api/v1/shop/?longitude=${currentLng}&latitude=${currentLat}&radius=1`)
@@ -222,7 +220,7 @@ function Search() {
                                             variant="body2"
                                             color="text.primary"
                                         >
-                                            {sectorSample[(Number(datas[0].sectorId)) - 1].name}
+                                            {sectorSample[(Number(data.sectorId)) - 1].name}
                                         </Typography>
                                     </>
                                 }
