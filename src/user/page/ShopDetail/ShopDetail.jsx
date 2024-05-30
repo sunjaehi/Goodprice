@@ -61,6 +61,9 @@ function ShopDetail() {
     const [value, setValue] = React.useState(0);
     const [isOpen, setIsOpen] = useState(false);
     const [hasRecommended, setHasRecommended] = useState(false);
+    const [latitude, setLatitude] = useState(null);
+    const [longitude, setLongitude] = useState(null);
+    const [stations, setStations] = useState(null);
     const atk = sessionStorage.getItem('atk');
 
     const handleChange = (event, newValue) => {
@@ -76,6 +79,13 @@ function ShopDetail() {
         isLoading: true,
 
     });
+
+    useEffect(() => {
+        fetch(`http://localhost:8080/api/v1/subway/?latitude=${latitude}&longitude=${longitude}`)
+            .then(response => response.json())
+            .then(json => { console.log(json); setStations(json) });
+    }, [latitude]);
+
     useEffect(() => {
         const atk = sessionStorage.getItem('atk');
         if (atk !== null) {
@@ -113,6 +123,8 @@ function ShopDetail() {
 
                 result = await fetch(`http://localhost:8080/api/v1/shopLocation/${shopId}`);
                 let json = await result.json();
+                setLatitude(json.latitude);
+                setLongitude(json.longitude);
                 setState({
                     center: {
                         lat: json.latitude,
@@ -229,6 +241,9 @@ function ShopDetail() {
                                         </MapMarker>
                                     )}
                                 </Map>
+                                {stations.length > 0 && stations.map(station => (
+                                    <p>{station.name}역에서 {parseInt(station.distance * 1000)}m</p>
+                                ))}
                             </CustomTabPanel>
                             <CustomTabPanel value={value} index={2}>
                                 <Typography>기타 정보</Typography>
