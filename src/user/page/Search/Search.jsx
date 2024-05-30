@@ -101,7 +101,7 @@ function Search() {
         <div className="wrap">
             <Button color="secondary" startIcon={<MyLocationIcon />} size="large" variant="outlined"
                 onClick={handleSubmit}
-                sx={{ borderRadius: 3, width: '600px' }}>현재 위치에서 가까운 가게 찾기</Button>
+                sx={{ borderRadius: 3, width: '600px', mt:1 }}>현재 위치에서 가까운 가게 찾기</Button>
             <Map
                 center={state.center}
                 isPanto={state.isPanto}
