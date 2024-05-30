@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './user/component/Header/Header';
+import Footer from './user/component/Footer/Footer';
 import Register from './user/page/Register/Register';
 import Login from './user/page/Login/Login';
 import Notice from './user/page/Notice/Notice';
@@ -28,12 +29,14 @@ import Registershop from './admin/page/Registershop';
 import NoticeTable from './admin/section/NoticeTable';
 import NoticeManage from './admin/page/NoticeManage';
 import NoticeDetail from './user/page/Notice/NoticeDetail';
+import Newsfeed from './user/page/Newsfeed/Newsfeed';
 
 
 function App() {
   return (
     <BrowserRouter>
       <Header />
+      
       <Routes>
         <Route path='/' element={<Mainpage />}></Route>
         <Route path="/Register" element={<Register />}></Route>
@@ -61,7 +64,9 @@ function App() {
         <Route path="/Shopmanage/:shopId" element={<Shopmanage />}></Route>
         <Route path="/Noticemanage" element={<NoticeManage />}></Route>
         <Route path="/Shoptable" element={<Shoptable />}></Route>
+        <Route path="/Newsfeed" element={<Newsfeed />}></Route>
       </Routes>
+      <Footer />
     </BrowserRouter >
   );
 }

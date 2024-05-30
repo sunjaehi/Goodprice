@@ -39,14 +39,14 @@ function Header () {
     const navigateToHome = () => {
         navigate("/");
     }
-    const navigateToSearch = () => {
-        navigate("/Search");
-    }
-    /*
-    const navigateToMypage = () => {
-        navigate("/Mypage");
-    }
-    */
+    // const navigateToSearch = () => {
+    //     navigate("/Search");
+    // }
+    // /*
+    // const navigateToMypage = () => {
+    //     navigate("/Mypage");
+    // }
+    // */
    const navigateToServicecenter = () => {
         navigate("/Servicecenter");
    }
@@ -66,9 +66,9 @@ function Header () {
                     <ListItemButton onClick={navigateToBenefit}>
                         <ListItemText primary="혜택" />       
                     </ListItemButton>
-                    <ListItemButton onClick={navigateToSearch}>
+                    {/* <ListItemButton onClick={navigateToSearch}>
                         <ListItemText primary="지역별로 찾기" />       
-                    </ListItemButton>
+                    </ListItemButton> */}
                 </List>
                 <Divider />
                 <List>
