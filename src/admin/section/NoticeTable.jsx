@@ -11,19 +11,19 @@ import Adminlist from './Adminlist';
 import TablePagination from '@mui/material/TablePagination';
 import { useNavigate } from "react-router-dom";
 
-export default function Shoptable() {
+export default function NoticeTable() {
     const navigate = useNavigate();
     const [response, setResponse] = useState(null);
-    const [shopData, setShopData] = useState(null);
+    const [notices, setNotices] = useState(null);
     useEffect(() => {
-        fetch('http://localhost:8080/api/v1/shop/list')
+        fetch('http://localhost:8080/api/v1/notice/')
             .then(result => result.json())
             .then(json => {
                 setResponse(json);
-                if (json && json.shops) {
-                    setShopData(json.shops);
+                if (json && json.notices) {
+                    setNotices(json.notices);
                 } else {
-                    setShopData([]);
+                    setNotices([]);
                 }
             })
     }, [])
@@ -43,9 +43,9 @@ export default function Shoptable() {
             .then(json => {
                 setResponse(json);
                 if (json && json.shops) {
-                    setShopData(json.shops);
+                    setNotices(json.shops);
                 } else {
-                    setShopData([]);
+                    setNotices([]);
                 }
             })
     };
@@ -57,13 +57,10 @@ export default function Shoptable() {
             width: "85%"
         }}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" mt={3} mr={3}>
-                <Typography variant="h4">가게 관리</Typography>
+                <Typography variant="h4">공지사항 관리</Typography>
                 <Stack direction="row" justifyContent="flex-end" spacing={2}>
-                    <Button variant="contained" color="inherit" onClick={navigateToRegistershop}>
-                        신규 가게 등록
-                    </Button>
-                    <Button variant="contained" color="inherit" onClick={navigateToProposalmanage}>
-                        등록 요청 관리
+                    <Button variant="contained" color="inherit" onClick={() => navigate('/NoticeInput')}>
+                        공지사항 등록
                     </Button>
                 </Stack>
             </Stack>
@@ -72,23 +69,21 @@ export default function Shoptable() {
                     <Table width="85%" sx={{ minWidth: 650, mr: "10px" }} aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <TableCell>가게 ID</TableCell>
-                                <TableCell align="right">상호명</TableCell>
-                                <TableCell align="right">상태</TableCell>
-                                <TableCell align="right">추천수</TableCell>
-                                <TableCell align="right">기준</TableCell>
+                                <TableCell>공지사항 ID</TableCell>
+                                <TableCell align="right">제목</TableCell>
+                                <TableCell align="right">조회수</TableCell>
+                                <TableCell align="right">업로드 일자</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {shopData && shopData.map((shop) => (
-                                <TableRow key={shop.id} onClick={() => handleRowClick(shop.id)} style={{ cursor: 'pointer' }}>
+                            {notices && notices.map((notice) => (
+                                <TableRow key={notice.id} onClick={() => handleRowClick(notice.id)} style={{ cursor: 'pointer' }}>
                                     <TableCell component="th" scope="row">
-                                        {shop.id}
+                                        {notice.id}
                                     </TableCell>
-                                    <TableCell align="right">{shop.name}</TableCell>
-                                    <TableCell align="right">{shop.isAvailable}</TableCell>
-                                    <TableCell align="right">{shop.recommend}</TableCell>
-                                    <TableCell align="right">{shop.updatedAt}</TableCell>
+                                    <TableCell align="right">{notice.title}</TableCell>
+                                    <TableCell align="right">{notice.viewCount}</TableCell>
+                                    <TableCell align="right">{notice.createdAt}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

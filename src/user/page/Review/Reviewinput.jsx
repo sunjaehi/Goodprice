@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import FormGroup from '@mui/material/FormGroup';
 import TextField from '@mui/material/TextField';
 import FormLabel from "@mui/material/FormLabel";
@@ -18,6 +18,14 @@ function Reviewinput() {
     const { shopId } = useParams();
     const navigate = useNavigate();
     const formData = new FormData();
+
+    useEffect(() => {
+        const atk = sessionStorage.getItem('atk');
+        if (atk === null) {
+            alert('로그인 후 리뷰를 작성할 수 있습니다');
+            navigate(-1);
+        }
+    }, [])
 
     const reviewSubmit = (e) => {
         e.preventDefault();
@@ -53,13 +61,13 @@ function Reviewinput() {
     const onChangeFile = (event) => {
         let newFiles = Array.from(event.target.files);
         setSelectedFiles(prevFiles => [...prevFiles, ...newFiles]);
-        
-        const newPreviews = newFiles.map(file=>URL.createObjectURL(file));
-        setPreviews(prevPreviews =>[...prevPreviews, ...newPreviews]);
+
+        const newPreviews = newFiles.map(file => URL.createObjectURL(file));
+        setPreviews(prevPreviews => [...prevPreviews, ...newPreviews]);
     }
     const removeImage = (index) => {
-        setSelectedFiles(prevFiles => prevFiles.filter((_, i) => i !==index));
-        setPreviews(prevPreviews => prevPreviews.filter((_,i) => i !==index));                                                          
+        setSelectedFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
+        setPreviews(prevPreviews => prevPreviews.filter((_, i) => i !== index));
     }
 
     return (
@@ -79,10 +87,10 @@ function Reviewinput() {
                     multiline
                     placeholder="리뷰를 작성해주세요"
                 />
-                <Box sx={{flexDirection:"row", display:"flex"}}>
-                <p id="star">별점을 남겨주세요</p>
-                <Rating sx={{margin:"10px"}} name="half-rating" defaultValue={0.0} precision={0.5} onChange={(event, newScore) => { setScore(newScore) }} />
-                {/* <label htmlFor="file">
+                <Box sx={{ flexDirection: "row", display: "flex" }}>
+                    <p id="star">별점을 남겨주세요</p>
+                    <Rating sx={{ margin: "10px" }} name="half-rating" defaultValue={0.0} precision={0.5} onChange={(event, newScore) => { setScore(newScore) }} />
+                    {/* <label htmlFor="file">
                     <div className="btn-upload"><AddIcon /></div>
                 </label> */}
 
@@ -98,17 +106,17 @@ function Reviewinput() {
                 />
                 <Button startIcon={<AddIcon />} variant="contained"
                     sx={{
-                        color:"black", backgroundColor:"lightgrey", 
-                        margin:"10px",
-                        ":hover" : {
-                            backgroundColor:"grey"
+                        color: "black", backgroundColor: "lightgrey",
+                        margin: "10px",
+                        ":hover": {
+                            backgroundColor: "grey"
                         }
                     }}
-                    onClick={()=>imageInput.current.click()}
+                    onClick={() => imageInput.current.click()}
                 >이미지 추가</Button>
-                <div className="preview" style={{display:'flex', flexWrap:'wrap', marginTop:'10px'}}>
+                <div className="preview" style={{ display: 'flex', flexWrap: 'wrap', marginTop: '10px' }}>
                     {previews.map((preview, index) => (
-                        <div key={index} style={{position:'relative', margin:'10px'}}>
+                        <div key={index} style={{ position: 'relative', margin: '10px' }}>
                             <img
                                 //key={index}
                                 alt="미리보기 제공 불가"
@@ -117,9 +125,9 @@ function Reviewinput() {
                             />
                             <Button
                                 variant="contained"
-                                color="eror"
+                                color="error"
                                 onClick={() => removeImage(index)}
-                                style={{position:'absolute', top:'5px', right:'5px', minwidth:'30px', minheight:'30px',pading:'5px'}}
+                                style={{ position: 'absolute', top: '5px', right: '5px', minwidth: '30px', minheight: '30px', pading: '5px' }}
                             >
                                 X
                             </Button>

@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Adminlist from "../section/Adminlist";
-import { Box, Stack, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, FormControlLabel, Checkbox, Grid } from "@mui/material";
+import { Box, Stack, TextField, Button, FormControlLabel, Checkbox, Grid } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
@@ -12,86 +12,8 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-
-function ProductDialog({ open, handleClose, onAddButtonClicked, nameInput, priceInput, onChangeFile }) {
-
-    const priceRef = useRef();
-    const nameRef = useRef();
-    return (
-        <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>상품 추가</DialogTitle>
-            <DialogContent>
-                <Stack direction="column" spacing={3}>
-                    <TextField label="상품명" fullWidth variant="outlined" margin="normal" inputRef={nameInput} />
-                    <TextField label="가격" fullWidth variant="outlined" margin="normal" inputRef={priceInput} />
-                    <input type="file" accept="image/*" onChange={onChangeFile} />
-                </Stack>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={onAddButtonClicked}>추가</Button>
-                <Button onClick={handleClose}>취소</Button>
-            </DialogActions>
-        </Dialog>
-    );
-}
-
-function ProductEditDialog({ product, editFormOpen, setEditFormOpen }) {
-    const [imageDeleted, setImageDeleted] = useState(false);
-    const newPriceRef = useRef();
-
-    const handleImageDelete = () => {
-        setImageDeleted(true);
-    };
-
-    const handleEdit = () => {
-        const formData = new FormData();
-        formData.append('id', product.id);
-        formData.append('attachmentId', product.attachmentId);
-        formData.append('price', newPriceRef.current.value);
-        formData.append('isDeleteImage', imageDeleted);
-        fetch('http://localhost:8080/api/v1/product/edit', {
-            method: "PATCH",
-            headers: {
-                "Authorization": `Bearer ${sessionStorage.getItem('atk')}`
-            },
-            body: formData
-        }).then(response => {
-            if (response.status === 200) {
-                alert('수정 완료!');
-                setEditFormOpen(false);
-            } else {
-                alert('수정 실패ㅜ');
-            }
-        })
-    };
-
-    return (
-        <Dialog open={editFormOpen}>
-            <DialogTitle>상품 수정</DialogTitle>
-            <DialogContent>
-                <Stack direction="column" spacing={3}>
-                    <TextField defaultValue={product.name} fullWidth variant="outlined" margin="normal" disabled />
-                    <TextField label="가격" fullWidth variant="outlined" margin="normal" defaultValue={product.price} inputRef={newPriceRef} />
-                    {product.imgUrl && !imageDeleted ? (
-                        <>
-                            <img src={product.imgUrl} alt="상품 이미지" />
-                            <Button onClick={handleImageDelete}>이미지 삭제</Button>
-                        </>
-                    ) : (
-                        <>
-                            <input type="file" accept="image/*" />
-                        </>
-                    )}
-                </Stack>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleEdit}>수정</Button>
-                <Button onClick={() => setEditFormOpen(false)}>취소</Button>
-            </DialogActions>
-        </Dialog>
-    );
-}
-
+import ProductDialog from "./ProductDialog";
+import ProductEditDialog from "./ProductEditDialog";
 
 export default function Shopmanage() {
     const navigate = useNavigate();
@@ -102,11 +24,10 @@ export default function Shopmanage() {
     const [endTime, setEndTime] = useState(null);
     const [is24Hours, setIs24Hours] = useState(false);
     const [open, setOpen] = useState(false);
-    const nameInput = useRef();
-    const priceInput = useRef();
     const [editFormOpen, setEditFormOpen] = useState(false);
+    const [selectedFiles, setSelectedFiles] = useState([]);
+    const [deletedFiles, setDeletedFiles] = useState([]);
     const defaultImageUrl = 'https://via.placeholder.com/150';
-
 
     function parseTimeString(timeString) {
         if (timeString === null)
@@ -162,37 +83,6 @@ export default function Shopmanage() {
         setOpen(true);
     }
 
-    const [selectedFiles, setSelectedFiles] = useState([]);
-    const onChangeFile = (e) => {
-        let files = Array.from(e.target.files);
-        setSelectedFiles(files);
-        const previews = files.map(file => {
-            return URL.createObjectURL(file);
-        });
-    }
-
-    const handleAddButtonClicked = async (e) => {
-        const formData = new FormData();
-        formData.append('shopId', shopId);
-        formData.append('name', nameInput.current.value);
-        formData.append('price', priceInput.current.value);
-        selectedFiles.forEach(file => formData.append('files', file));
-
-        const result = await fetch('http://localhost:8080/api/v1/product/new',
-            {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${sessionStorage.getItem('atk')}`
-                },
-                body: formData,
-            }
-        )
-        if (result.status === 201) {
-            alert('등록 성공!');
-            setOpen(false);
-        }
-    }
-
     const onFormChange = (e) => {
         setShopInfo({ ...shopInfo, [e.target.name]: e.target.value });
     }
@@ -209,6 +99,67 @@ export default function Shopmanage() {
         setEditFormOpen(null);
     };
 
+    const deleteProduct = (id) => {
+        fetch(`http://localhost:8080/api/v1/product/delete/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${sessionStorage.getItem("atk")}`
+            }
+        })
+            .then(response => {
+                if (response.status === 200) {
+                    alert('삭제 성공!');
+                }
+            })
+    }
+
+    const onFileChange = (e) => {
+        let files = Array.from(e.target.files);
+        setSelectedFiles(prevFiles => [...prevFiles, ...files]); // 새로운 파일들을 기존 파일들과 합침
+    }
+
+    const removeSelectedFile = (file) => {
+        setSelectedFiles(prevFiles => prevFiles.filter(f => f !== file)); // 선택한 파일 삭제
+    }
+
+    const removeExistingFile = (fileUrl) => {
+        setDeletedFiles([...deletedFiles, fileUrl]);
+
+        // 이미지 URL을 삭제하면서 해당 이미지를 미리보여주는 컴포넌트가 표시하지 않도록 처리
+        setShopInfo(prevShopInfo => ({
+            ...prevShopInfo,
+            shopImgUrls: prevShopInfo.shopImgUrls.filter(url => url !== fileUrl)
+        }));
+
+        // 선택한 파일 목록에서도 삭제
+        setSelectedFiles(prevFiles => prevFiles.filter(file => file !== fileUrl));
+    }
+
+    const handleShopUpdate = async () => {
+        const formData = new FormData();
+        formData.append('shopId', shopId)
+        formData.append('phone', shopInfo.phone);
+        formData.append('boast', shopInfo.boast);
+        formData.append('info', shopInfo.info);
+        formData.append('businessHours', is24Hours ? "00:00 - 24:00" : `${startTime.format('HH:mm')} - ${endTime.format('HH:mm')}`);
+        selectedFiles.forEach(file => formData.append('newFiles', file));
+        alert(selectedFiles.length)
+        deletedFiles.forEach(fileUrl => formData.append('deletedFiles', fileUrl));
+
+        const result = await fetch('http://localhost:8080/api/v1/shop/edit', {
+            method: "PATCH",
+            headers: {
+                "Authorization": `Bearer ${sessionStorage.getItem('atk')}`
+            },
+            body: formData,
+        });
+        if (result.status === 200) {
+            alert('수정 완료!');
+            // navigateToMainadmin();
+        } else {
+            alert('수정 실패');
+        }
+    }
 
     return (
         <>
@@ -288,22 +239,52 @@ export default function Shopmanage() {
                             onChange={onFormChange}
                         />
 
+                        <Typography variant="h7">기존 첨부 사진</Typography>
+                        <Grid container spacing={3}>
+                            {shopInfo.shopImgUrls && shopInfo.shopImgUrls.map((image, index) => (
+                                <Grid item xs={12} sm={6} md={4} key={index}>
+                                    {image && ( // 이미지 URL이 있는 경우에만 미리보기 표시
+                                        <Card>
+                                            <CardMedia
+                                                component="img"
+                                                style={{
+                                                    width: '100%'
+                                                }}
+                                                image={image}
+                                                title="shop image"
+                                            />
+                                            <CardActions>
+                                                {
+                                                    image.startsWith("http://sftc.seoul.go.kr/mulga/inc/img_view.jsp?") === false && (<Button size="small" onClick={() => removeExistingFile(image)}>삭제</Button>)
+                                                }
+                                            </CardActions>
+                                        </Card>
+                                    )}
+                                </Grid>
+                            ))}
+                        </Grid>
+                        <Typography variant="h7">새로운 사진 추가</Typography>
+                        <input type="file" accept="image/*" multiple onChange={onFileChange} />
+                        <Grid container spacing={3}>
+                            {selectedFiles.map((file, index) => (
+                                <Grid item xs={12} sm={6} md={4} key={index}>
+                                    <Card>
+                                        <CardMedia
+                                            component="img"
+                                            sx={{ height: 100 }}
+                                            image={URL.createObjectURL(file)}
+                                            title="new shop image"
+                                        />
+                                        <CardActions>
+                                            <Button size="small" onClick={() => removeSelectedFile(file)}>삭제</Button> {/* 선택한 파일 삭제 버튼 */}
+                                        </CardActions>
+                                    </Card>
+                                </Grid>
+                            ))}
+                        </Grid>
+
                         <Typography variant="h7">상품 목록</Typography>
                         <Button variant="outlined" onClick={handleOpen}>상품 추가</Button>
-                        <Dialog open={open} onClose={handleClose}>
-                            <DialogTitle>상품 추가</DialogTitle>
-                            <DialogContent>
-                                <Stack direction="column" spacing={3} style={{ marginTop: 8, marginBottom: 8 }}>
-                                    <TextField label="상품명" fullWidth variant="outlined" margin="normal" inputRef={nameInput} />
-                                    <TextField label="가격" fullWidth variant="outlined" margin="normal" inputRef={priceInput} />
-                                    <input type="file" accept="image/*" onChange={onChangeFile} />
-                                </Stack>
-                            </DialogContent>
-                            <DialogActions>
-                                <Button onClick={handleOpen}>추가</Button>
-                                <Button onClick={handleClose}>취소</Button>
-                            </DialogActions>
-                        </Dialog>
                         <Grid container spacing={3}>
                             {productInfo && productInfo.map(product => (
                                 <Grid item xs={12} sm={6} md={4} key={product.id}>
@@ -311,24 +292,27 @@ export default function Shopmanage() {
                                         <input type="hidden" value={product.id} />
                                         <CardMedia
                                             component="img"
-                                            sx={{ height: 100 }}
+                                            style={{
+                                                width: '100%',
+                                                position: 'relative',
+                                            }}
                                             image={product.imgUrl || defaultImageUrl}
                                             title="item"
                                             alt={product.imgUrl ? "" : "이미지 없음"}
                                         />
                                         <CardContent>
                                             <Typography variant="h6" component="div">{product.name}</Typography>
-                                            <TextField value={product.price} variant="outlined" sx={{ mt: "5px" }} fullWidth />
+                                            <Typography variant="body" >{product.price}원</Typography>
                                         </CardContent>
                                         <CardActions>
                                             <Button size="small" onClick={() => handleEditButtonClicked(product.id)}>수정</Button>
-                                            <Button size="small">삭제</Button>
+                                            <Button size="small" onClick={() => deleteProduct(product.id)}>삭제</Button>
                                         </CardActions>
                                     </Card>
                                     {editFormOpen === product.id && (
                                         <ProductEditDialog
                                             product={product}
-                                            editFormOpen={true} // 해당 상품의 ID가 editFormOpen과 일치할 때만 다이얼로그 열기
+                                            editFormOpen={true}
                                             setEditFormOpen={setEditFormOpen}
                                             handleCloseEditForm={handleCloseEditForm}
                                         />
@@ -342,11 +326,7 @@ export default function Shopmanage() {
                         <ProductDialog
                             open={open}
                             handleClose={handleClose}
-                            onAddButtonClicked={handleAddButtonClicked}
-                            nameInput={nameInput}
-                            priceInput={priceInput}
-                            onChangeFile={onChangeFile}
-                            isModify={false}
+                            shopId={shopId}
                         />
 
                         <Stack
@@ -355,7 +335,7 @@ export default function Shopmanage() {
                         >
                             <Button
                                 variant="contained"
-                                type="submit"
+                                onClick={handleShopUpdate}
                                 sx={{
                                     mr: '10px',
                                     borderRadius: "15px",

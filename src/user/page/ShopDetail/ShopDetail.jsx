@@ -60,6 +60,7 @@ function ShopDetail() {
     const [reviewSummary, setReviewSummary] = useState(null);
     const [value, setValue] = React.useState(0);
     const [isOpen, setIsOpen] = useState(false);
+    const [hasRecommended, setHasRecommended] = useState(false);
     const atk = sessionStorage.getItem('atk');
 
     const handleChange = (event, newValue) => {
@@ -76,13 +77,23 @@ function ShopDetail() {
 
     });
     useEffect(() => {
+        const atk = sessionStorage.getItem('atk');
+        if (atk !== null) {
+            fetch(`http://localhost:8080/api/v1/shopRecommend/check?shopId=${shopId}`, {
+                headers: {
+                    'Authorization': 'Bearer ' + sessionStorage.getItem("atk")
+                }
+            }).then(response => response.json())
+                .then(json => setHasRecommended(json));
+        }
+
+
         const fetchData = async () => {
             try {
                 let result = await fetch(`http://localhost:8080/api/v1/shop/${shopId}`);
                 if (result.status === 200) {
                     const json = await result.json();
                     setDatas(json);
-                    console.log(json);
 
                     if (json.businessHours != null && json.businessHours.length >= 5) {
                         const [start, end] = json.businessHours.split(' - ').map(time => {
@@ -127,8 +138,6 @@ function ShopDetail() {
     const mapRef = useRef();
 
     function recommend() {
-        console.log(sessionStorage.getItem("atk"));
-        const data = JSON.stringify()
         fetch("http://localhost:8080/api/v1/shopRecommend/register", {
             method: "POST",
             headers: {
@@ -139,6 +148,21 @@ function ShopDetail() {
                 shopId: shopId
             })
         });
+        setHasRecommended(true);
+    }
+
+    function unRecommend() {
+        fetch("http://localhost:8080/api/v1/shopRecommend/remove", {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8;',
+                'Authorization': 'Bearer ' + sessionStorage.getItem("atk")
+            },
+            body: JSON.stringify({
+                shopId: shopId
+            })
+        });
+        setHasRecommended(false);
     }
 
 
@@ -175,7 +199,7 @@ function ShopDetail() {
                                 <Typography variant="body2" color="text.secondary">{datas.phone.length < 5 ? "연락처 정보가 없습니다" : datas.phone}</Typography>
                                 <Typography>영업시간</Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                    {datas.businessHours && datas.businessHours.length < 5 ? "영업시간 정보가 없습니다." : datas.businessHours} (자세한 정보는 기타 정보를 참고하시길 바랍니다.)
+                                    {datas.businessHours && datas.businessHours.length < 5 ? "영업시간 정보가 없습니다." : datas.businessHours} <br />(자세한 시간 정보는 기타 정보를 참고하세요.)
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
                                     {datas.businessHours && datas.businessHours.length >= 5 && isOpen ? "영업중입니다" : (datas.businessHours && "영업중이 아닙니다 ")}
@@ -189,9 +213,7 @@ function ShopDetail() {
                                     isPanto={state.isPanto}
                                     style={{
                                         width: "100%",
-                                        height: "450px",
-                                        marginBottom: "10px",
-                                        marginTop: "20px"
+                                        height: "500px",
                                     }}
                                     level={level}
                                     ref={mapRef}
@@ -216,7 +238,7 @@ function ShopDetail() {
                             </CustomTabPanel>
                         </CardContent>
                         <CardActions>
-                            <Button size="small" onClick={recommend} disabled={atk === null}>추천</Button>
+                            <Button size="small" onClick={hasRecommended ? unRecommend : recommend} disabled={atk === null}>{hasRecommended ? "추천 해제" : "추천"}</Button>
                             <Button size="small" disabled={atk === null}>관심 가게 목록에 추가</Button>
                         </CardActions>
                     </Card>
