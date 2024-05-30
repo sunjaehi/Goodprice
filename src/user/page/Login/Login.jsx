@@ -15,6 +15,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
 import {useDispatch} from 'react-redux';
 import base64 from 'base-64';
+import { Snackbar, Alert } from "@mui/material";
 import sessionStorage from "redux-persist/es/storage/session";
 
 const defaultTheme = createTheme();
@@ -26,6 +27,24 @@ function Login(props) {
     const [userEmail, setUseremail] = useState('');
     const [userPw, setUserpw] = useState('');
     const [loginCheck, setLoginCheck] = useState(false);
+
+    const [showSnackbar, setShowSnackbar] = useState(false);
+    const handleClick = () => {
+        setShowSnackbar(true);
+    };
+    const handleClose = (event) => {
+        setShowSnackbar(false);
+    };
+    const CustomSnackbar = (props) => (
+        <Snackbar
+            autoHideDuration={6000}
+            open={showSnackbar}
+            onClose={handleClose}
+            anchorOrigin={{horizontal:'center', vertical:'top'}}
+            children={props.children}
+        ></Snackbar>
+    )
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -61,12 +80,9 @@ function Login(props) {
             sessionStorage.setItem("role", decoded.auth);
             sessionStorage.setItem("atk",atk);
             
-            alert('로그인 성공!');
             navigate("/");
         } else if(response.status === 401) {
-            alert(
-                '로그인에 실패했어요. 아이디와 패스워드를 확인하세요'
-            );
+            handleClick();
             setLoginCheck(true);
         }else{
             alert('서버 오류. 나중에 시도하시오');
@@ -145,6 +161,11 @@ checkToken = () => {
                         >
                             로그인
                         </Button>
+                        {showSnackbar && (
+                            <CustomSnackbar>
+                                <Alert severity="error">로그인에 실패했습니다.</Alert>
+                            </CustomSnackbar>
+                        )}
                         <Grid container>
                             <Grid item xs>
                                 <Link href="/Findpassword" variant="body2">
