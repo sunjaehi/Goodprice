@@ -5,9 +5,6 @@ import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import OtherHousesOutlinedIcon from '@mui/icons-material/OtherHousesOutlined';
 import FeedOutlinedIcon from '@mui/icons-material/FeedOutlined';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import CssBaseline from "@mui/material/CssBaseline";
 import { useNavigate } from "react-router-dom";
 
 export default function Footer() {
