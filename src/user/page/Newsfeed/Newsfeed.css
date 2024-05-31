@@ -1,0 +1,24 @@
+.collapsible {
+    background-color: #f1f1f1;
+    color: #444;
+    cursor: pointer;
+    padding: auto;
+    width: 100%;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+.collapsible:hover {
+    background-color: #ddd;
+
+}
+.content {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    background-color: #f9f9f9;
+    transition: max-height 0.3s ease;
+}
+.content.show {
+    display: block;
+    
+}
