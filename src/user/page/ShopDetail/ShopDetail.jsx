@@ -61,6 +61,7 @@ function ShopDetail() {
     const [value, setValue] = React.useState(0);
     const [isOpen, setIsOpen] = useState(false);
     const [hasRecommended, setHasRecommended] = useState(false);
+    const [hasMarked, setHasMarked] = useState(false);
     const [latitude, setLatitude] = useState(null);
     const [longitude, setLongitude] = useState(null);
     const [stations, setStations] = useState(null);
@@ -95,6 +96,13 @@ function ShopDetail() {
                 }
             }).then(response => response.json())
                 .then(json => setHasRecommended(json));
+
+            fetch(`http://localhost:8080/api/v1/shopmark/check?shopId=${shopId}`, {
+                headers: {
+                    'Authorization': 'Bearer ' + sessionStorage.getItem("atk")
+                }
+            }).then(response => response.json())
+                .then(json => setHasMarked(json));
         }
 
 
@@ -177,6 +185,29 @@ function ShopDetail() {
         setHasRecommended(false);
     }
 
+    function addShopMark() {
+        fetch('http://localhost:8080/api/v1/shopmark/', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + sessionStorage.getItem('atk')
+            },
+            body: JSON.stringify({ shopId: shopId })
+        });
+        setHasMarked(true);
+    }
+
+    function deleteShopMark() {
+        fetch('http://localhost:8080/api/v1/shopmark/', {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + sessionStorage.getItem('atk')
+            },
+            body: JSON.stringify({ shopId: shopId })
+        })
+        setHasMarked(false);
+    }
 
     return (
         <>
@@ -254,7 +285,7 @@ function ShopDetail() {
                         </CardContent>
                         <CardActions>
                             <Button size="small" onClick={hasRecommended ? unRecommend : recommend} disabled={atk === null}>{hasRecommended ? "추천 해제" : "추천"}</Button>
-                            <Button size="small" disabled={atk === null}>관심 가게 목록에 추가</Button>
+                            <Button size="small" onClick={hasMarked ? deleteShopMark : addShopMark} disabled={atk === null} >{hasMarked ? "관심 가게 추가" : "관심 가게 해제"}</Button>
                         </CardActions>
                     </Card>
                     }
