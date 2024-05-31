@@ -12,8 +12,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import AddBusinessOutlinedIcon from '@mui/icons-material/AddBusinessOutlined';
 import { useDaumPostcodePopup } from "react-daum-postcode";
 import { postcodeScriptUrl } from "react-daum-postcode/lib/loadPostcode";
-import dayjs from "dayjs";
-import AddIcon from '@mui/icons-material/Add';
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TimePicker } from "@mui/x-date-pickers";
@@ -21,104 +19,90 @@ import { TimePicker } from "@mui/x-date-pickers";
 function Servicecenter() {
     const navigate = useNavigate();
     const [inputItem, setInputItems] = useState({
-        shopname : '',
-        sector : '',
-        postcode : '',
-        detailAddress : '',
-        shopPhone : '',
-        reason : ''
+        shopName: '',
+        shopAddress: '',
+        shopPhone: '',
+        info: '',
+        reason: '',
+        sectorId: '',
+        zipcode: ''
     });
-    
-    //상태가 변경될 때 호출되는
-    const handleInput = (e) => {
-        const {id, value} = e.currentTarget;
-        setInputItems((prevData) => ({
-            ...prevData,
-            [id] : value,
-        }));
-    };
-    const isFormValid = () => {
-        return inputItem.shopname && 
-        inputItem.shopPhone && inputItem.reason && inputItem.sector;
-    }
+
     const [sectors, setSectors] = useState(null);
 
-
     const [sector, setSector] = useState(null);
-    const [address, setAddress] = useState(null);
-    const [zipcode,setZipcode] = useState(null);
-    const [regionId, setRegionId] = useState(null);
-
-    const [startTime, setStartTime] = useState(dayjs('2024-05-20T09:00'));
-    const [endTime, setEndTime] = useState(dayjs());
-    const nameInput = useRef(null);
-    const phoneInput = useRef(null);
-    const boastInput = useRef(null);
-    //const infoInput = useRef(null);
-    const imageInput = useRef(null);
-
-    const [selectedFiles, setSelectedFiles] = useState([]);
-    const [previews, setPreviews] = useState([]);
-
-    const formData = new FormData();
+    const [isFormValid, setIsFormValid] = useState(false);
+    const [startTime, setStartTime] = useState(null);
+    const [endTime, setEndTime] = useState(null);
 
     useEffect(() => {
+        const atk = sessionStorage.getItem('atk')
+        if (atk === null) {
+            alert('로그인이 필요합니다!');
+            navigate(-1);
+        }
         fetch('http://localhost:8080/api/v1/sector/')
             .then(result => result.json())
             .then(json => setSectors(json));
-    },[]);
+    }, []);
+
+    useEffect(() => checkValidation(), [startTime]);
+    useEffect(() => checkValidation(), [endTime]);
 
     const open = useDaumPostcodePopup(postcodeScriptUrl);
     const handleComplete = (data) => {
         if (data.addressType === 'R') {
-            console.log(data);
-            setAddress(data.roadAddress);
-            setZipcode(data.zonecode);
-            setRegionId(data.sigunguCode);
+            setInputItems((prev) => ({
+                ...prev,
+                shopAddress: data.roadAddress,
+                zipcode: data.zonecode
+            }));
         }
+        checkValidation();
+    };
+
+    const checkValidation = () => {
+        setIsFormValid(
+            Object.values(inputItem).every(value => value.trim() !== '')
+            && startTime !== null
+            && endTime !== null
+        );
     }
+
+    const handleInput = (e) => {
+        const { id, value } = e.target;
+        setInputItems((prevData) => ({
+            ...prevData,
+            [id]: value,
+        }));
+        checkValidation();
+    };
+
     const handleSearch = () => {
-        open({ onComplete: handleComplete});
+        open({ onComplete: handleComplete });
     }
-    const handleStartTimeChange = (newValue) => {
-        setStartTime(newValue);
-    };
-    const handleEndTimeChange = (newValue) => {
-        setEndTime(newValue);
-    };
-    const handleChange = (e) => {
-        setSector(e.currentTarget.value);
-    }
+
     const formatTime = (time) => {
         return time.format('HH:mm');
     };
-    const onChangeFile = (e) => {
-        let files = Array.from(e.target.files);
-        setSelectedFiles(files);
-        const previews = files.map(file => {
-            return URL.createObjectURL(file);
-        });
-        setPreviews(previews);
-    }
+
     function submit(e) {
         e.preventDefault();
-        alert(sector);
-        formData.append('name',nameInput.current.value);
-        formData.append('address',address);
-        formData.append('phone',phoneInput.current.value);
-        formData.append('boast',boastInput.current.value);
-        //formData.append('info',infoInput.current.value);
-        formData.append('businessHours', `${formatTime(startTime)} - ${formatTime(endTime)}`);
-        selectedFiles.forEach(file => formData.append('files',file));
-
-        fetch(`http://localhost:8080/api/v1/`, {
-            method : "POST",
-            headers : {
-                "Authorization" : "Bearer " + sessionStorage.getItem("atk")
+        console.log(inputItem);
+        const businessHours = `${formatTime(startTime)} - ${formatTime(endTime)}`;
+        const bodyString = JSON.stringify({
+            ...inputItem,
+            businessHours: businessHours
+        });
+        fetch(`http://localhost:8080/api/v1/proposal/register`, {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + sessionStorage.getItem("atk"),
+                'Content-Type': 'application/json; charset=utf-8;'
             },
-            body : formData,
+            body: bodyString,
         }).then(response => {
-            if (response.status === 200) {
+            if (response.status === 201) {
                 alert("등록 성공");
                 navigate('/');
             }
@@ -128,106 +112,97 @@ function Servicecenter() {
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
-            <Box    
+            <Box
                 sx={{
-                    marginTop:8,
-                    display:'flex',
-                    flexDirection:'column',
-                    //alignItems:'center',
-                    
+                    marginTop: 8,
+                    display: 'flex',
+                    flexDirection: 'column',
                 }}
                 fullWidth
                 gap={1}
             >
-                <Box sx={{display:'flex', alignItems:'center', flexDirection:'column'}}>
-                <Avatar sx={{m:1, bgcolor:'secondary.main'}}>
-                    <AddBusinessOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    새로운 가게 등록 요청
-                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                        <AddBusinessOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        새로운 가게 등록 요청
+                    </Typography>
                 </Box>
-                
-                {/* <Box component="form" noValidate sx={{mt:1,ml:5}} fullWidth> */}
-                    <TextField
-                        margin="normal"
+
+                <TextField
+                    margin="normal"
+                    fullWidth
+                    id="shopName"
+                    label="상호명"
+                    value={inputItem.shopName}
+                    onChange={handleInput}
+                />
+                <FormControl>
+                    <InputLabel id="select-label">업종 선택</InputLabel>
+                    <Select
+                        labelId="sector-label"
+                        id="sectorId"
+                        value={sector}
+                        label="업종 선택"
+                        onChange={(e) => { setSector(e.target.value); setInputItems(prev => ({ ...prev, sectorId: e.target.value })) }}
                         fullWidth
-                        id="shopname"
-                        label="상호명"
-                        //variant="standard"
-                        inputRef={nameInput}
-                        value={inputItem.shopname}
-                        onChange={handleInput}
-                    />
-                    <FormControl>
-                        <InputLabel id="select-label">업종 선택</InputLabel>
-                        <Select
-                            labelId="sector-label"
-                            id="sector"
-                            value={inputItem.sector}
-                            label="업종 선택"
-                            onChange={()=>{
-                                handleChange();
-                                handleInput();
-                            }}
-                            fullWidth
-                        >
-                            {sectors && sectors.map((sector)=>(
-                                <MenuItem
-                                    value={`${sector.id}`}
-                                >{`${sector.name}`}</MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                    
-                {/* </Box> */}
+                    >
+                        {sectors && sectors.map((sector) => (
+                            <MenuItem
+                                value={`${sector.id}`}
+                            >{`${sector.name}`}</MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+
                 <Box
                     sx={{
-                        display:"flex",
-                        flexDirection:"row",
-                        justifyContent:"flex-start"
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "flex-start"
                     }}
                     gap={2}
                     fullWidth
                 >
-                    
+
                     <TextField
                         id="postcode"
                         placeholder="우편번호"
                         multiline
-                        inputProps={{readOnly:true, disableUnderline:true}}
-                        value={zipcode}
-                        sx={{width:"50%",
-                                                    
+                        inputProps={{ readOnly: true, disableUnderline: true }}
+                        value={inputItem.zipcode}
+                        sx={{
+                            width: "50%",
                         }}
-                        // onChange={handleInput}
+                        onChange={handleInput}
                     />
-                    <Button 
+                    <Button
                         onClick={handleSearch}
                         variant="contained"
-                        sx={{width:"50%",borderRadius:"10px",
-                        color:"white",
-                        bgcolor:"blueviolet",
-                        ":hover" : {
-                            bgcolor:"lavender"
-                        }
+                        sx={{
+                            width: "50%", borderRadius: "10px",
+                            color: "white",
+                            bgcolor: "blueviolet",
+                            ":hover": {
+                                bgcolor: "lavender"
+                            }
                         }}
                     >우편번호 찾기</Button>
                 </Box>
                 <TextField
                     id="detailAddress"
                     placeholder="가게 주소"
-                    inputProps={{readOnly:true, disableUnderline:true}}
+                    inputProps={{ readOnly: true, disableUnderline: true }}
                     multiline
-                    value={address}
+                    value={inputItem.shopAddress}
                     fullWidth
-                    // onChange={handleInput}
+                    onChange={handleInput}
                 />
                 <TextField
                     id="shopPhone"
                     label="연락처"
                     multiline
-                    inputRef={phoneInput}
                     fullWidth
                     value={inputItem.shopPhone}
                     onChange={handleInput}
@@ -237,95 +212,47 @@ function Servicecenter() {
                         <TimePicker
                             label="시작시간"
                             defaultValue={startTime}
-                            onChange={handleStartTimeChange}
-                            
-                
+                            onChange={(newValue) => setStartTime(newValue)}
                         />
                         <TimePicker
                             label="종료시간"
                             defaultValue={endTime}
-                            onChange={handleEndTimeChange}
-                            //sx={{width:'50%'}}
+                            onChange={(newValue) => setEndTime(newValue)}
                             fullWidth
                         />
                     </Stack>
-                    <div>
-                        {`${formatTime(startTime)} - ${formatTime(endTime)}`}
-                    </div>
                 </LocalizationProvider>
                 <TextField
                     id="reason"
                     label="이유"
                     multiline
                     rows={3}
-                    inputRef={boastInput}
                     fullWidth
                     value={inputItem.reason}
                     onChange={handleInput}
                 />
-                {/* <TextField
+                <TextField
                     id="info"
                     label="기타정보"
                     multiline
-                    inputRef={infoInput}
+                    value={inputItem.info}
+                    onChange={handleInput}
                     fullWidth
-                /> */}
-                <Box
-                display="flex"
-                mt={1}
-            >
-                <input
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    ref={imageInput}
-                    id="file"
-                    onChange={onChangeFile}
-                    style={{display:"none"}}
                 />
-                <Button startIcon={<AddIcon />} variant="contained"
-                    sx={{
-                        color:"black", backgroundColor:"lightgrey", borderRadius:"10px", mt:"10px",ml:"5px",
-                        ":hover" : {
-                            backgroundColor:"grey"
-                        }
-                    }}
-                    onClick={()=>imageInput.current.click()}
-                >이미지 추가</Button>
-            </Box>
-            <div className="preview">
-                {previews.map((preview,index)=>(
-                    <img
-                        key={index}
-                        alt="미리보기 제공 불가"
-                        src={preview}
-                        style={{width:'100px', height:'100px',objectFit:'cover',margin:'10px'}}
-                    />
-                ))}
-            </div>
                 <Box
                     flexDirection="row-reverse"
                     gap={2}
                     display="flex"
                 >
-                    <Button 
-                        variant="contained"
-                        color="secondary"
-                        type="submit"
-                        sx={{mr:'5px'}}
+                    <Button variant="contained" color="secondary"
+                        sx={{ mr: '5px' }}
                         onClick={submit}
-                        disabled={!isFormValid()}
+                        disabled={!isFormValid}
                     >등록</Button>
-                    <Button
-                        variant="contained"
-                    >취소</Button>
+                    <Button variant="contained">취소</Button>
                 </Box>
             </Box>
-            
-        </Container>
-        // </Box>
-
-        
+        </Container >
     );
 }
 export default Servicecenter;
