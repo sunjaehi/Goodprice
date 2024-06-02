@@ -1,81 +1,72 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import ReactLoading from 'react-loading';
-
-const LoaderWrap = styled.div`
-  width:100%;
-  height:80%;
-  display:flex;
-  justify-content:center;
-  text-align:center;
-  align-items:center;
-`;
-
-const ItemWrap = styled.div`
-  width:100%;
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  text-align:center;
-  align-items:center;
-
-  .Item {
-    width:350px;
-    height:300px;
-    display:flex;
-    flex-direction:column;
-    background-color:#fff;
-    margin:1rem;
-    box-shadow:rgba(100,100,111,0.2) 0px 7px 29px 0px;
-    border-radius:6px;
-  }
-`;
+import { Card, CardContent, Container, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import Footer from '../../component/Footer/Footer';
 
 function Newsfeed() {
-  const [itemList, setItemList] = useState([1,2,3,4,5,6,7,8,9,10]);
+  const [itemList, setItemList] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   const [target, setTarget] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const [page, setPage] = useState(0);
+  const [newsList, setNewsList] = useState([]);
+  useEffect(() => {
+    fetch(`http://localhost:8080/api/v1/shop-news/feed?page=${page}`, {
+      headers: {
+        "Authorization": "Bearer " + sessionStorage.getItem('atk')
+      }
+    })
+      .then(response => response.json())
+      .then(json => setNewsList(prev => prev.concat(json)));
+  }, [page])
+
   const onIntersect = async ([entry], observer) => {
     if (entry.isIntersecting && !isLoading) {
-        observer.unobserve(entry.target);
-        setIsLoading(true);
+      observer.unobserve(entry.target);
+      setIsLoading(true);
 
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        let Items = [1,2,3,4,5,6,7,8,9,10];
-        setItemList((itemLists) => itemLists.concat(Items));
-        setIsLoading(false);
-        observer.observe(entry.target);
-      }
-    };
-    useEffect(()=>{
-      let observer;
-      if (target) {
-        observer = new IntersectionObserver(onIntersect, {
-          threshold: 0.5,
-        });
-        observer.observe(target);
-      }
-      return () => observer && observer.disconnect();
-    },[target]);
-  
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      let Items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+      setItemList((itemLists) => itemLists.concat(Items));
+      setPage((prev) => prev + 1);
+      setIsLoading(false);
+      observer.observe(entry.target);
+    }
+  };
+  useEffect(() => {
+    let observer;
+    if (target) {
+      observer = new IntersectionObserver(onIntersect, {
+        threshold: 0.8,
+      });
+      observer.observe(target);
+    }
+    return () => observer && observer.disconnect();
+  }, [target]);
+
   return (
-    <div className='App'>
-      <ItemWrap>
-        {itemList.map((item,index)=> (
-          <div className='Item' key={index}>{index+1}</div>
+    <>
+      <Container maxWidth="sm">
+        {newsList && newsList.map((news, index) => (
+          <Card>
+            <CardContent>
+              <Typography variant="h6">{news.title}</Typography>
+              <Typography variant='body2'>{news.content}</Typography>
+            </CardContent>
+          </Card>
+
         ))}
-      </ItemWrap>
-      {isLoading ? (
-        <LoaderWrap>
+        {isLoading ? (
           <ReactLoading type="spin" color="#00008b" />
-        </LoaderWrap>
-      ) : (
-        ""
-      )}
-      <div ref={setTarget}></div>
-    </div>
+        ) : (
+          ""
+        )}
+        <div ref={setTarget}></div>
+      </Container>
+      <Footer />
+    </>
   );
 }
 export default Newsfeed;
