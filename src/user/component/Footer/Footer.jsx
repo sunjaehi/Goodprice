@@ -27,21 +27,25 @@ export default function Footer() {
 
     return (
         <div className="footer">
-            <BottomNavigation sx={{bgcolor:'mistyrose', height:'6vh',width:'100%', justifyContent:'space-between'}} value={value} onChange={handleChange} >
+            <BottomNavigation sx={{bgcolor:'mistyrose', height:'6vh',width:'100%', justifyContent:'space-between',
+                '&& .Mui-selected' : {
+                    color:'green'
+                }
+            }} value={value} onChange={handleChange} >
                 <BottomNavigationAction
-                    label="Feed"
+                    label="피드"
                     value="feed"
                     icon={<FeedOutlinedIcon />}
                     onClick={navigateToFeed}
                 />
                 <BottomNavigationAction
-                    label="Home"
+                    label="메인"
                     value="home"
                     icon={<OtherHousesOutlinedIcon />}
                     onClick={navigateToHome}
                 />
                 <BottomNavigationAction
-                    label="Nearby"
+                    label="내 주변"
                     value="nearby"
                     icon={<LocationOnIcon />}
                     onClick={navigateToSearch}
