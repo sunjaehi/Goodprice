@@ -36,4 +36,8 @@
     transform: rotate(360deg);
   }
 }
-
+@font-face {
+  font-family: "NanumGothicLight";
+  font-style: normal;
+  src: url("./fonts/NanumGothicLight.ttf");
+}
