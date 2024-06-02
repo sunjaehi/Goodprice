@@ -140,10 +140,10 @@ function Mainpage() {
                                     />
                                     <CardContent>
                                         <Typography gutterBottom variant="h6" component="div">
-                                            {bestShop.shopName}
+                                            {bestShop.name}
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary">
-                                            {bestShop.shopAddress}
+                                            {bestShop.address}
                                         </Typography>
                                     </CardContent>
                                 </CardActionArea>
