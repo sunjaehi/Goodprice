@@ -3,23 +3,17 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import store from '././user/redux/modules/Configstore';
-import { Provider } from 'react-redux';
-import { CookiesProvider } from 'react-cookie';
-import { persistStore } from 'redux-persist';
-import { PersistGate } from 'redux-persist/integration/react';
+import { ThemeProvider, createTheme } from '@mui/material';
 
-const persistors = persistStore(store);
+const theme=createTheme();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <CookiesProvider>
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistors}>
-        <App />
-      </PersistGate>
-    </Provider>
-  </CookiesProvider>
+  <React.StrictMode>
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
+  </React.StrictMode>
 );
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

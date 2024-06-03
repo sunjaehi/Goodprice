@@ -18,6 +18,9 @@ import { TimePicker } from "@mui/x-date-pickers";
 
 function Servicecenter() {
     const navigate = useNavigate();
+    const navigateToLogin = () => {
+        navigate("/Login");
+    }
     const [inputItem, setInputItems] = useState({
         shopName: '',
         shopAddress: '',
@@ -39,7 +42,7 @@ function Servicecenter() {
         const atk = sessionStorage.getItem('atk')
         if (atk === null) {
             alert('로그인이 필요합니다!');
-            navigate(-1);
+            navigateToLogin();
         }
         fetch('http://localhost:8080/api/v1/sector/')
             .then(result => result.json())

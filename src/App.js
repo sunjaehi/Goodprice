@@ -67,7 +67,6 @@ function App() {
         <Route path="/Shoptable" element={<Shoptable />}></Route>
         <Route path="/Newsfeed" element={<Newsfeed />}></Route>
       </Routes>
-      <Footer />
     </BrowserRouter >
   );
 }
