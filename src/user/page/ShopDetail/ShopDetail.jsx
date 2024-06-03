@@ -1,21 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Map, MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import { Chip, Container, ImageList, Paper, Rating, Tab, Tabs } from "@mui/material";
+import {
+    Card, CardActions, CardContent, Button, Typography, List, ListItem, ListItemText,
+    Chip, Container, ImageList, Paper, Rating, Tab, Tabs, Box
+} from '@mui/material';
 import Carousel from "react-material-ui-carousel";
 import { styled } from '@mui/material/styles';
 import { Link, useNavigate, useParams } from "react-router-dom";
-import Box from '@mui/material/Box';
 import PropTypes from 'prop-types';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-
 const { kakao } = window;
 const ImageContainer = styled('div')({
     width: '100%',
@@ -285,7 +278,7 @@ function ShopDetail() {
                         </CardContent>
                         <CardActions>
                             <Button size="small" onClick={hasRecommended ? unRecommend : recommend} disabled={atk === null}>{hasRecommended ? "추천 해제" : "추천"}</Button>
-                            <Button size="small" onClick={hasMarked ? deleteShopMark : addShopMark} disabled={atk === null} >{hasMarked ? "관심 가게 추가" : "관심 가게 해제"}</Button>
+                            <Button size="small" onClick={hasMarked ? deleteShopMark : addShopMark} disabled={atk === null} >{hasMarked ? "관심 가게 해제" : "관심 가게 추가"}</Button>
                         </CardActions>
                     </Card>
                     }

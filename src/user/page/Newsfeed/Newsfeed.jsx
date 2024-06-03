@@ -1,81 +1,85 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import ReactLoading from 'react-loading';
-
-const LoaderWrap = styled.div`
-  width:100%;
-  height:80%;
-  display:flex;
-  justify-content:center;
-  text-align:center;
-  align-items:center;
-`;
-
-const ItemWrap = styled.div`
-  width:100%;
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  text-align:center;
-  align-items:center;
-
-  .Item {
-    width:350px;
-    height:300px;
-    display:flex;
-    flex-direction:column;
-    background-color:#fff;
-    margin:1rem;
-    box-shadow:rgba(100,100,111,0.2) 0px 7px 29px 0px;
-    border-radius:6px;
-  }
-`;
+import { Card, CardContent, Container, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import Footer from '../../component/Footer/Footer';
 
 function Newsfeed() {
-  const [itemList, setItemList] = useState([1,2,3,4,5,6,7,8,9,10]);
   const [target, setTarget] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const onIntersect = async ([entry], observer) => {
-    if (entry.isIntersecting && !isLoading) {
-        observer.unobserve(entry.target);
-        setIsLoading(true);
+  const [page, setPage] = useState(0);
+  const [newsList, setNewsList] = useState([]);
+  const [newsResponse, setNewsResponse] = useState(null);
+  const [isLastPage, setIsLastPage] = useState(false);
 
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        let Items = [1,2,3,4,5,6,7,8,9,10];
-        setItemList((itemLists) => itemLists.concat(Items));
-        setIsLoading(false);
-        observer.observe(entry.target);
+  useEffect(() => {
+    if (isLastPage) return; // 마지막 페이지면 요청을 보내지 않음
+
+    fetch(`http://localhost:8080/api/v1/shop-news/feed?page=${page}`, {
+      headers: {
+        "Authorization": "Bearer " + sessionStorage.getItem('atk')
       }
-    };
-    useEffect(()=>{
-      let observer;
-      if (target) {
-        observer = new IntersectionObserver(onIntersect, {
-          threshold: 0.5,
-        });
-        observer.observe(target);
-      }
-      return () => observer && observer.disconnect();
-    },[target]);
-  
+    })
+      .then(response => response.json())
+      .then(json => {
+        setNewsResponse(json);
+        return json; // 다음 then 블록에서 json을 사용하기 위해 반환
+      })
+      .then(json => {
+        if (json && json.newsList) { // json과 json.newsList가 유효한지 확인
+          setNewsList(prev => prev.concat(json.newsList));
+          setIsLastPage(json.lastPage); // json.lastPage를 사용하여 isLastPage 설정
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching news:', error);
+      });
+  }, [page, isLastPage]);
+
+  const onIntersect = async ([entry], observer) => {
+    if (entry.isIntersecting && !isLoading && !isLastPage) {
+      observer.unobserve(entry.target);
+      setIsLoading(true);
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setPage((prev) => prev + 1);
+      setIsLoading(false);
+      observer.observe(entry.target);
+    }
+  };
+  useEffect(() => {
+    let observer;
+    if (target) {
+      observer = new IntersectionObserver(onIntersect, {
+        threshold: 0.8,
+      });
+      observer.observe(target);
+    }
+    return () => observer && observer.disconnect();
+  }, [target, newsResponse]);
+
   return (
-    <div className='App'>
-      <ItemWrap>
-        {itemList.map((item,index)=> (
-          <div className='Item' key={index}>{index+1}</div>
+    <>
+      <Container maxWidth="sm">
+        {newsList && newsList.map((news, index) => (
+          <Card key={index}>
+            <CardContent>
+              <Typography variant="h6">{news.title}</Typography>
+              <Typography variant='body2'>{news.content}</Typography>
+            </CardContent>
+          </Card>
         ))}
-      </ItemWrap>
-      {isLoading ? (
-        <LoaderWrap>
+        {isLoading && !isLastPage ? (
           <ReactLoading type="spin" color="#00008b" />
-        </LoaderWrap>
-      ) : (
-        ""
-      )}
-      <div ref={setTarget}></div>
-    </div>
+        ) : (
+          ""
+        )}
+        <div ref={setTarget}></div>
+      </Container>
+      <Footer />
+    </>
   );
 }
 export default Newsfeed;
