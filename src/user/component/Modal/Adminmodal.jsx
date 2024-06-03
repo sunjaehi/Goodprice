@@ -9,7 +9,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useNavigate } from "react-router-dom";
 import Stack from '@mui/material/Stack';
-import { useSelector } from "react-redux";
 
 const style = {
     position:'absolute',
@@ -23,7 +22,8 @@ const style = {
     p: 4,
      
 };
-//const data = useSelector(state.Member);
+
+
 function Mymodal() {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -65,8 +65,13 @@ function Mymodal() {
                     <Stack spacing={2} direction="column">
                         
                         <Button 
-                            color="secondary"
-                            variant="outlined" 
+                            sx={{bgcolor:'grey',
+                            color:'black',
+                            ":hover" : {
+                                bgcolor:"lightgray"
+                            }
+                        }}
+                            variant="contained" 
                             size="large" 
                             startIcon={<LockOutlinedIcon />}
                             onClick={logOut}
@@ -74,8 +79,13 @@ function Mymodal() {
                             로그아웃
                         </Button>
                         <Button 
-                            color="secondary"
-                            variant="outlined"
+                            sx={{bgcolor:'grey',
+                            color:'black',
+                            ":hover" : {
+                                bgcolor:"lightgray"
+                            }
+                        }}
+                            variant="contained"
                             size="large" 
                             startIcon={<PersonAddIcon />}
                             onClick={navigateToAdmin}

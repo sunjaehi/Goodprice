@@ -219,8 +219,13 @@ function Registershop() {
                     />
                     <Button
                         onClick={handleSearch}
-                        variant="outlined"
-                        color="secondary"
+                        variant="contained"
+                        sx={{bgcolor:'black',
+                            color:'white',
+                            ":hover" : {
+                                bgcolor:"gray"
+                            }
+                        }}
                     >주소 찾기</Button>
 
                 </Box>
@@ -303,10 +308,10 @@ function Registershop() {
                 >
                     <Button
                         variant="contained"
-                        color="secondary"
                         type="submit"
                         sx={{
-                            mr: '5px'
+                            mr: '5px',
+                            bgcolor:'grey'
                         }}
                         onClick={submit}
                         disabled={!isFormValid()}
@@ -314,6 +319,11 @@ function Registershop() {
                     </Button>
                     <Button
                         variant="contained"
+                        sx={{bgcolor:'black',
+                            ":hover" :{
+                                bgcolor:'grey'
+                            }
+                        }}
                     >초기화</Button>
 
                 </Box>

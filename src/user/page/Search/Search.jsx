@@ -9,8 +9,11 @@ import MyLocationIcon from '@mui/icons-material/MyLocation';
 import { sectorSample } from '../../../data/sectorSample';
 import { Link } from 'react-router-dom';
 import NavigationIcon from '@mui/icons-material/Navigation';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 function Search() {
+
+
     const [datas, setData] = useState(null);
     const [sector, setSector] = useState('');
     const [filtered, setFiltered] = useState([]);
@@ -141,7 +144,7 @@ function Search() {
                     )}
                 </Map>
                 <Button
-                    color="secondary"
+                    
                     startIcon={<MyLocationIcon />}
                     size="large"
                     variant="contained"
@@ -153,13 +156,16 @@ function Search() {
                         transform: 'translateX(-50%)',
                         zIndex: 10,
                         borderRadius: 3,
-                        mt: 1
+                        mt: 1,
+                        bgcolor:'black',
+                        ":hover" :{
+                            bgcolor:'grey'
+                        }
                     }}
                 >
                     여기서 재검색
                 </Button>
                 <Button
-                    color="primary"
                     size="large"
                     variant="contained"
                     onClick={toggleDrawer(true)}
@@ -171,6 +177,10 @@ function Search() {
                         zIndex: 10,
                         borderRadius: 3,
                         width: '200px',
+                        bgcolor:'black',
+                        ":hover" :{
+                            bgcolor:'grey'
+                        }
                     }}
                 >
                     목록 보기
@@ -207,8 +217,13 @@ function Search() {
                             {sectorSample.map(sector => (<MenuItem value={`${sector.id}`}>{`${sector.name}`}</MenuItem>))}
                         </Select>
                         <Button
-                            sx={{ ml: "10px" }}
-                            color="secondary"
+                            sx={{ mt: "10px",
+                                color:'black',
+                                bgcolor:"grey",
+                                ":hover" : {
+                                    bgcolor:"lightgray"
+                                }
+                             }}
                             variant="outlined"
                             size="small"
                             endIcon={<SendIcon />}
