@@ -100,12 +100,24 @@ function Mainpage() {
                         <Grid item xs={12} sm={4}>
                             <Card>
                                 <CardActionArea onClick={() => handleCardClick(`/detail/${dailyShop.shopId}`)}>
-                                    <CardMedia
-                                        component="img"
-                                        height="140"
-                                        image={dailyShop.imgUrl}
-                                        alt="green iguana"
-                                    />
+                                    <div style={{ width: '100%', paddingTop: '100%', position: 'relative' }}>
+                                        <img
+                                            src={dailyShop.imgUrl}
+                                            alt="상점 이미지"
+                                            style={{
+                                                width: '100%',
+                                                height: '100%',
+                                                position: 'absolute',
+                                                top: 0,
+                                                left: 0,
+                                                objectFit: 'cover'
+                                            }}
+                                            onError={(e) => {
+                                                e.target.onerror = null; // prevents looping
+                                                e.target.src = defaultImage;
+                                            }}
+                                        />
+                                    </div>
                                     <CardContent>
                                         <Typography gutterBottom variant="h5" component="div">
                                             {dailyShop.name}
@@ -132,12 +144,23 @@ function Mainpage() {
                             </Typography>
                             <Card>
                                 <CardActionArea onClick={() => handleCardClick(`/detail/${bestShop.shopId}`)}>
-                                    <CardMedia
-                                        component="img"
-                                        height="140"
-                                        image={bestShop.imgUrl}
-                                        alt={bestShop.name}
-                                    />
+                                    <div style={{ width: '100%', paddingTop: '100%', position: 'relative' }}>
+                                        <img
+                                            src={bestShop.imgUrl}
+                                            style={{
+                                                width: '100%',
+                                                height: '100%',
+                                                position: 'absolute',
+                                                top: 0,
+                                                left: 0,
+                                                objectFit: 'cover'
+                                            }}
+                                            onError={(e) => {
+                                                e.target.onerror = null; // prevents looping
+                                                e.target.src = defaultImage;
+                                            }}
+                                        />
+                                    </div>
                                     <CardContent>
                                         <Typography gutterBottom variant="h6" component="div">
                                             {bestShop.name}
