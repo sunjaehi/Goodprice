@@ -31,13 +31,15 @@ import NoticeTable from './admin/section/NoticeTable';
 import NoticeManage from './admin/page/NoticeManage';
 import NoticeDetail from './user/page/Notice/NoticeDetail';
 import Newsfeed from './user/page/Newsfeed/Newsfeed';
+import ResetPassword from './user/page/ResetPassword/ResetPassword';
+import NoticeAdminDetail from './admin/page/NoticeAdminDetail';
 
 
 function App() {
   return (
     <BrowserRouter>
       <Header />
-      
+
       <Routes>
         <Route path='/' element={<Mainpage />}></Route>
         <Route path="/Register" element={<Register />}></Route>
@@ -66,6 +68,8 @@ function App() {
         <Route path="/Noticemanage" element={<NoticeManage />}></Route>
         <Route path="/Shoptable" element={<Shoptable />}></Route>
         <Route path="/Newsfeed" element={<Newsfeed />}></Route>
+        <Route path="/ResetPassword/:email/:uuid" element={<ResetPassword />}></Route>
+        <Route path="/noticeAdminDetail/:id" element={<NoticeAdminDetail />}></Route>
       </Routes>
     </BrowserRouter >
   );
