@@ -9,6 +9,8 @@ import AddIcon from '@mui/icons-material/Add';
 import { useNavigate, useParams } from "react-router-dom";
 import './Reviewinput.css';
 
+const backend = process.env.REACT_APP_BACKEND_ADDR;
+
 function Reviewinput() {
     const imageInput = useRef(null);
     const commentInput = useRef(null);
@@ -41,7 +43,7 @@ function Reviewinput() {
 
         selectedFiles.forEach(file => formData.append('files', file));
 
-        fetch(`http://localhost:8080/api/v1/review/`, {
+        fetch(`${backend}/api/v1/review/`, {
             method: "POST",
             headers: {
                 "Authorization": "Bearer " + sessionStorage.getItem("atk")

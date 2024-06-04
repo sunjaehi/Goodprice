@@ -7,12 +7,13 @@ import { Link, useParams } from "react-router-dom";
 import { Box, Container } from "@mui/material";
 const defaultTheme = createTheme();
 
+const backend = process.env.REACT_APP_BACKEND_ADDR;
 
 function Review(props) {
     const { shopId } = useParams();
     const [reviews, setReviews] = useState(null);
     useEffect(() => {
-        fetch(`http://localhost:8080/api/v1/review/?shopId=${shopId}`)
+        fetch(`${backend}/api/v1/review/?shopId=${shopId}`)
             .then(response => response.json())
             .then(data => { setReviews(data); });
     }, [])
@@ -31,8 +32,8 @@ function Review(props) {
                             <ImageList sx={{ width: '100%', display: 'flex', flexDirection: 'row', overflowX: 'auto' }}>
                                 {review.attachmentIndices.map(index => {
                                     return (
-                                        <a key={index} href={`http://localhost:8080/api/v1/attachment/${index}`} style={{ marginRight: '10px' }}>
-                                            <img src={`http://localhost:8080/api/v1/attachment/${index}`} width={160} height={90} />
+                                        <a key={index} href={`${backend}/api/v1/attachment/${index}`} style={{ marginRight: '10px' }}>
+                                            <img src={`${backend}/api/v1/attachment/${index}`} width={160} height={90} />
                                         </a>
                                     )
                                 })}
