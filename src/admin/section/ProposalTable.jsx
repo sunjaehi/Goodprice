@@ -11,6 +11,8 @@ import Adminlist from './Adminlist';
 import TablePagination from '@mui/material/TablePagination';
 import { useNavigate } from "react-router-dom";
 
+const backend = process.env.REACT_APP_BACKEND_ADDR;
+
 export default function ProposalTable() {
     const navigate = useNavigate();
     const [response, setResponse] = useState(null);
