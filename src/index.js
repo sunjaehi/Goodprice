@@ -5,7 +5,12 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider, createTheme } from '@mui/material';
 
-const theme=createTheme();
+const theme=createTheme({
+  typography: {
+    fontFamily: 'NanumGothicLight'
+  }
+
+})
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

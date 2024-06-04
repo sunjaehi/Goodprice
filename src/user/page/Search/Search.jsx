@@ -9,6 +9,7 @@ import MyLocationIcon from '@mui/icons-material/MyLocation';
 import { sectorSample } from '../../../data/sectorSample';
 import { Link } from 'react-router-dom';
 import NavigationIcon from '@mui/icons-material/Navigation';
+import Footer from '../../component/Footer/Footer';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
@@ -143,7 +144,7 @@ function Search() {
                     )}
                 </Map>
                 <Button
-
+                    
                     startIcon={<MyLocationIcon />}
                     size="large"
                     variant="contained"
@@ -156,7 +157,8 @@ function Search() {
                         zIndex: 10,
                         borderRadius: 3,
                         mt: 1,
-                        bgcolor: 'black',
+                        color:'black',
+                        bgcolor: 'white',
                         ":hover": {
                             bgcolor: 'grey'
                         }
@@ -176,7 +178,8 @@ function Search() {
                         zIndex: 10,
                         borderRadius: 3,
                         width: '200px',
-                        bgcolor: 'black',
+                        color:'black',
+                        bgcolor: 'white',
                         ":hover": {
                             bgcolor: 'grey'
                         }
@@ -192,6 +195,11 @@ function Search() {
                         bottom: '80px',
                         right: '16px',
                         zIndex: 10,
+                        color:'black',
+                        bgcolor: 'white',
+                        ":hover": {
+                            bgcolor: 'grey'
+                        }
                     }}
                 >
                     <NavigationIcon />
@@ -266,6 +274,7 @@ function Search() {
                     </List>
                 </div>
             </SwipeableDrawer>
+            <Footer />
         </div >
     )
 }

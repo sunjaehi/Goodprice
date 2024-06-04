@@ -83,14 +83,14 @@ function Header () {
         <div className="head">
             <div className="one">
             <Button 
-                sx={{textDecoration:'none', color:'inherit'}}
+                sx={{textDecoration:'none', color:'white'}}
                 onClick={toggleDrawer(true)}><MenuIcon /></Button>
             <Drawer open={open} onClose={toggleDrawer(false)}>
                 {DrawerList}
             </Drawer>
             </div>
             <Link to="/" className="link">
-                <Typography color='black' variant="h5">착한 동행</Typography>
+                <Typography color='white' variant="h5">착한 동행</Typography>
             </Link>
             
             {/*<Mymodal />*/}

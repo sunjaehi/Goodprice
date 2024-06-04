@@ -41,7 +41,7 @@ function Mymodal() {
     return (
         <div>
             <Button onClick={handleOpen}
-            sx={{textDecoration:'none', color:'inherit'}}><AccountCircleIcon /></Button>
+            sx={{textDecoration:'none', color:'white'}}><AccountCircleIcon /></Button>
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -62,7 +62,7 @@ function Mymodal() {
                         
                         <Button 
                             sx={{bgcolor:'#435585',
-                                color:'black',
+                                color:'white',
                                 ":hover" : {
                                     bgcolor:"#435585"
                                 }
@@ -76,7 +76,7 @@ function Mymodal() {
                         </Button>
                         <Button 
                             sx={{bgcolor:'#435585',
-                            color:'black',
+                            color:'white',
                             ":hover" : {
                                 bgcolor:"#435585"
                             }
