@@ -219,9 +219,9 @@ function Search() {
                         <Button
                             sx={{ mt: "10px",
                                 color:'black',
-                                bgcolor:"grey",
+                                bgcolor:"#435585",
                                 ":hover" : {
-                                    bgcolor:"lightgray"
+                                    bgcolor:"435585"
                                 }
                              }}
                             variant="outlined"
@@ -252,7 +252,7 @@ function Search() {
                                                 </Typography>
                                                 {data.phone.length > 5 ? <a href={`tel:${data.phone}`}>{data.phone}</a> : "연락처 정보가 없습니다"}
                                                 <Typography sx={{ display: 'block' }} component="span" variant="body2" color="text.primary">
-                                                    <img src="https://cdn.pixabay.com/photo/2022/12/27/13/13/icon-7680929_1280.png" width={25} height={25} alt="recommendation icon" />
+                                                    <img src="https://img.icons8.com/fluency/48/thumb-up.png" width={25} height={25} alt="recommendation icon" />
                                                     {data.recommend}
                                                 </Typography>
                                                 <Typography sx={{ display: 'block' }} component="span" variant="body2" color="text.primary">
