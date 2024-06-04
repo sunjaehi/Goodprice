@@ -27,9 +27,9 @@ export default function Footer() {
 
     return (
         <div className="footer">
-             <BottomNavigation sx={{bgcolor:'#f5f5f5', height:'6vh',width:'100%', justifyContent:'space-between',
+             <BottomNavigation sx={{bgcolor:'#98ABEE', height:'6vh',width:'100%', justifyContent:'space-between',
                 '&& .Mui-selected' : {
-                    color:'#435585'
+                    color:'white'
                 }
             }} value={value} onChange={handleChange} >
                 <BottomNavigationAction
