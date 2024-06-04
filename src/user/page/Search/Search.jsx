@@ -11,9 +11,8 @@ import { Link } from 'react-router-dom';
 import NavigationIcon from '@mui/icons-material/Navigation';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+const backend = process.env.REACT_APP_BACKEND_ADDR;
 function Search() {
-
-
     const [datas, setData] = useState(null);
     const [sector, setSector] = useState('');
     const [filtered, setFiltered] = useState([]);
@@ -58,7 +57,7 @@ function Search() {
         const currentLat = map.getCenter().getLat();
         const currentLng = map.getCenter().getLng();
 
-        fetch(`http://localhost:8080/api/v1/shop/?longitude=${currentLng}&latitude=${currentLat}&radius=2`)
+        fetch(`${backend}/api/v1/shop/?longitude=${currentLng}&latitude=${currentLat}&radius=2`)
             .then(respone => respone.json())
             .then(json => { setData(json); return json; })
             .then(json => setFiltered(json));
@@ -144,7 +143,7 @@ function Search() {
                     )}
                 </Map>
                 <Button
-                    
+
                     startIcon={<MyLocationIcon />}
                     size="large"
                     variant="contained"
@@ -157,9 +156,9 @@ function Search() {
                         zIndex: 10,
                         borderRadius: 3,
                         mt: 1,
-                        bgcolor:'black',
-                        ":hover" :{
-                            bgcolor:'grey'
+                        bgcolor: 'black',
+                        ":hover": {
+                            bgcolor: 'grey'
                         }
                     }}
                 >
@@ -177,9 +176,9 @@ function Search() {
                         zIndex: 10,
                         borderRadius: 3,
                         width: '200px',
-                        bgcolor:'black',
-                        ":hover" :{
-                            bgcolor:'grey'
+                        bgcolor: 'black',
+                        ":hover": {
+                            bgcolor: 'grey'
                         }
                     }}
                 >
@@ -217,13 +216,14 @@ function Search() {
                             {sectorSample.map(sector => (<MenuItem value={`${sector.id}`}>{`${sector.name}`}</MenuItem>))}
                         </Select>
                         <Button
-                            sx={{ mt: "10px",
-                                color:'black',
-                                bgcolor:"grey",
-                                ":hover" : {
-                                    bgcolor:"lightgray"
+                            sx={{
+                                mt: "10px",
+                                color: 'black',
+                                bgcolor: "grey",
+                                ":hover": {
+                                    bgcolor: "lightgray"
                                 }
-                             }}
+                            }}
                             variant="outlined"
                             size="small"
                             endIcon={<SendIcon />}
