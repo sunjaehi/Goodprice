@@ -7,7 +7,7 @@ import Carousel from 'react-material-ui-carousel';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-
+const backend = process.env.REACT_APP_BACKEND_ADDR;
 function Mainpage() {
     const [newShopDatas, setNewShopDatas] = useState(null);
     const [sectors, setSectors] = useState(null);
@@ -22,16 +22,16 @@ function Mainpage() {
         navigate(link);
     };
     useEffect(() => {
-        fetch('http://localhost:8080/api/v1/sector/')
+        fetch(`${backend}/api/v1/sector/`)
             .then(result => result.json())
             .then(json => setSectors(json));
-        fetch('http://localhost:8080/api/v1/shop/best')
+        fetch(`${backend}/api/v1/shop/best`)
             .then(result => result.json())
             .then(json => setBestShops(json));
-        fetch('http://localhost:8080/api/v1/newShop/')
+        fetch(`${backend}/api/v1/newShop/`)
             .then(result => result.json())
             .then(json => setNewShopDatas(json));
-        fetch('http://localhost:8080/api/v1/dailyShop/')
+        fetch(`${backend}/api/v1/dailyShop/`)
             .then(result => result.json())
             .then(json => setDailyShops(json));
     }, []);
