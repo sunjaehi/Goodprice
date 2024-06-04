@@ -61,10 +61,10 @@ function Mymodal() {
                     <Stack spacing={2} direction="column">
                         
                         <Button 
-                            sx={{bgcolor:'grey',
+                            sx={{bgcolor:'#435585',
                                 color:'black',
                                 ":hover" : {
-                                    bgcolor:"lightgray"
+                                    bgcolor:"#435585"
                                 }
                             }}
                             variant="contained" 
@@ -75,10 +75,10 @@ function Mymodal() {
                             로그인
                         </Button>
                         <Button 
-                            sx={{bgcolor:'grey',
+                            sx={{bgcolor:'#435585',
                             color:'black',
                             ":hover" : {
-                                bgcolor:"lightgray"
+                                bgcolor:"#435585"
                             }
                         }}
                             variant="contained"

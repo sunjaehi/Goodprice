@@ -13,7 +13,6 @@ function Quitdialog() {
   const [checkedItems, setCheckedItems] = useState({
     sameEmail: false,
     review: false,
-    point: false,
   });
 
   const handleToggle = (name) => () => {
@@ -38,7 +37,7 @@ function Quitdialog() {
   return (
     <div>
       
-      <Button sx={{mt:10}} variant="contained" color="inherit" fullWidth onClick={() => setOpen(true)}>
+      <Button sx={{mt:7, color:'white',backgroundColor:'#435585',":hover":{backgroundColor:'#435584'}}} variant="contained" fullWidth onClick={() => setOpen(true)}>
         회원 탈퇴
       </Button>
       <Dialog open={open} onClose={() => setOpen(false)}>
@@ -49,7 +48,7 @@ function Quitdialog() {
                 alignItems:"flex-start",
                 flexDirection:"column"
             }}>
-            <DialogContentText>회원 탈퇴를 하기 위해 아래 항목에 동의하세요</DialogContentText>
+            <DialogContentText>회원 탈퇴를 위해 아래 항목에 동의하세요</DialogContentText>
           <FormControlLabel
             control={
               <Checkbox
@@ -68,15 +67,15 @@ function Quitdialog() {
             }
             label="작성한 리뷰는 삭제되지 않습니다"
           />
-          <FormControlLabel
+          {/* <FormControlLabel
             control={
               <Checkbox
                 checked={checkedItems.point}
                 onChange={handleToggle('point')}
               />
             }
-            label="보유하신 포인트는 소멸됩니다"
-          />
+            label=""
+          /> */}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)}>취소</Button>

@@ -125,7 +125,7 @@ function Servicecenter() {
                 gap={1}
             >
                 <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                    <Avatar sx={{ m: 1, bgcolor: '#435585' }}>
                         <AddBusinessOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
@@ -186,9 +186,9 @@ function Servicecenter() {
                         sx={{
                             width: "50%", borderRadius: "10px",
                             color: "white",
-                            bgcolor: "blueviolet",
+                            bgcolor: "#435585",
                             ":hover": {
-                                bgcolor: "lavender"
+                                bgcolor: "#435585"
                             }
                         }}
                     >우편번호 찾기</Button>
@@ -248,11 +248,11 @@ function Servicecenter() {
                     display="flex"
                 >
                     <Button variant="contained" color="secondary"
-                        sx={{ mr: '5px' }}
+                        sx={{ mr: '5px' , bgcolor:'#435585'}}
                         onClick={submit}
                         disabled={!isFormValid}
                     >등록</Button>
-                    <Button variant="contained">취소</Button>
+                    <Button variant="outlined" sx={{borderColor:'black', color:'black'}}>취소</Button>
                 </Box>
             </Box>
         </Container >

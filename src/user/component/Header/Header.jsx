@@ -90,7 +90,7 @@ function Header () {
             </Drawer>
             </div>
             <Link to="/" className="link">
-                <Typography color='black' variant="h5" fontWeight='bold'>착한 동행</Typography>
+                <Typography color='black' variant="h5">착한 동행</Typography>
             </Link>
             
             {/*<Mymodal />*/}

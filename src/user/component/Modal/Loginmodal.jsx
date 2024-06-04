@@ -38,7 +38,6 @@ function Loginmodal() {
     const logOut = () => {
         sessionStorage.removeItem('atk');
         sessionStorage.removeItem('role');
-        alert('로그아웃 성공');
         navigate("/");
     }
 
@@ -64,10 +63,10 @@ function Loginmodal() {
                     >
                     <Stack spacing={2} direction="column">
                         <Button 
-                            sx={{bgcolor:'grey',
-                            color:'black',
+                            sx={{bgcolor:'#435585',
+                            color:'white',
                             ":hover" : {
-                                bgcolor:"lightgray"
+                                bgcolor:"#435584"
                             }
                         }}
                             variant="contained" 
@@ -78,10 +77,10 @@ function Loginmodal() {
                             로그아웃
                         </Button>
                         <Button 
-                            sx={{bgcolor:'grey',
-                            color:'black',
+                            sx={{bgcolor:'#435585',
+                            color:'white',
                             ":hover" : {
-                                bgcolor:"lightgray"
+                                bgcolor:"#435585"
                             }
                         }}
                             variant="contained"

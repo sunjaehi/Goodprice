@@ -14,6 +14,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { createTheme,IconButton,OutlinedInput,ThemeProvider } from "@mui/material";
 import Quitdialog from "../../component/Dialog/Quitdialog";
+import { useNavigate } from "react-router-dom";
 //import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
@@ -41,6 +42,11 @@ function Myprofile() {
             }
         }
     })
+    const navigate=useNavigate();
+    const navigateToHome = () => {
+        navigate("/");
+    }
+
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
@@ -51,10 +57,9 @@ function Myprofile() {
                         display:'flex',
                         flexDirection:'column',
                         alignItems:'center'
-
                     }}
                 >
-                    <Avatar sx={{mb:1, bgColor:'secondary.main'}}>
+                    <Avatar sx={{mb:1, bgcolor: '#363062'}}>
                         <SettingsIcon />
                     </Avatar>
                     <Typography variant="h1">
@@ -113,24 +118,30 @@ function Myprofile() {
                     />
                     <Button 
                         type="submit"
-                        color="inherit"
+                        color="secondary"
                         variant="contained"
-                        sx={{mt:3, mb:2,ml:5}}
+                        sx={{mt:3, mb:2,ml:5, backgroundColor:'#435585',color:'white',
+                        ":hover" : {
+                            backgroundColor:'#435584'
+                        }}}
                     >닉네임 중복 확인</Button>
                     <Quitdialog />
                     <Box sx={{display:'flex',
                         flexDirection:'row'}}>
                     <Button
                         type="submit"
-                        color="inherit"
                         variant="contained"
-                        sx={{mt:3,mr:2,width:'50%'}}
+                        sx={{mt:2,mr:2,width:'50%',backgroundColor:'#435585',color:'white',
+                            ":hover" : {
+                                backgroundColor:'#435585'
+                            }
+                        }}
                     >수정 완료</Button>
                     <Button
                         type="submit"
-                        color="inherit"
-                        variant="contained"
-                        sx={{mt:3,ml:2,width:'50%'}}
+                        variant="outlined"
+                        sx={{mt:2,ml:2,width:'50%',color:'black',borderColor:'black'}}
+                        onClick={navigateToHome}
                     >취소</Button>
                     </Box>
                 </Box>

@@ -117,7 +117,7 @@ checkToken = () => {
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                    <Avatar sx={{ m: 1, bgcolor: '#435585' }}>
                         <LoginIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
@@ -129,7 +129,7 @@ checkToken = () => {
                             required
                             fullWidth
                             id="email"
-                            label="Email Address"
+                            label="이메일"
                             name="email"
                             autoComplete="email"
                             autoFocus
@@ -140,7 +140,7 @@ checkToken = () => {
                             required
                             fullWidth
                             name="password"
-                            label="Password"
+                            label="비밀번호"
                             type="password"
                             id="password"
                             autoComplete="current-password"
@@ -153,9 +153,12 @@ checkToken = () => {
                         <Button
                             type="submit"
                             fullWidth
-                            color="secondary"
                             variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
+                            sx={{ mt: 3, mb: 2, backgroundColor:'#435585',
+                                ":hover":{
+                                    backgroundColor:'#435585'
+                                }
+                             }}
                             //disabled={this.state.ID.includes('@') && PW.length>=5 ? false : true}
                             onClick={handleSubmit}
                         >

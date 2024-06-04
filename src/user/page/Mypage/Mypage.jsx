@@ -13,9 +13,6 @@ function Mypage() {
     const navigateToMyRegion = () => {
         navigate("/Myregion");
     }
-    const navigateToMySector = () => {
-        navigate("/Mysector");
-    }
     const navigateToMyfavorite = () => {
         navigate("/Myfavorite");
     }
@@ -30,9 +27,6 @@ function Mypage() {
 
         }}>
         <List>
-            <ListItemButton onClick={navigateToMySector}>
-                <ListItemText primary="관심 업종 관리" />
-            </ListItemButton>
             <ListItemButton onClick={navigateToMyRegion}>
                 <ListItemText primary="관심 지역 관리" />
             </ListItemButton>

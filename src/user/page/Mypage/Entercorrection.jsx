@@ -50,7 +50,7 @@ function Entercorrection() {
             }}
         >
             <ThemeProvider theme={theme}>
-            <Avatar sx={{m:1, bgcolor:'secondary.main'}}>
+            <Avatar sx={{m:1, bgcolor:'#435585'}}>
                 <PinIcon />
            </Avatar> 
            <Typography variant="h1">
@@ -82,8 +82,11 @@ function Entercorrection() {
         <Button 
             variant="contained"
             type='submit'
-            color='inherit'
-            sx={{width:'50%',mt:5}}
+            sx={{width:'50%',mt:5,backgroundColor:'#435585',
+                ":hover":{
+                    backgroundColor:'#435585'
+                }
+            }}
             onClick={navigateToMyprofile}
         >비밀번호 확인</Button>
         </ThemeProvider>
