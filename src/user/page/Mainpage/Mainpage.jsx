@@ -43,13 +43,13 @@ function Mainpage() {
             <>
                 {newShopDatas && (
                     <>
-                        <Typography gutterBottom variant="h5" component="div">
+                        <Typography gutterBottom variant="h6" component="div">
                             착한가격 업소란?
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                             착한 가격, 청결한 가게운영, 기분좋은 서비스 제공으로 소비자에게 만족을 드리기 위해 정부와 지방자치단체가 선정한 우수업소가 바로 ‘착한가격업소’ 입니다.
                         </Typography>
-                        <Typography gutterBottom variant="h5" component="div">
+                        <Typography gutterBottom variant="h6" component="div">
                             새로 추가된 가게
                         </Typography>
                         <Carousel
@@ -63,7 +63,7 @@ function Mainpage() {
                             {newShopDatas.map((newShopData) => (
                                 <Card key={newShopData.shopId}>
                                     <CardActionArea onClick={() => handleCardClick(`/detail/${newShopData.shopId}`)}>
-                                        <div style={{ width: '100%', paddingTop: '100%', position: 'relative' }}>
+                                        <div style={{ width: '100%', paddingTop: '50%', position: 'relative' }}>
                                             <img
                                                 src={newShopData.imgUrl}
                                                 alt="상점 이미지"
@@ -101,7 +101,7 @@ function Mainpage() {
                         <Grid item xs={12} sm={4}>
                             <Card>
                                 <CardActionArea onClick={() => handleCardClick(`/detail/${dailyShop.shopId}`)}>
-                                    <div style={{ width: '100%', paddingTop: '100%', position: 'relative' }}>
+                                    <div style={{ width: '100%', paddingTop: '50%', position: 'relative' }}>
                                         <img
                                             src={dailyShop.imgUrl}
                                             alt="상점 이미지"
@@ -145,7 +145,7 @@ function Mainpage() {
                             </Typography>
                             <Card>
                                 <CardActionArea onClick={() => handleCardClick(`/detail/${bestShop.shopId}`)}>
-                                    <div style={{ width: '100%', paddingTop: '100%', position: 'relative' }}>
+                                    <div style={{ width: '100%', paddingTop: '50%', position: 'relative' }}>
                                         <img
                                             src={bestShop.imgUrl}
                                             style={{
