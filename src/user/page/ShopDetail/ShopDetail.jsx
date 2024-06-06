@@ -9,7 +9,7 @@ import { styled } from '@mui/material/styles';
 import { Link, useNavigate, useParams } from "react-router-dom";
 import PropTypes from 'prop-types';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-const { kakao } = window;
+const backend = process.env.REACT_APP_BACKEND_ADDR;
 const ImageContainer = styled('div')({
     width: '100%',
     height: 450,
@@ -75,7 +75,7 @@ function ShopDetail() {
     });
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/v1/subway/?latitude=${latitude}&longitude=${longitude}`)
+        fetch(`${backend}/api/v1/subway/?latitude=${latitude}&longitude=${longitude}`)
             .then(response => response.json())
             .then(json => { console.log(json); setStations(json) });
     }, [latitude]);
@@ -83,14 +83,14 @@ function ShopDetail() {
     useEffect(() => {
         const atk = sessionStorage.getItem('atk');
         if (atk !== null) {
-            fetch(`http://localhost:8080/api/v1/shopRecommend/check?shopId=${shopId}`, {
+            fetch(`${backend}/api/v1/shopRecommend/check?shopId=${shopId}`, {
                 headers: {
                     'Authorization': 'Bearer ' + sessionStorage.getItem("atk")
                 }
             }).then(response => response.json())
                 .then(json => setHasRecommended(json));
 
-            fetch(`http://localhost:8080/api/v1/shopmark/check?shopId=${shopId}`, {
+            fetch(`${backend}/api/v1/shopmark/check?shopId=${shopId}`, {
                 headers: {
                     'Authorization': 'Bearer ' + sessionStorage.getItem("atk")
                 }
@@ -101,7 +101,7 @@ function ShopDetail() {
 
         const fetchData = async () => {
             try {
-                let result = await fetch(`http://localhost:8080/api/v1/shop/${shopId}`);
+                let result = await fetch(`${backend}/api/v1/shop/${shopId}`);
                 if (result.status === 200) {
                     const json = await result.json();
                     setDatas(json);
@@ -122,7 +122,7 @@ function ShopDetail() {
                     return;
                 }
 
-                result = await fetch(`http://localhost:8080/api/v1/shopLocation/${shopId}`);
+                result = await fetch(`${backend}/api/v1/shopLocation/${shopId}`);
                 let json = await result.json();
                 setLatitude(json.latitude);
                 setLongitude(json.longitude);
@@ -133,11 +133,11 @@ function ShopDetail() {
                     }
                 });
 
-                result = await fetch(`http://localhost:8080/api/v1/product/?shopId=${shopId}`);
+                result = await fetch(`${backend}/api/v1/product/?shopId=${shopId}`);
                 json = await result.json();
                 setProductDatas(json);
 
-                result = await fetch(`http://localhost:8080/api/v1/review/summary?shopId=${shopId}`);
+                result = await fetch(`${backend}/api/v1/review/summary?shopId=${shopId}`);
                 json = await result.json();
                 setReviewSummary(json);
             } catch (error) {
@@ -151,7 +151,7 @@ function ShopDetail() {
     const mapRef = useRef();
 
     function recommend() {
-        fetch("http://localhost:8080/api/v1/shopRecommend/register", {
+        fetch(`${backend}/api/v1/shopRecommend/register`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json; charset=utf-8;',
@@ -165,7 +165,7 @@ function ShopDetail() {
     }
 
     function unRecommend() {
-        fetch("http://localhost:8080/api/v1/shopRecommend/remove", {
+        fetch(`${backend}/api/v1/shopRecommend/remove`, {
             method: "DELETE",
             headers: {
                 'Content-Type': 'application/json; charset=utf-8;',
@@ -179,7 +179,7 @@ function ShopDetail() {
     }
 
     function addShopMark() {
-        fetch('http://localhost:8080/api/v1/shopmark/', {
+        fetch(`${backend}/api/v1/shopmark/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -191,7 +191,7 @@ function ShopDetail() {
     }
 
     function deleteShopMark() {
-        fetch('http://localhost:8080/api/v1/shopmark/', {
+        fetch(`${backend}/api/v1/shopmark/`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -327,8 +327,8 @@ function ShopDetail() {
                                     <ImageList sx={{ width: '100%', display: 'flex', flexDirection: 'row', overflowX: 'auto' }}>
                                         {reviewSummary.attachmentIndices.map(index => {
                                             return (
-                                                <a key={index} href={`http://localhost:8080/api/v1/attachment/${index}`} style={{ marginRight: '10px' }}>
-                                                    <img src={`http://localhost:8080/api/v1/attachment/${index}`} width={160} height={90} />
+                                                <a key={index} href={`${backend}/api/v1/attachment/${index}`} style={{ marginRight: '10px' }}>
+                                                    <img src={`${backend}/api/v1/attachment/${index}`} width={160} height={90} />
                                                 </a>
                                             )
                                         })}
