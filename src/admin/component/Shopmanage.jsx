@@ -143,7 +143,6 @@ export default function Shopmanage() {
         formData.append('info', shopInfo.info);
         formData.append('businessHours', is24Hours ? "00:00 - 24:00" : `${startTime.format('HH:mm')} - ${endTime.format('HH:mm')}`);
         selectedFiles.forEach(file => formData.append('newFiles', file));
-        alert(selectedFiles.length)
         deletedFiles.forEach(fileUrl => formData.append('deletedFiles', fileUrl));
 
         const result = await fetch('http://localhost:8080/api/v1/shop/edit', {
