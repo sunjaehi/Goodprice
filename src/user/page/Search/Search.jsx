@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Map, MapMarker } from 'react-kakao-maps-sdk';
+import { Map, CustomOverlayMap, MapMarker } from 'react-kakao-maps-sdk';
 import {
     List, ListItem, ListItemText, ListItemButton, Typography, InputLabel,
     FormControl, MenuItem, Select, Button, ListItemAvatar, SwipeableDrawer, Fab
@@ -136,11 +136,11 @@ function Search() {
                             </MapMarker>);
                     })}
                     {!state.isLoading && (
-                        <MapMarker position={state.center}>
-                            <div style={{ padding: "5px", color: "#000" }}>
+                        <CustomOverlayMap position={state.center}>
+                            <div style={{ padding: "5px", margin:"10px", color: "#000" ,backgroundColor:"rgba(0,0,0,0.2)", borderRadius:'10px'}}>
                                 {state.errMsg ? state.errMsg : "여기에 계신가요?"}
                             </div>
-                        </MapMarker>
+                        </CustomOverlayMap>
                     )}
                 </Map>
                 <Button
@@ -226,9 +226,9 @@ function Search() {
                         <Button
                             sx={{ mt: "10px",
                                 color:'black',
-                                bgcolor:"#435585",
+                                bgcolor:"#98ABEE",
                                 ":hover" : {
-                                    bgcolor:"435585"
+                                    bgcolor:"#98ABEE"
                                 }
                             }}
                             variant="outlined"
