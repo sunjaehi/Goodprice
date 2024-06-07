@@ -217,11 +217,20 @@ function ShopDetail() {
                             )}
                         </Carousel>
                         <CardContent>
+                            <Box display="flex" justifyContent="space-between" alignItems="center">
                             <Typography gutterBottom variant="h5" component="div">
                                 {datas.shopName}
                             </Typography>
-                            <Typography variant="body2" color="text.secondary">{datas.sector}</Typography>
-                            <ThumbUpIcon />{datas.recommend}<br />
+                                <Typography variant="body2" color="text.secondary">
+                                    {datas.sector}
+                                </Typography>
+                            </Box>
+                            <Box display="flex" alignItems="baseline">
+                                <ThumbUpIcon style={{ verticalAlign: 'middle' }} />
+                                <Typography variant="body2" color="text.secondary" style={{ marginLeft: 4 }}>
+                                    {datas.recommend}
+                                </Typography>
+                            </Box>
                             <Rating readOnly value={datas.rate} precision={0.1} /> {datas.rate.toFixed(2)}
                             <Tabs value={value} onChange={handleChange} centered variant="fullWidth">
                                 <Tab label="홈" />
