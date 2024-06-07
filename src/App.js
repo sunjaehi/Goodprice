@@ -33,6 +33,7 @@ import NoticeDetail from './user/page/Notice/NoticeDetail';
 import Newsfeed from './user/page/Newsfeed/Newsfeed';
 import ResetPassword from './user/page/ResetPassword/ResetPassword';
 import NoticeAdminDetail from './admin/page/NoticeAdminDetail';
+import NoticeAdminEdit from './admin/page/NoticeAdminEdit';
 
 
 function App() {
@@ -70,6 +71,7 @@ function App() {
         <Route path="/Newsfeed" element={<Newsfeed />}></Route>
         <Route path="/ResetPassword/:email/:uuid" element={<ResetPassword />}></Route>
         <Route path="/noticeAdminDetail/:id" element={<NoticeAdminDetail />}></Route>
+        <Route path="/noticeAdminEdit/:id" element={<NoticeAdminEdit />}></Route>
       </Routes>
     </BrowserRouter >
   );
