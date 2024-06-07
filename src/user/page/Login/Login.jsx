@@ -13,17 +13,18 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
-import {useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 import base64 from 'base-64';
 import { Snackbar, Alert } from "@mui/material";
 import sessionStorage from "redux-persist/es/storage/session";
 
 const defaultTheme = createTheme();
 
+const backend = process.env.REACT_APP_BACKEND_ADDR;
 function Login(props) {
     const navigate = useNavigate();
     //const dispatch = useDispatch();
-    const API = "http://localhost:8080/api/v1/member/login";
+    const API = `${backend}/api/v1/member/login`;
     const [userEmail, setUseremail] = useState('');
     const [userPw, setUserpw] = useState('');
     const [loginCheck, setLoginCheck] = useState(false);
@@ -40,11 +41,11 @@ function Login(props) {
             autoHideDuration={6000}
             open={showSnackbar}
             onClose={handleClose}
-            anchorOrigin={{horizontal:'center', vertical:'top'}}
+            anchorOrigin={{ horizontal: 'center', vertical: 'top' }}
             children={props.children}
         ></Snackbar>
     )
-    
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -66,7 +67,7 @@ function Login(props) {
             setLoginCheck(false);
             console.log(result);
             const atk = result.accessToken;
-            
+
             // sessionStorage.setItem("email",result.email);
             // sessionStorage.setItem("password",result.password);
             let payload = atk.substring(atk.indexOf('.') + 1, atk.lastIndexOf('.'));
@@ -78,33 +79,17 @@ function Login(props) {
 
             sessionStorage.setItem("email", loginedEmail);
             sessionStorage.setItem("role", decoded.auth);
-            sessionStorage.setItem("atk",atk);
-            
+            sessionStorage.setItem("atk", atk);
+
             navigate("/");
-        } else if(response.status === 401) {
+        } else if (response.status === 401) {
             handleClick();
             setLoginCheck(true);
-        }else{
+        } else {
             alert('서버 오류. 나중에 시도하시오');
         }
-        
+
     }
-    /*
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            if (data.token) {navigate("/")}
-            else {
-                alert("ID 혹은 비밀번호를 확인해주세요")
-            }
-        });
-};
- 
-checkToken = () => {
-    const token = localStorage.getItem("token");
-    alert(token);
-}
-*/
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
@@ -154,11 +139,12 @@ checkToken = () => {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 2, backgroundColor:'#435585',
-                                ":hover":{
-                                    backgroundColor:'#435585'
+                            sx={{
+                                mt: 3, mb: 2, backgroundColor: '#435585',
+                                ":hover": {
+                                    backgroundColor: '#435585'
                                 }
-                             }}
+                            }}
                             //disabled={this.state.ID.includes('@') && PW.length>=5 ? false : true}
                             onClick={handleSubmit}
                         >

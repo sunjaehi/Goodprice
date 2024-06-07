@@ -5,6 +5,7 @@ import { Card, CardContent, Container, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../../component/Footer/Footer';
 
+const backend = process.env.REACT_APP_BACKEND_ADDR;
 function Newsfeed() {
   const [target, setTarget] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +18,7 @@ function Newsfeed() {
   useEffect(() => {
     if (isLastPage) return; // 마지막 페이지면 요청을 보내지 않음
 
-    fetch(`http://localhost:8080/api/v1/shop-news/feed?page=${page}`, {
+    fetch(`${backend}/api/v1/shop-news/feed?page=${page}`, {
       headers: {
         "Authorization": "Bearer " + sessionStorage.getItem('atk')
       }
