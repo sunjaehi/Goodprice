@@ -1,14 +1,14 @@
 @font-face {
-  font-family: "NanumGothicLight";
+  font-family: "NanumGothic";
   font-style: normal;
-  src: url("./fonts/NanumGothicLight.ttf");
+  src: url("./fonts/NanumGothic.ttf");
 }
 :root {
-  --font-NanumGothicLight:"NanumGothicLight"
+  --font-NanumGothic:"NanumGothic"
 }
 body {
   margin: 0;
-  font-family: var(--font-NanumGothicLight);
+  font-family: var(--font-NanumGothic);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /*
