@@ -7,16 +7,16 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Box, Stack, Typography, Button } from '@mui/material';
-import Adminlist from './Adminlist';
 import TablePagination from '@mui/material/TablePagination';
 import { useNavigate } from "react-router-dom";
 
+const backend = process.env.REACT_APP_BACKEND_ADDR;
 export default function NoticeTable() {
     const navigate = useNavigate();
     const [response, setResponse] = useState(null);
     const [notices, setNotices] = useState(null);
     useEffect(() => {
-        fetch('http://localhost:8080/api/v1/notice/')
+        fetch(`${backend}/api/v1/notice`)
             .then(result => result.json())
             .then(json => {
                 setResponse(json);
@@ -27,18 +27,12 @@ export default function NoticeTable() {
                 }
             })
     }, [])
-    const navigateToRegistershop = () => {
-        navigate("/Registershop");
-    }
-    const navigateToProposalmanage = () => {
-        navigate("/Proposalmanage");
-    }
 
-    const handleRowClick = (shopId) => {
-        navigate(`/shopManage/${shopId}`);
+    const handleRowClick = (id) => {
+        navigate(`/noticeAdminDetail/${id}`);
     };
     const handleChangePage = (event, newPage) => {
-        fetch(`http://localhost:8080/api/v1/shop/list?page=${newPage}`)
+        fetch(`${backend}/api/v1/notice?page=${newPage}`)
             .then(result => result.json())
             .then(json => {
                 setResponse(json);
@@ -130,6 +124,5 @@ export default function NoticeTable() {
                 </TableContainer>
             }
         </Box>
-
     )
 }
