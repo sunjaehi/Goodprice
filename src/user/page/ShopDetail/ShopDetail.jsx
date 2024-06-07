@@ -274,9 +274,25 @@ function ShopDetail() {
                                         </MapMarker>
                                     )}
                                 </Map>
-                                {stations.length > 0 && stations.map(station => (
-                                    <p>{station.name}역에서 {parseInt(station.distance * 1000)}m</p>
-                                ))}
+                                {stations.length > 0 && (() => {
+                                    const stationGroups = stations.reduce((acc, station) => {
+                                        if (!acc[station.name]) {
+                                            acc[station.name] = [];
+                                        }
+                                        acc[station.name].push(station.distance * 1000);
+                                        return acc;
+                                    }, {});
+
+                                    const stationAverages = Object.keys(stationGroups).map(name => {
+                                        const totalDistance = stationGroups[name].reduce((acc, distance) => acc + distance, 0);
+                                        const averageDistance = totalDistance / stationGroups[name].length;
+                                        return { name, averageDistance: Math.round(averageDistance) };
+                                    });
+
+                                    return stationAverages.map((station, index) => (
+                                        <p key={index}>{station.name}역에서 {station.averageDistance}m</p>
+                                    ));
+                                })()}
                             </CustomTabPanel>
                             <CustomTabPanel value={value} index={2}>
                                 <Typography>기타 정보</Typography>
