@@ -203,168 +203,166 @@ function ShopDetail() {
     }
 
     return (
-        <>
-            <Container maxWidth="sm">
-                <div>
-                    {datas && <Card sx={{ width: '100%' }}>
-                        <Carousel autoPlay={false} animation="slide" timeout={1000}>
-                            {datas.shopImgUrls.map(url =>
-                                <Paper>
-                                    <ImageContainer>
-                                        <Image src={url} alt="이미지 준비중" />
-                                    </ImageContainer>
-                                </Paper>
-                            )}
-                        </Carousel>
-                        <CardContent>
-                            <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Container maxWidth="sm" sx={{ marginTop: '75px' }}>
+            <div>
+                {datas && <Card sx={{ width: '100%' }}>
+                    <Carousel autoPlay={false} animation="slide" timeout={1000} >
+                        {datas.shopImgUrls.map(url =>
+                            <Paper>
+                                <ImageContainer>
+                                    <Image src={url} alt="이미지 준비중" />
+                                </ImageContainer>
+                            </Paper>
+                        )}
+                    </Carousel>
+                    <CardContent>
+                        <Box display="flex" justifyContent="space-between" alignItems="center">
                             <Typography gutterBottom variant="h5" component="div">
                                 {datas.shopName}
                             </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    {datas.sector}
-                                </Typography>
-                            </Box>
-                            <Box display="flex" alignItems="baseline">
-                                <ThumbUpIcon style={{ verticalAlign: 'middle' }} />
-                                <Typography variant="body2" color="text.secondary" style={{ marginLeft: 4 }}>
-                                    {datas.recommend}
-                                </Typography>
-                            </Box>
-                            <Rating readOnly value={datas.rate} precision={0.1} /> {datas.rate.toFixed(2)}
-                            <Tabs value={value} onChange={handleChange} centered variant="fullWidth">
-                                <Tab label="홈" />
-                                <Tab label="지도" />
-                                <Tab label="기타 정보" />
-                            </Tabs>
-                            <CustomTabPanel value={value} index={0}>
-                                <Typography>주소</Typography>
-                                <Typography variant="body2" color="text.secondary">{datas.address}</Typography>
-                                <Typography>연락처</Typography>
-                                <Typography variant="body2" color="text.secondary">{datas.phone.length < 5 ? "연락처 정보가 없습니다" : datas.phone}</Typography>
-                                <Typography>영업시간</Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    {datas.businessHours && datas.businessHours.length < 5 ? "영업시간 정보가 없습니다." : datas.businessHours} <br />(자세한 시간 정보는 기타 정보를 참고하세요.)
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    {datas.businessHours && datas.businessHours.length >= 5 && isOpen ? "영업중입니다" : (datas.businessHours && "영업중이 아닙니다 ")}
-                                </Typography>
-                                <br />
-                                {datas.isLocalFranchise == 1 && (<Chip label="서울사랑상품권" variant="outlined" color="primary" />)}
-                            </CustomTabPanel>
-                            <CustomTabPanel value={value} index={1}>
-                                <Map
-                                    center={state.center}
-                                    isPanto={state.isPanto}
-                                    style={{
-                                        width: "100%",
-                                        height: "500px",
-                                    }}
-                                    level={level}
-                                    ref={mapRef}
-                                >
-                                    <CustomOverlayMap position={state.center}>
-                                        <div className="overlay">Here !</div>
-                                    </CustomOverlayMap>
-                                    {!state.isLoading && (
-                                        <MapMarker position={state.center}>
-                                            <div style={{ padding: "5px", color: "#000" }}>
-                                                {state.errMsg ? state.errMsg : datas && datas.shopName}
-                                            </div>
-                                        </MapMarker>
-                                    )}
-                                </Map>
-                                {stations.length > 0 && (() => {
-                                    const stationGroups = stations.reduce((acc, station) => {
-                                        if (!acc[station.name]) {
-                                            acc[station.name] = [];
-                                        }
-                                        acc[station.name].push(station.distance * 1000);
-                                        return acc;
-                                    }, {});
-
-                                    const stationAverages = Object.keys(stationGroups).map(name => {
-                                        const totalDistance = stationGroups[name].reduce((acc, distance) => acc + distance, 0);
-                                        const averageDistance = totalDistance / stationGroups[name].length;
-                                        return { name, averageDistance: Math.round(averageDistance) };
-                                    });
-
-                                    return stationAverages.map((station, index) => (
-                                        <p key={index}>{station.name}역에서 {station.averageDistance}m</p>
-                                    ));
-                                })()}
-                            </CustomTabPanel>
-                            <CustomTabPanel value={value} index={2}>
-                                <Typography>기타 정보</Typography>
-                                <Typography variant="body2" color="text.secondary">{datas.info}</Typography>
-                                <Typography>자랑거리</Typography>
-                                <Typography variant="body2" color="text.secondary">{datas.boast}</Typography>
-                            </CustomTabPanel>
-                        </CardContent>
-                        <CardActions>
-                            <Button size="small" onClick={hasRecommended ? unRecommend : recommend} disabled={atk === null}>{hasRecommended ? "추천 해제" : "추천"}</Button>
-                            <Button size="small" onClick={hasMarked ? deleteShopMark : addShopMark} disabled={atk === null} >{hasMarked ? "관심 가게 해제" : "관심 가게 추가"}</Button>
-                        </CardActions>
-                    </Card>
-                    }
-                </div>
-                <h2>상품</h2>
-                <hr />
-                <List>
-                    {(!productDatas || productDatas.length === 0) && <p>아직 상품이 없어요</p>}
-                    {productDatas && productDatas.map(product => {
-                        return (
-                            <ListItem divider>
-                                {product.imgUrl && (
-                                    <img
-                                        src={product.imgUrl}
-                                        style={{
-                                            width: '100px',
-                                            height: '100px',
-                                            objectFit: 'cover',
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            overflowX: 'auto',
-                                            marginRight: '16px'
-                                        }}
-                                        alt="상품 이미지"
-                                    />
+                            <Typography variant="body2" color="text.secondary">
+                                {datas.sector}
+                            </Typography>
+                        </Box>
+                        <Box display="flex" alignItems="baseline">
+                            <ThumbUpIcon style={{ verticalAlign: 'middle' }} />
+                            <Typography variant="body2" color="text.secondary" style={{ marginLeft: 4 }}>
+                                {datas.recommend}
+                            </Typography>
+                        </Box>
+                        <Rating readOnly value={datas.rate} precision={0.1} /> {datas.rate.toFixed(2)}
+                        <Tabs value={value} onChange={handleChange} centered variant="fullWidth">
+                            <Tab label="홈" />
+                            <Tab label="지도" />
+                            <Tab label="기타 정보" />
+                        </Tabs>
+                        <CustomTabPanel value={value} index={0}>
+                            <Typography>주소</Typography>
+                            <Typography variant="body2" color="text.secondary">{datas.address}</Typography>
+                            <Typography>연락처</Typography>
+                            <Typography variant="body2" color="text.secondary">{datas.phone.length < 5 ? "연락처 정보가 없습니다" : datas.phone}</Typography>
+                            <Typography>영업시간</Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                {datas.businessHours && datas.businessHours.length < 5 ? "영업시간 정보가 없습니다." : datas.businessHours} <br />(자세한 시간 정보는 기타 정보를 참고하세요.)
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                {datas.businessHours && datas.businessHours.length >= 5 && isOpen ? "영업중입니다" : (datas.businessHours && "영업중이 아닙니다 ")}
+                            </Typography>
+                            <br />
+                            {datas.isLocalFranchise == 1 && (<Chip label="서울사랑상품권" variant="outlined" color="primary" />)}
+                        </CustomTabPanel>
+                        <CustomTabPanel value={value} index={1}>
+                            <Map
+                                center={state.center}
+                                isPanto={state.isPanto}
+                                style={{
+                                    width: "100%",
+                                    height: "500px",
+                                }}
+                                level={level}
+                                ref={mapRef}
+                            >
+                                <CustomOverlayMap position={state.center}>
+                                    <div className="overlay">Here !</div>
+                                </CustomOverlayMap>
+                                {!state.isLoading && (
+                                    <MapMarker position={state.center}>
+                                        <div style={{ padding: "5px", color: "#000" }}>
+                                            {state.errMsg ? state.errMsg : datas && datas.shopName}
+                                        </div>
+                                    </MapMarker>
                                 )}
-                                <ListItemText primary={product.name} secondary={product.price} />
-                            </ListItem>
-                        )
-                    })}
-                </List>
-                <h2>리뷰</h2>
-                <List>
-                    {(!reviewSummary || reviewSummary.length == 0) && <p>아직 리뷰가 없어요. 가게를 방문해보셨다면 리뷰를 남겨보세요</p>}
-                    <Button variant="contained" component={Link} to={`/review/${shopId}`}>전체 리뷰보기</Button>
+                            </Map>
+                            {stations.length > 0 && (() => {
+                                const stationGroups = stations.reduce((acc, station) => {
+                                    if (!acc[station.name]) {
+                                        acc[station.name] = [];
+                                    }
+                                    acc[station.name].push(station.distance * 1000);
+                                    return acc;
+                                }, {});
 
-                    {reviewSummary && reviewSummary.map(reviewSummary => {
-                        return (
-                            <>
-                                <hr />
-                                <h3>{reviewSummary.writer}</h3>
-                                <p>{reviewSummary.comment}</p>
-                                <p>{reviewSummary.createdAt}</p>
-                                <Rating name="read-only" value={reviewSummary.score} precision={0.5} readOnly />
-                                {reviewSummary.attachmentIndices.length > 0 &&
-                                    <ImageList sx={{ width: '100%', display: 'flex', flexDirection: 'row', overflowX: 'auto' }}>
-                                        {reviewSummary.attachmentIndices.map(index => {
-                                            return (
-                                                <a key={index} href={`${backend}/api/v1/attachment/${index}`} style={{ marginRight: '10px' }}>
-                                                    <img src={`${backend}/api/v1/attachment/${index}`} width={160} height={90} />
-                                                </a>
-                                            )
-                                        })}
-                                    </ImageList>
-                                }
-                            </>
-                        )
-                    })}
-                </List>
-            </Container >
-        </>
+                                const stationAverages = Object.keys(stationGroups).map(name => {
+                                    const totalDistance = stationGroups[name].reduce((acc, distance) => acc + distance, 0);
+                                    const averageDistance = totalDistance / stationGroups[name].length;
+                                    return { name, averageDistance: Math.round(averageDistance) };
+                                });
+
+                                return stationAverages.map((station, index) => (
+                                    <p key={index}>{station.name}역에서 {station.averageDistance}m</p>
+                                ));
+                            })()}
+                        </CustomTabPanel>
+                        <CustomTabPanel value={value} index={2}>
+                            <Typography>기타 정보</Typography>
+                            <Typography variant="body2" color="text.secondary">{datas.info}</Typography>
+                            <Typography>자랑거리</Typography>
+                            <Typography variant="body2" color="text.secondary">{datas.boast}</Typography>
+                        </CustomTabPanel>
+                    </CardContent>
+                    <CardActions>
+                        <Button size="small" onClick={hasRecommended ? unRecommend : recommend} disabled={atk === null}>{hasRecommended ? "추천 해제" : "추천"}</Button>
+                        <Button size="small" onClick={hasMarked ? deleteShopMark : addShopMark} disabled={atk === null} >{hasMarked ? "관심 가게 해제" : "관심 가게 추가"}</Button>
+                    </CardActions>
+                </Card>
+                }
+            </div>
+            <h2>상품</h2>
+            <hr />
+            <List>
+                {(!productDatas || productDatas.length === 0) && <p>아직 상품이 없어요</p>}
+                {productDatas && productDatas.map(product => {
+                    return (
+                        <ListItem divider>
+                            {product.imgUrl && (
+                                <img
+                                    src={product.imgUrl}
+                                    style={{
+                                        width: '100px',
+                                        height: '100px',
+                                        objectFit: 'cover',
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        overflowX: 'auto',
+                                        marginRight: '16px'
+                                    }}
+                                    alt="상품 이미지"
+                                />
+                            )}
+                            <ListItemText primary={product.name} secondary={product.price} />
+                        </ListItem>
+                    )
+                })}
+            </List>
+            <h2>리뷰</h2>
+            <List>
+                {(!reviewSummary || reviewSummary.length == 0) && <p>아직 리뷰가 없어요. 가게를 방문해보셨다면 리뷰를 남겨보세요</p>}
+                <Button variant="contained" component={Link} to={`/review/${shopId}`}>전체 리뷰보기</Button>
+
+                {reviewSummary && reviewSummary.map(reviewSummary => {
+                    return (
+                        <>
+                            <hr />
+                            <h3>{reviewSummary.writer}</h3>
+                            <p>{reviewSummary.comment}</p>
+                            <p>{reviewSummary.createdAt}</p>
+                            <Rating name="read-only" value={reviewSummary.score} precision={0.5} readOnly />
+                            {reviewSummary.attachmentIndices.length > 0 &&
+                                <ImageList sx={{ width: '100%', display: 'flex', flexDirection: 'row', overflowX: 'auto' }}>
+                                    {reviewSummary.attachmentIndices.map(index => {
+                                        return (
+                                            <a key={index} href={`${backend}/api/v1/attachment/${index}`} style={{ marginRight: '10px' }}>
+                                                <img src={`${backend}/api/v1/attachment/${index}`} width={160} height={90} />
+                                            </a>
+                                        )
+                                    })}
+                                </ImageList>
+                            }
+                        </>
+                    )
+                })}
+            </List>
+        </Container >
     )
 }
 export default ShopDetail;
