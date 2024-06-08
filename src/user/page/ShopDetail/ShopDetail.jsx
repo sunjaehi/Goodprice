@@ -217,11 +217,20 @@ function ShopDetail() {
                             )}
                         </Carousel>
                         <CardContent>
+                            <Box display="flex" justifyContent="space-between" alignItems="center">
                             <Typography gutterBottom variant="h5" component="div">
                                 {datas.shopName}
                             </Typography>
-                            <Typography variant="body2" color="text.secondary">{datas.sector}</Typography>
-                            <ThumbUpIcon />{datas.recommend}<br />
+                                <Typography variant="body2" color="text.secondary">
+                                    {datas.sector}
+                                </Typography>
+                            </Box>
+                            <Box display="flex" alignItems="baseline">
+                                <ThumbUpIcon style={{ verticalAlign: 'middle' }} />
+                                <Typography variant="body2" color="text.secondary" style={{ marginLeft: 4 }}>
+                                    {datas.recommend}
+                                </Typography>
+                            </Box>
                             <Rating readOnly value={datas.rate} precision={0.1} /> {datas.rate.toFixed(2)}
                             <Tabs value={value} onChange={handleChange} centered variant="fullWidth">
                                 <Tab label="홈" />
@@ -265,9 +274,25 @@ function ShopDetail() {
                                         </MapMarker>
                                     )}
                                 </Map>
-                                {stations.length > 0 && stations.map(station => (
-                                    <p>{station.name}역에서 {parseInt(station.distance * 1000)}m</p>
-                                ))}
+                                {stations.length > 0 && (() => {
+                                    const stationGroups = stations.reduce((acc, station) => {
+                                        if (!acc[station.name]) {
+                                            acc[station.name] = [];
+                                        }
+                                        acc[station.name].push(station.distance * 1000);
+                                        return acc;
+                                    }, {});
+
+                                    const stationAverages = Object.keys(stationGroups).map(name => {
+                                        const totalDistance = stationGroups[name].reduce((acc, distance) => acc + distance, 0);
+                                        const averageDistance = totalDistance / stationGroups[name].length;
+                                        return { name, averageDistance: Math.round(averageDistance) };
+                                    });
+
+                                    return stationAverages.map((station, index) => (
+                                        <p key={index}>{station.name}역에서 {station.averageDistance}m</p>
+                                    ));
+                                })()}
                             </CustomTabPanel>
                             <CustomTabPanel value={value} index={2}>
                                 <Typography>기타 정보</Typography>
