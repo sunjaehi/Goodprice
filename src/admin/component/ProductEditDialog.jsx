@@ -1,9 +1,11 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from "@mui/material";
 import { useRef, useState } from "react";
+const backend = process.env.REACT_APP_BACKEND_ADDR;
 
 export default function ProductEditDialog({ product, editFormOpen, setEditFormOpen }) {
     const [imageDeleted, setImageDeleted] = useState(false);
     const newPriceRef = useRef();
+    const fileInputRef = useRef();
 
     const handleImageDelete = () => {
         setImageDeleted(true);
@@ -12,10 +14,15 @@ export default function ProductEditDialog({ product, editFormOpen, setEditFormOp
     const handleEdit = () => {
         const formData = new FormData();
         formData.append('id', product.id);
-        formData.append('attachmentId', product.attachmentId);
+        formData.append('attachmentUrl', product.attachmentId);
         formData.append('price', newPriceRef.current.value);
         formData.append('isDeleteImage', imageDeleted);
-        fetch('http://localhost:8080/api/v1/product/edit', {
+
+        if (fileInputRef.current && fileInputRef.current.files.length > 0) {
+            formData.append('file', fileInputRef.current.files[0]);
+        }
+
+        fetch(`${backend}/api/v1/product/edit`, {
             method: "PATCH",
             headers: {
                 "Authorization": `Bearer ${sessionStorage.getItem('atk')}`
@@ -45,7 +52,7 @@ export default function ProductEditDialog({ product, editFormOpen, setEditFormOp
                         </>
                     ) : (
                         <>
-                            <input type="file" accept="image/*" />
+                            <input type="file" accept="image/*" ref={fileInputRef} />
                         </>
                     )}
                 </Stack>
