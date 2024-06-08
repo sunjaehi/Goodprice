@@ -1,6 +1,8 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from "@mui/material";
 import { useRef, useState } from "react";
 
+const backend = process.env.REACT_APP_BACKEND_ADDR;
+
 function ProductDialog({ open, handleClose, shopId }) {
     const [selectedFiles, setSelectedFiles] = useState([]);
     const priceRef = useRef();
@@ -18,7 +20,7 @@ function ProductDialog({ open, handleClose, shopId }) {
         formData.append('price', priceRef.current.value);
         selectedFiles.forEach(file => formData.append('files', file));
 
-        const result = await fetch('http://localhost:8080/api/v1/product/new',
+        const result = await fetch(`${backend}/api/v1/product/new`,
             {
                 method: "POST",
                 headers: {
