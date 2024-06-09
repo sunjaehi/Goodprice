@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Map, MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
 import {
     Card, CardActions, CardContent, Button, Typography, List, ListItem, ListItemText,
-    Chip, Container, ImageList, Paper, Rating, Tab, Tabs, Box
+    Chip, Container, ImageList, Paper, Rating, Tab, Tabs, Box, IconButton
 } from '@mui/material';
 import Carousel from "react-material-ui-carousel";
 import { styled } from '@mui/material/styles';
@@ -240,7 +240,9 @@ function ShopDetail() {
                             <Typography>주소</Typography>
                             <Typography variant="body2" color="text.secondary">{datas.address}</Typography>
                             <Typography>연락처</Typography>
-                            <Typography variant="body2" color="text.secondary">{datas.phone.length < 5 ? "연락처 정보가 없습니다" : datas.phone}</Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                {datas.phone.length < 5 ? "연락처 정보가 없습니다" : (<a href={`tel:${datas.phone}`}>{datas.phone}</a>)}
+                            </Typography>
                             <Typography>영업시간</Typography>
                             <Typography variant="body2" color="text.secondary">
                                 {datas.businessHours && datas.businessHours.length < 5 ? "영업시간 정보가 없습니다." : datas.businessHours} <br />(자세한 시간 정보는 기타 정보를 참고하세요.)
