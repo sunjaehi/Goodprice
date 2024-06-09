@@ -3,6 +3,8 @@ import { Container, IconButton, List, ListItem, ListItemButton, ListItemText, Me
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const backend = process.env.REACT_APP_BACKEND_ADDR;
+
 function Myfavorite() {
     const navigate = useNavigate();
     const [shopMarks, setShopMarks] = useState(null);
@@ -16,7 +18,7 @@ function Myfavorite() {
             navigate(-1);
         }
 
-        fetch('http://localhost:8080/api/v1/shopmark/', {
+        fetch(`${backend}/api/v1/shopmark/`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + atk
@@ -52,7 +54,7 @@ function Myfavorite() {
     };
 
     const handleDelete = () => {
-        fetch('http://localhost:8080/api/v1/shopmark/', {
+        fetch(`${backend}/api/v1/shopmark/`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",

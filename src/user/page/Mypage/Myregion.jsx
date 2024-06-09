@@ -3,11 +3,12 @@ import Switch from '@mui/material/Switch';
 import Button from '@mui/material/Button';
 import { regionSample } from "../../../data/regionSample";
 import { Container, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+const backend = process.env.REACT_APP_BACKEND_ADDR;
 
 function Myregion() {
     const [selected, setSelcted] = useState(new Set());
     useEffect(() => {
-        fetch('http://localhost:8080/api/v1/regionMark/', {
+        fetch(`${backend}/api/v1/regionMark/`, {
             headers: {
                 "Authorization": "Bearer " + sessionStorage.getItem("atk")
             }
@@ -39,7 +40,7 @@ function Myregion() {
                 isAdd: isChecked
             }
         )
-        fetch(`http://localhost:8080/api/v1/regionMark/edit`, {
+        fetch(`${backend}/api/v1/regionMark/edit`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

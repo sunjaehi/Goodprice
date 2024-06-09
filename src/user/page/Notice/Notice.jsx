@@ -4,6 +4,8 @@ import { Container, List, ListItemButton, ListItemText } from "@mui/material";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { SecurityUpdateGood } from "@mui/icons-material";
 
+const backend = process.env.REACT_APP_BACKEND_ADDR;
+
 function Notice() {
     const navigate = useNavigate();
     const [response, setResponse] = useState(null);
@@ -11,7 +13,7 @@ function Notice() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [page, setPage] = useState(searchParams.get('page') || 1);
     useEffect(() => {
-        fetch(`http://localhost:8080/api/v1/notice/?page=${page - 1}`)
+        fetch(`${backend}/api/v1/notice/?page=${page - 1}`)
             .then(response => response.json())
             .then(json => {
                 setResponse(json);
