@@ -65,22 +65,15 @@ function Login(props) {
 
         if (response.status === 200) {
             setLoginCheck(false);
-            console.log(result);
             const atk = result.accessToken;
 
-            // sessionStorage.setItem("email",result.email);
-            // sessionStorage.setItem("password",result.password);
             let payload = atk.substring(atk.indexOf('.') + 1, atk.lastIndexOf('.'));
             let decoded = JSON.parse(base64.decode(payload));
-            const loginedEmail = decoded.id;
-            const loginedPassword = decoded.password;
-            // const loginedNickname = decoded.nickname;
-            // const loginedAuth = decoded.auth;
-
-            sessionStorage.setItem("email", loginedEmail);
-            sessionStorage.setItem("role", decoded.auth);
-            sessionStorage.setItem("atk", atk);
-
+            const loginedAuth = decoded.auth;
+            const memberPk = decoded.id;
+            sessionStorage.setItem('atk', atk);
+            sessionStorage.setItem('role', loginedAuth);
+            sessionStorage.setItem('id', memberPk);
             navigate("/");
         } else if (response.status === 401) {
             handleClick();
