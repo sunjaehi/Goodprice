@@ -18,7 +18,7 @@ export default function ProposalTable() {
     const [response, setResponse] = useState(null);
     const [proposalData, setProposalData] = useState(null);
     useEffect(() => {
-        fetch('http://localhost:8080/api/v1/proposal/')
+        fetch(`${backend}/api/v1/proposal/`)
             .then(result => result.json())
             .then(json => {
                 setResponse(json);
@@ -36,11 +36,11 @@ export default function ProposalTable() {
         navigate("/Proposalmanage");
     }
 
-    const handleRowClick = (shopId) => {
-        navigate(`/shopManage/${shopId}`);
+    const handleRowClick = (proposalId) => {
+        navigate(`/ProposalAdminDetail/${proposalId}`);
     };
     const handleChangePage = (event, newPage) => {
-        fetch(`http://localhost:8080/api/v1/proposal/?page=${newPage}`)
+        fetch(`${backend}/api/v1/proposal/?page=${newPage}`)
             .then(result => result.json())
             .then(json => {
                 setResponse(json);
