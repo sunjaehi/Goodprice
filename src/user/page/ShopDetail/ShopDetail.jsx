@@ -339,26 +339,34 @@ function ShopDetail() {
                 {(!reviewSummary || reviewSummary.length == 0) && <p>아직 리뷰가 없어요. 가게를 방문해보셨다면 리뷰를 남겨보세요</p>}
                 <Button variant="contained" component={Link} to={`/review/${shopId}`}>전체 리뷰보기</Button>
 
-                {reviewSummary && reviewSummary.map(reviewSummary => {
+                {reviewSummary && reviewSummary.map(review => {
                     return (
-                        <>
-                            <hr />
-                            <h3>{reviewSummary.writer}</h3>
-                            <p>{reviewSummary.comment}</p>
-                            <p>{reviewSummary.createdAt}</p>
-                            <Rating name="read-only" value={reviewSummary.score} precision={0.5} readOnly />
-                            {reviewSummary.attachmentIndices.length > 0 &&
-                                <ImageList sx={{ width: '100%', display: 'flex', flexDirection: 'row', overflowX: 'auto' }}>
-                                    {reviewSummary.attachmentIndices.map(index => {
-                                        return (
-                                            <a key={index} href={`${backend}/api/v1/attachment/${index}`} style={{ marginRight: '10px' }}>
-                                                <img src={`${backend}/api/v1/attachment/${index}`} width={160} height={90} />
-                                            </a>
-                                        )
-                                    })}
-                                </ImageList>
-                            }
-                        </>
+                        <Card key={review.id} sx={{ marginBottom: 2 }}>
+                            <CardContent>
+                                <Box display="flex" justifyContent="space-between" alignItems="center">
+                                    <Typography variant="h6">{review.memberNickname}</Typography>
+                                </Box>
+                                <Typography variant="body2" color="textSecondary">{review.createdAt}</Typography>
+                                <Typography variant="body1" paragraph>{review.comment}</Typography>
+                                <Rating name="read-only" value={review.score} precision={0.5} readOnly />
+                                {review.imgUrls && review.imgUrls.length > 0 &&
+                                    <ImageList sx={{ width: '100%', display: 'flex', flexDirection: 'row', overflowX: 'auto' }}>
+                                        {review.imgUrls.map(imgurl => {
+                                            return (
+                                                <a href={imgurl} style={{ marginRight: '10px' }}>
+                                                    <img
+                                                        src={imgurl}
+                                                        width={100}
+                                                        height={100}
+                                                        style={{ objectFit: 'cover' }}
+                                                    />
+                                                </a>
+                                            )
+                                        })}
+                                    </ImageList>
+                                }
+                            </CardContent>
+                        </Card>
                     )
                 })}
             </List>
