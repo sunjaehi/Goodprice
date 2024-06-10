@@ -8,6 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import PersonIcon from '@mui/icons-material/Person';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import GroupIcon from '@mui/icons-material/Group';
 
 const defaultTheme = createTheme();
 const backend = process.env.REACT_APP_BACKEND_ADDR;
@@ -18,12 +19,24 @@ function Review(props) {
     const [reviews, setReviews] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedReviewId, setSelectedReviewId] = useState(null);
+    const [myReviewMode, setMyReviewMode] = useState(false);
 
     useEffect(() => {
-        fetch(`${backend}/api/v1/review/?shopId=${shopId}`)
-            .then(response => response.json())
-            .then(data => { setReviews(data); });
-    }, [shopId]);
+        if (myReviewMode === false) {
+            fetch(`${backend}/api/v1/review/?shopId=${shopId}`)
+                .then(response => response.json())
+                .then(data => { setReviews(data); });
+        }
+        else if (myReviewMode === true) {
+            fetch(`${backend}/api/v1/review/my-review?shopId=${shopId}`, {
+                headers: {
+                    "Authorization": "Bearer " + sessionStorage.getItem('atk')
+                }
+            })
+                .then(response => response.json())
+                .then(data => { setReviews(data); });
+        }
+    }, [shopId, myReviewMode]);
 
     const handleMenuOpen = (event, reviewId) => {
         setAnchorEl(event.currentTarget);
@@ -68,10 +81,15 @@ function Review(props) {
                         to={`/ReviewInput/${shopId}`}
                     />
                     <SpeedDialAction
-                        icon={<PersonIcon />}
+                        icon={myReviewMode ? <GroupIcon /> : <PersonIcon />}
                         tooltipTitle="나의 리뷰"
-                        component={Link}
-                        to={`/MyReviews/${shopId}`}
+                        onClick={() => {
+                            if (myReviewMode) {
+                                setMyReviewMode(false);
+                            } else {
+                                setMyReviewMode(true);
+                            }
+                        }}
                     />
                 </SpeedDial>
             </Box>
