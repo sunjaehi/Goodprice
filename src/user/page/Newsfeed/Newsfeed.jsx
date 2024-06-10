@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import styled from 'styled-components';
 import ReactLoading from 'react-loading';
 import { Card, CardContent, Container, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import BottomNavigation from '../../component/BottomNavigation/BottomNavigation';
+import BottomNav from '../../component/BottomNavigation/BottomNav';
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
 function Newsfeed() {
@@ -79,7 +77,7 @@ function Newsfeed() {
         )}
         <div ref={setTarget}></div>
       </Container>
-      <BottomNavigation />
+      <BottomNav />
     </>
   );
 }
