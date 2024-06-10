@@ -145,7 +145,7 @@ function Search() {
                 </Map>
                 <Button
                     
-                    startIcon={<MyLocationIcon />}
+                    startIcon={<NavigationIcon />}
                     size="large"
                     variant="contained"
                     onClick={handleSubmit}
@@ -202,7 +202,7 @@ function Search() {
                         }
                     }}
                 >
-                    <NavigationIcon />
+                    <MyLocationIcon />
                 </Fab>
             </div>
             <SwipeableDrawer
