@@ -17,8 +17,8 @@ export default function BottomNav() {
     const navigateToHome = () => {
         navigate("/");
     }
-    const navigateToSearch = () => {
-        navigate("/Search");
+    const navigateToNearby = () => {
+        navigate("/Nearby");
     }
 
     const handleChange = (event, newValue) => {
@@ -49,7 +49,7 @@ export default function BottomNav() {
                     label="내 주변"
                     value="nearby"
                     icon={<LocationOnIcon />}
-                    onClick={navigateToSearch}
+                    onClick={navigateToNearby}
                 />
             </BottomNavigation>
         </div>
