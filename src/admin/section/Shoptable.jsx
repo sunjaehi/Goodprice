@@ -40,7 +40,7 @@ export default function Shoptable() {
         navigate(`/shopManage/${shopId}`);
     };
     const handleChangePage = (event, newPage) => {
-        fetch(`${backend}/api/v1 / shop / list ? page = ${newPage}`)
+        fetch(`${backend}/api/v1/shop/list?page=${newPage}`)
             .then(result => result.json())
             .then(json => {
                 setResponse(json);
