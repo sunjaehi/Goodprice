@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -17,6 +17,7 @@ import { useDispatch } from 'react-redux';
 import base64 from 'base-64';
 import { Snackbar, Alert } from "@mui/material";
 import sessionStorage from "redux-persist/es/storage/session";
+import { useCookies } from "react-cookie";
 
 const defaultTheme = createTheme();
 
@@ -45,10 +46,27 @@ function Login(props) {
             children={props.children}
         ></Snackbar>
     )
+    const [isRemember, setIsRemember] = useState(false);
+    const [cookies, setCookie, removeCookie] = useCookies(["rememberUserEmail"]);
 
+    useEffect(() => { //저장된 쿠키값이 있으면 값 셋팅
+        if (cookies.rememberUserEmail !== undefined) {
+            setUseremail(cookies.rememberUserEmail);
+            setIsRemember(true);
+        }
+    },[]);
+    const handleOnChange = (e) => {
+        setIsRemember(e.target.checked);
+        if (e.target.checked) {
+            setCookie('rememberUserEmail', userEmail);
+        } else {
+            removeCookie('rememberUserEmail');
+        }
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log(userEmail, userPw);
         //const user = {userEmail, userPw};
         //await new Promise((r)=setTimeout(r,1000));
         const response = await fetch(API, {
@@ -111,6 +129,7 @@ function Login(props) {
                             name="email"
                             autoComplete="email"
                             autoFocus
+                            defaultValue={cookies.rememberUserEmail}
                             onChange={(e) => setUseremail(e.target.value)}
                         />
                         <TextField
@@ -125,8 +144,9 @@ function Login(props) {
                             onChange={(e) => setUserpw(e.target.value)}
                         />
                         <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
-                            label="아이디/비밀번호 저장"
+                            control={<Checkbox value="remember" color="primary" onChange={handleOnChange}
+                            checked={isRemember}/>}
+                            label="아이디 저장"
                         />
                         <Button
                             type="submit"
