@@ -99,7 +99,7 @@ function Servicecenter() {
             ...inputItem,
             businessHours: businessHours
         });
-        fetch(`http://localhost:8080/api/v1/proposal/register`, {
+        fetch(`${backend}/api/v1/proposal/register`, {
             method: "POST",
             headers: {
                 "Authorization": "Bearer " + sessionStorage.getItem("atk"),
