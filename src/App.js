@@ -35,6 +35,7 @@ import ResetPassword from './user/page/ResetPassword/ResetPassword';
 import NoticeAdminDetail from './admin/page/NoticeAdminDetail';
 import NoticeAdminEdit from './admin/page/NoticeAdminEdit';
 import ProposalAdminDetail from './admin/page/ProposalAdminDetail';
+import ReviewEdit from './user/page/Review/ReviewEdit';
 
 
 function App() {
@@ -74,6 +75,7 @@ function App() {
         <Route path="/noticeAdminDetail/:id" element={<NoticeAdminDetail />}></Route>
         <Route path="/noticeAdminEdit/:id" element={<NoticeAdminEdit />}></Route>
         <Route path="/proposalAdminDetail/:id" element={<ProposalAdminDetail />}></Route>
+        <Route path="/edit-review" element={<ReviewEdit />}></Route>
       </Routes>
     </BrowserRouter >
   );
