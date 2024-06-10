@@ -16,6 +16,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TimePicker } from "@mui/x-date-pickers";
 
+const backend = process.env.REACT_APP_BACKEND_ADDR;
+
 function Servicecenter() {
     const navigate = useNavigate();
     const navigateToLogin = () => {
@@ -44,7 +46,7 @@ function Servicecenter() {
             alert('로그인이 필요합니다!');
             navigateToLogin();
         }
-        fetch('http://localhost:8080/api/v1/sector/')
+        fetch(`${backend}/api/v1/sector/`)
             .then(result => result.json())
             .then(json => setSectors(json));
     }, []);
@@ -248,11 +250,11 @@ function Servicecenter() {
                     display="flex"
                 >
                     <Button variant="contained" color="secondary"
-                        sx={{ mr: '5px' , bgcolor:'#435585'}}
+                        sx={{ mr: '5px', bgcolor: '#435585' }}
                         onClick={submit}
                         disabled={!isFormValid}
                     >등록</Button>
-                    <Button variant="outlined" sx={{borderColor:'black', color:'black'}}>취소</Button>
+                    <Button variant="outlined" sx={{ borderColor: 'black', color: 'black' }}>취소</Button>
                 </Box>
             </Box>
         </Container >

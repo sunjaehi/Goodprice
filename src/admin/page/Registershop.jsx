@@ -16,6 +16,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { Check, CheckBox } from "@mui/icons-material";
 
+const backend = process.env.REACT_APP_BACKEND_ADDR;
+
 function Registershop() {
     const [sectors, setSectors] = useState(null);
     const [sector, setSector] = useState(null);
@@ -62,7 +64,7 @@ function Registershop() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch('http://localhost:8080/api/v1/sector/')
+        fetch(`${backend}/api/v1/sector/`)
             .then(result => result.json())
             .then(json => setSectors(json));
     }, [])
@@ -121,7 +123,7 @@ function Registershop() {
         formData.append('zipcode', zipcode);
         selectedFiles.forEach(file => formData.append('files', file));
 
-        fetch(`http://localhost:8080/api/v1/shop/register`, {
+        fetch(`${backend}/api/v1/shop/register`, {
             method: "POST",
             headers: {
                 "Authorization": "Bearer " + sessionStorage.getItem("atk")
@@ -220,10 +222,11 @@ function Registershop() {
                     <Button
                         onClick={handleSearch}
                         variant="contained"
-                        sx={{bgcolor:'black',
-                            color:'white',
-                            ":hover" : {
-                                bgcolor:"gray"
+                        sx={{
+                            bgcolor: 'black',
+                            color: 'white',
+                            ":hover": {
+                                bgcolor: "gray"
                             }
                         }}
                     >주소 찾기</Button>
@@ -311,7 +314,7 @@ function Registershop() {
                         type="submit"
                         sx={{
                             mr: '5px',
-                            bgcolor:'grey'
+                            bgcolor: 'grey'
                         }}
                         onClick={submit}
                         disabled={!isFormValid()}
@@ -319,9 +322,10 @@ function Registershop() {
                     </Button>
                     <Button
                         variant="contained"
-                        sx={{bgcolor:'black',
-                            ":hover" :{
-                                bgcolor:'grey'
+                        sx={{
+                            bgcolor: 'black',
+                            ":hover": {
+                                bgcolor: 'grey'
                             }
                         }}
                     >초기화</Button>

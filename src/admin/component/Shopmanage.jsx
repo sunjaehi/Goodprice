@@ -15,6 +15,8 @@ import Typography from "@mui/material/Typography";
 import ProductDialog from "./ProductDialog";
 import ProductEditDialog from "./ProductEditDialog";
 
+const backend = process.env.REACT_APP_BACKEND_ADDR;
+
 export default function Shopmanage() {
     const navigate = useNavigate();
     const { shopId } = useParams();
@@ -27,7 +29,6 @@ export default function Shopmanage() {
     const [editFormOpen, setEditFormOpen] = useState(false);
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [deletedFiles, setDeletedFiles] = useState([]);
-    const defaultImageUrl = 'https://via.placeholder.com/150';
 
     function parseTimeString(timeString) {
         if (timeString === null)
@@ -45,7 +46,7 @@ export default function Shopmanage() {
 
     useEffect(() => {
         const fetchData = async () => {
-            let result = await fetch(`http://localhost:8080/api/v1/shop/${shopId}`);
+            let result = await fetch(`${backend}/api/v1/shop/${shopId}`);
             if (result.status === 404) {
                 alert('존재하지 않는 가게입니다');
                 navigate(-1);
@@ -64,7 +65,7 @@ export default function Shopmanage() {
                 }
             }
 
-            result = await fetch(`http://localhost:8080/api/v1/product/?shopId=${shopId}`);
+            result = await fetch(`${backend}/api/v1/product/?shopId=${shopId}`);
             json = await result.json();
             setProductInfo(json);
         }
@@ -100,7 +101,7 @@ export default function Shopmanage() {
     };
 
     const deleteProduct = (id) => {
-        fetch(`http://localhost:8080/api/v1/product/delete/${id}`, {
+        fetch(`${backend}/api/v1/product/delete/${id}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${sessionStorage.getItem("atk")}`
@@ -145,7 +146,7 @@ export default function Shopmanage() {
         selectedFiles.forEach(file => formData.append('newFiles', file));
         deletedFiles.forEach(fileUrl => formData.append('deletedFiles', fileUrl));
 
-        const result = await fetch('http://localhost:8080/api/v1/shop/edit', {
+        const result = await fetch(`${backend}/api/v1/shop/edit`, {
             method: "PATCH",
             headers: {
                 "Authorization": `Bearer ${sessionStorage.getItem('atk')}`
@@ -158,6 +159,38 @@ export default function Shopmanage() {
         } else {
             alert('수정 실패');
         }
+    }
+
+    const handleUnreigsterShop = async () => {
+        fetch(`${backend}/api/v1/shop/unregister/${shopId}`,
+            { method: "DELETE" }
+        )
+            .then(response => {
+                if (response.status === 200) {
+                    alert('지정해제 완료');
+                    setShopInfo((prev) => ({
+                        ...prev,
+                        isAvailable: 0
+                    }))
+                }
+                else alert('지정해제 실패');
+            })
+    }
+
+    const handleReRegisterShop = async () => {
+        fetch(`${backend}/api/v1/shop/re-register/${shopId}`,
+            { method: "PATCH" }
+        )
+            .then(response => {
+                if (response.status === 200) {
+                    alert('재지정 성공');
+                    setShopInfo((prev) => ({
+                        ...prev,
+                        isAvailable: 1
+                    }))
+                }
+                else alert('재지정 실패');
+            })
     }
 
     return (
@@ -289,16 +322,17 @@ export default function Shopmanage() {
                                 <Grid item xs={12} sm={6} md={4} key={product.id}>
                                     <Card>
                                         <input type="hidden" value={product.id} />
-                                        <CardMedia
-                                            component="img"
-                                            style={{
-                                                width: '100%',
-                                                position: 'relative',
-                                            }}
-                                            image={product.imgUrl || defaultImageUrl}
-                                            title="item"
-                                            alt={product.imgUrl ? "" : "이미지 없음"}
-                                        />
+                                        {product.imgUrl &&
+                                            <CardMedia
+                                                component="img"
+                                                style={{
+                                                    width: '100%',
+                                                    position: 'relative',
+                                                }}
+                                                image={product.imgUrl}
+                                                title="item"
+                                            />
+                                        }
                                         <CardContent>
                                             <Typography variant="h6" component="div">{product.name}</Typography>
                                             <Typography variant="body" >{product.price}원</Typography>
@@ -332,6 +366,28 @@ export default function Shopmanage() {
                             direction="row-reverse"
                             gap={3}
                         >
+                            {shopInfo && shopInfo.isAvailable ?
+                                < Button
+                                    variant="contained"
+                                    onClick={handleUnreigsterShop}
+                                    sx={{
+                                        mr: '10px',
+                                        borderRadius: "15px",
+                                        backgroundColor: "black",
+                                        ":hover": { backgroundColor: "grey" }
+                                    }}
+                                >지정해제</Button> :
+                                < Button
+                                    variant="contained"
+                                    onClick={handleReRegisterShop}
+                                    sx={{
+                                        mr: '10px',
+                                        borderRadius: "15px",
+                                        backgroundColor: "black",
+                                        ":hover": { backgroundColor: "grey" }
+                                    }}
+                                >재지정</Button>
+                            }
                             <Button
                                 variant="contained"
                                 onClick={handleShopUpdate}

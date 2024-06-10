@@ -11,12 +11,14 @@ import Adminlist from './Adminlist';
 import TablePagination from '@mui/material/TablePagination';
 import { useNavigate } from "react-router-dom";
 
+const backend = process.env.REACT_APP_BACKEND_ADDR;
+
 export default function Shoptable() {
     const navigate = useNavigate();
     const [response, setResponse] = useState(null);
     const [shopData, setShopData] = useState(null);
     useEffect(() => {
-        fetch('http://localhost:8080/api/v1/shop/list')
+        fetch(`${backend}/api/v1/shop/list`)
             .then(result => result.json())
             .then(json => {
                 setResponse(json);
@@ -38,7 +40,7 @@ export default function Shoptable() {
         navigate(`/shopManage/${shopId}`);
     };
     const handleChangePage = (event, newPage) => {
-        fetch(`http://localhost:8080/api/v1/shop/list?page=${newPage}`)
+        fetch(`${backend}/api/v1 / shop / list ? page = ${newPage}`)
             .then(result => result.json())
             .then(json => {
                 setResponse(json);

@@ -7,6 +7,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import AddIcon from '@mui/icons-material/Add';
 
+const backend = process.env.REACT_APP_BACKEND_ADDR;
+
 export default function Noticeinput() {
     const navigate = useNavigate();
     const navigateToMainadmin = () => {
@@ -42,7 +44,7 @@ export default function Noticeinput() {
         formData.append('isImportant', isImportant);
         selectedFiles.forEach(file => formData.append('files', file));
 
-        fetch(`http://localhost:8080/api/v1/notice/new`, {
+        fetch(`${backend}/api/v1/notice/new`, {
             method: "POST",
             headers: {
                 "Authorization": "Bearer " + sessionStorage.getItem("atk")
