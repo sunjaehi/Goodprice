@@ -7,7 +7,7 @@ import FeedOutlinedIcon from '@mui/icons-material/FeedOutlined';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { useNavigate } from "react-router-dom";
 
-export default function Footer() {
+export default function BottomNavigation() {
     const [value, setValue] = useState('recents');
 
     const navigate = useNavigate();

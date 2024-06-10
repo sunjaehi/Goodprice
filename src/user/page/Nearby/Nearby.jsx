@@ -9,11 +9,11 @@ import MyLocationIcon from '@mui/icons-material/MyLocation';
 import { sectorSample } from '../../../data/sectorSample';
 import { Link } from 'react-router-dom';
 import NavigationIcon from '@mui/icons-material/Navigation';
-import Footer from '../../component/Footer/Footer';
+import BottomNavigation from '../../component/BottomNavigation/BottomNavigation';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
-function Search() {
+function Nearby() {
     const [datas, setData] = useState(null);
     const [sector, setSector] = useState('');
     const [filtered, setFiltered] = useState([]);
@@ -274,9 +274,9 @@ function Search() {
                     </List>
                 </div>
             </SwipeableDrawer>
-            <Footer />
+            <BottomNavigation />
         </div >
     )
 }
 
-export default Search;
+export default Nearby;

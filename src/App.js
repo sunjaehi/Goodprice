@@ -3,11 +3,11 @@ import './App.css';
 import './index.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './user/component/Header/Header';
-import Footer from './user/component/Footer/Footer';
+import BottomNavigation from './user/component/BottomNavigation/BottomNavigation';
 import Register from './user/page/Register/Register';
 import Login from './user/page/Login/Login';
 import Notice from './user/page/Notice/Notice';
-import Search from './user/page/Search/Search';
+import Nearby from './user/page/Nearby/Nearby';
 import Benefit from './user/page/Benefit/Benefit';
 import Mysector from './user/page/Mypage/Mysector';
 import Myregion from './user/page/Mypage/Myregion';
@@ -54,7 +54,7 @@ function App() {
         <Route path="/Notice" element={<Notice />}></Route>
         <Route path="/NoticeDetail" element={<NoticeDetail />}></Route>
         <Route path="/Benefit" element={<Benefit />}></Route>
-        <Route path="/Search" element={<Search />}></Route>
+        <Route path="/Nearby" element={<Nearby />}></Route>
         <Route path="/Myregion" element={<Myregion />}></Route>
         <Route path="/Mysector" element={<Mysector />}></Route>
         <Route path="/Findpassword" element={<Findpassword />}></Route>
