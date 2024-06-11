@@ -9,6 +9,8 @@ import { styled } from '@mui/material/styles';
 import { Link, useNavigate, useParams } from "react-router-dom";
 import PropTypes from 'prop-types';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import { CopyToClipboard } from "react-copy-to-clipboard";
+
 const backend = process.env.REACT_APP_BACKEND_ADDR;
 const ImageContainer = styled('div')({
     width: '100%',
@@ -59,6 +61,52 @@ function ShopDetail() {
     const [longitude, setLongitude] = useState(null);
     const [stations, setStations] = useState(null);
     const atk = sessionStorage.getItem('atk');
+    const { Kakao } =window;
+
+    // function share() {
+    //     const realUrl = 'https://good-companion.shop';
+    //     const resultUrl = 'http://localhost:3003';
+
+    //     useEffect(()=>{
+    //         Kakao.cleanup();
+    //         Kakao.init('26629afca566a85d39b41a0e7760267d');
+    //         console.log(Kakao.isinitialized());
+    //     },[]);
+    //     const shareKakao = () => {
+    //         Kakao.Share.sendDefault({
+    //             objectType:'feed',
+    //             content: {
+    //                 title:'오늘의 디저트',
+    //                 description:'아메리카노, 빵',
+    //                 imageUrl:
+    //                     'https://mud-kage.kakao.com/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg',
+    //                 link : {
+    //                     mobileWebUrl : 'https://good-companion.shop',
+    //                 },
+    //             },
+    //             buttons : [
+    //                 {
+    //                     title:'나도 테스트 하러가기',
+    //                     link:{
+    //                         mobileWebUrl:'https://good-companion.shop',
+    //                     },
+    //                 },
+    //             ],
+    //         })
+    //     }
+    // }
+    function clipBoard() {
+        let clip = document.createElement('input');
+        const url = location.href;
+
+        document.body.appendChild(clip);
+        clip.value = url;
+        clip.select();
+        document.execCommand("copy");
+        alert("URL을 클립보드에 복사했습니다.");
+        document.body.removeChild(clip);
+    }
+    
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -305,6 +353,7 @@ function ShopDetail() {
                     <CardActions>
                         <Button size="small" onClick={hasRecommended ? unRecommend : recommend} disabled={atk === null}>{hasRecommended ? "추천 해제" : "추천"}</Button>
                         <Button size="small" onClick={hasMarked ? deleteShopMark : addShopMark} disabled={atk === null} >{hasMarked ? "관심 가게 해제" : "관심 가게 추가"}</Button>
+                        <Button size="small" onClick={()=>{clipBoard()}}>공유하기</Button>
                     </CardActions>
                 </Card>
                 }
