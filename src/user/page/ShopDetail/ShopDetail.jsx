@@ -116,7 +116,7 @@ function ShopDetail() {
         isLoading: true,
 
     });
-    
+
     useEffect(() => {
         if (latitude)
             fetch(`${backend}/api/v1/subway/?latitude=${latitude}&longitude=${longitude}`)
