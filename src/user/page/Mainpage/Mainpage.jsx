@@ -6,7 +6,7 @@ import { CardActionArea, Container, Grid } from '@mui/material'; // Gridë¥¼ MUIì
 import Carousel from 'react-material-ui-carousel';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import BottomNavigation from '../../component/BottomNavigation/BottomNavigation';
+import BottomNav from '../../component/BottomNavigation/BottomNav';
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
 function Mainpage() {
@@ -176,7 +176,7 @@ function Mainpage() {
                     )
                 }
             </Grid>
-            <BottomNavigation />
+            <BottomNav />
         </Container >
     );
 }

@@ -3,7 +3,6 @@ import './App.css';
 import './index.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './user/component/Header/Header';
-import BottomNavigation from './user/component/BottomNavigation/BottomNavigation';
 import Register from './user/page/Register/Register';
 import Login from './user/page/Login/Login';
 import Notice from './user/page/Notice/Notice';

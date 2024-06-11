@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import './Footer.css';
+import './BottomNav.css';
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import OtherHousesOutlinedIcon from '@mui/icons-material/OtherHousesOutlined';
@@ -7,7 +7,7 @@ import FeedOutlinedIcon from '@mui/icons-material/FeedOutlined';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { useNavigate } from "react-router-dom";
 
-export default function BottomNavigation() {
+export default function BottomNav() {
     const [value, setValue] = useState('recents');
 
     const navigate = useNavigate();
@@ -17,8 +17,8 @@ export default function BottomNavigation() {
     const navigateToHome = () => {
         navigate("/");
     }
-    const navigateToSearch = () => {
-        navigate("/Search");
+    const navigateToNearby = () => {
+        navigate("/Nearby");
     }
 
     const handleChange = (event, newValue) => {
@@ -27,9 +27,10 @@ export default function BottomNavigation() {
 
     return (
         <div className="footer">
-             <BottomNavigation sx={{bgcolor:'#98ABEE', height:'6vh',width:'100%', justifyContent:'space-between',
-                '&& .Mui-selected' : {
-                    color:'white'
+            <BottomNavigation sx={{
+                bgcolor: '#98ABEE', height: '6vh', width: '100%', justifyContent: 'space-between',
+                '&& .Mui-selected': {
+                    color: 'white'
                 }
             }} value={value} onChange={handleChange} >
                 <BottomNavigationAction
@@ -48,10 +49,10 @@ export default function BottomNavigation() {
                     label="내 주변"
                     value="nearby"
                     icon={<LocationOnIcon />}
-                    onClick={navigateToSearch}
+                    onClick={navigateToNearby}
                 />
             </BottomNavigation>
         </div>
-        
+
     );
 }
