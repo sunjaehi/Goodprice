@@ -6,8 +6,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Box, Stack, Typography, Button } from '@mui/material';
-import Adminlist from './Adminlist';
+import { Box, Stack, Typography, Button, TextField, InputAdornment, IconButton } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import TablePagination from '@mui/material/TablePagination';
 import { useNavigate } from "react-router-dom";
 
@@ -17,8 +17,19 @@ export default function Shoptable() {
     const navigate = useNavigate();
     const [response, setResponse] = useState(null);
     const [shopData, setShopData] = useState(null);
+    const [query, setQuery] = useState('');
+    const [page, setPage] = useState(0);
+
     useEffect(() => {
-        fetch(`${backend}/api/v1/shop/list`)
+        if (query) {
+            fetchSearchResults(query, page);
+        } else {
+            fetchShops(page);
+        }
+    }, [page]);
+
+    const fetchShops = (page) => {
+        fetch(`${backend}/api/v1/shop/list?page=${page}`)
             .then(result => result.json())
             .then(json => {
                 setResponse(json);
@@ -27,32 +38,60 @@ export default function Shoptable() {
                 } else {
                     setShopData([]);
                 }
-            })
-    }, [])
-    const navigateToRegistershop = () => {
-        navigate("/Registershop");
-    }
-    const navigateToProposalmanage = () => {
-        navigate("/Proposalmanage");
-    }
+            });
+    };
+
+    const fetchSearchResults = (keyword, page) => {
+        fetch(`${backend}/api/v1/shop/search?keyword=${keyword}&page=${page}`)
+            .then(result => result.json())
+            .then(json => {
+                setResponse(json);
+                if (json && json.shops) {
+                    setShopData(json.shops);
+                } else {
+                    setShopData([]);
+                }
+            });
+    };
+
+    const handleSearch = () => {
+        setPage(0);
+        fetchSearchResults(query, 0);
+    };
 
     const handleRowClick = (shopId) => {
-        navigate(`/shopManage/${shopId}`);
+        navigate(`/shopAdminDetail/${shopId}`);
     };
-    const handleChangePage = (event, newPage) => {
-        fetch(`${backend}/api/v1/shop/list?page=${newPage}`)
-            .then(result => result.json())
-            .then(json => {
-                setResponse(json);
-                if (json && json.shops) {
-                    setShopData(json.shops);
-                } else {
-                    setShopData([]);
-                }
-            })
-    };
-    return (
 
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    };
+
+    const navigateToRegistershop = () => {
+        navigate("/Registershop");
+    };
+
+    const navigateToProposalmanage = () => {
+        navigate("/Proposalmanage");
+    };
+
+    const highlight = (text, query) => {
+        if (!query) return text;
+        const parts = text.split(new RegExp(`(${query})`, 'gi'));
+        return parts.map((part, index) =>
+            part.toLowerCase() === query.toLowerCase() ?
+                <mark key={index} style={{ backgroundColor: 'yellow' }}>{part}</mark> :
+                part
+        );
+    };
+
+    return (
         <Box sx={{
             display: "flex",
             flexDirection: "column",
@@ -67,6 +106,22 @@ export default function Shoptable() {
                     <Button variant="contained" color="inherit" onClick={navigateToProposalmanage}>
                         등록 요청 관리
                     </Button>
+                    <TextField
+                        label="가게 이름 검색"
+                        variant="outlined"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton onClick={handleSearch}>
+                                        <SearchIcon />
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
                 </Stack>
             </Stack>
             {response &&
@@ -87,7 +142,7 @@ export default function Shoptable() {
                                     <TableCell component="th" scope="row">
                                         {shop.id}
                                     </TableCell>
-                                    <TableCell align="right">{shop.name}</TableCell>
+                                    <TableCell align="right">{highlight(shop.name, query)}</TableCell>
                                     <TableCell align="right">{shop.isAvailable}</TableCell>
                                     <TableCell align="right">{shop.recommend}</TableCell>
                                     <TableCell align="right">{shop.updatedAt}</TableCell>

@@ -17,7 +17,7 @@ import ProductEditDialog from "./ProductEditDialog";
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
 
-export default function Shopmanage() {
+export default function ShopAdminDetail() {
     const navigate = useNavigate();
     const { shopId } = useParams();
     const [shopInfo, setShopInfo] = useState(null);
