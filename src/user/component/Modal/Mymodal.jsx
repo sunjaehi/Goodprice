@@ -15,12 +15,11 @@ const style = {
     top:'50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 350,
+    width: 300,
     bgcolor: 'background.paper',
     border: '1px solid #000',
     boxShadow: 20,
-    p: 4,
-     
+    p: 4,     
 };
 
 function Mymodal() {
