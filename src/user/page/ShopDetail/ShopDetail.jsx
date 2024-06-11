@@ -269,8 +269,8 @@ function ShopDetail() {
                             </Typography>
                         </Box>
                         <Box display="flex" alignItems="baseline">
-                            <ThumbUpIcon style={{ verticalAlign: 'middle' }} />
-                            <Typography variant="body2" color="text.secondary" style={{ marginLeft: 4 }}>
+                            <img src="https://img.icons8.com/fluency/48/thumb-up.png" width={25} height={25} alt="recommendation icon" />
+                            <Typography variant="body2" color="text.secondary" style={{ marginLeft: 4}}>
                                 {datas.recommend}
                             </Typography>
                         </Box>

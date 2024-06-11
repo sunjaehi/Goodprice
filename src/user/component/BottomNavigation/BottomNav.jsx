@@ -27,6 +27,7 @@ export default function BottomNav() {
     }
 
     const handleChange = (event, newValue) => {
+        
         setValue(newValue);
     };
 
@@ -37,7 +38,7 @@ export default function BottomNav() {
                 '&& .Mui-selected': {
                     color: 'white'
                 }
-            }} value={value} onChange={handleChange} >
+            }} value={value} onChange={handleChange}>
                 <BottomNavigationAction
                     label="메인"
                     value="home"
