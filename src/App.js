@@ -35,13 +35,14 @@ import NoticeAdminDetail from './admin/page/NoticeAdminDetail';
 import NoticeAdminEdit from './admin/page/NoticeAdminEdit';
 import ProposalAdminDetail from './admin/page/ProposalAdminDetail';
 import ReviewEdit from './user/page/Review/ReviewEdit';
+import Search from './user/page/Search/Search';
+import ShopList from './user/page/ShopList/ShopList';
 
 
 function App() {
   return (
     <BrowserRouter>
       <Header />
-
       <Routes>
         <Route path='/' element={<Mainpage />}></Route>
         <Route path="/Register" element={<Register />}></Route>
@@ -75,6 +76,8 @@ function App() {
         <Route path="/noticeAdminEdit/:id" element={<NoticeAdminEdit />}></Route>
         <Route path="/proposalAdminDetail/:id" element={<ProposalAdminDetail />}></Route>
         <Route path="/edit-review" element={<ReviewEdit />}></Route>
+        <Route path="/search" element={<Search />}></Route>
+        <Route path="/shop-list" element={<ShopList />}></Route>
       </Routes>
     </BrowserRouter >
   );
