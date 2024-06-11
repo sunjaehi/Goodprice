@@ -6,6 +6,7 @@ import OtherHousesOutlinedIcon from '@mui/icons-material/OtherHousesOutlined';
 import FeedOutlinedIcon from '@mui/icons-material/FeedOutlined';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { useNavigate } from "react-router-dom";
+import { Search } from "@mui/icons-material";
 
 export default function BottomNav() {
     const [value, setValue] = useState('recents');
@@ -21,6 +22,10 @@ export default function BottomNav() {
         navigate("/Nearby");
     }
 
+    const navigateToSearch = () => {
+        navigate("/search");
+    }
+
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -34,17 +39,27 @@ export default function BottomNav() {
                 }
             }} value={value} onChange={handleChange} >
                 <BottomNavigationAction
-                    label="피드"
-                    value="feed"
-                    icon={<FeedOutlinedIcon />}
-                    onClick={navigateToFeed}
-                />
-                <BottomNavigationAction
                     label="메인"
                     value="home"
                     icon={<OtherHousesOutlinedIcon />}
                     onClick={navigateToHome}
                 />
+
+                <BottomNavigationAction
+                    label="피드"
+                    value="feed"
+                    icon={<FeedOutlinedIcon />}
+                    onClick={navigateToFeed}
+
+                />
+
+                <BottomNavigationAction
+                    label="검색"
+                    value="search"
+                    icon={<Search />}
+                    onClick={navigateToSearch}
+                />
+
                 <BottomNavigationAction
                     label="내 주변"
                     value="nearby"

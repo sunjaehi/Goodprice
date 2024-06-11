@@ -64,7 +64,44 @@ function ShopDetail() {
     const [stations, setStations] = useState(null);
     const atk = sessionStorage.getItem('atk');
 
-    
+    const { Kakao } = window;
+
+    useEffect(() => {
+        console.log(Kakao);
+        Kakao.cleanup();
+        Kakao.init('26629afca566a85d39b41a0e7760267d');
+    }, []);
+
+
+
+    const shareKakao = (datas) => {
+        Kakao.Share.sendDefault({
+            objectType: 'feed',
+            content: {
+                title: `${datas.shopName}`,
+                description: `${datas.address}`,
+                imageUrl:
+                    `${datas.shopImgUrls[0]}`,
+                link: {
+                    mobileWebUrl: `https://good-companion.shop/detail/${datas.shopId}`,
+                },
+            },
+            buttons: [
+                {
+                    title: '상세보기',
+                    link: {
+                        mobileWebUrl: `https://good-companion.shop/detail/${datas.shopId}`,
+                    },
+                },
+                {
+                    title: '착한동행 웹 사이트 방문',
+                    link: {
+                        mobileWebUrl: 'https://good-companion.shop',
+                    },
+                },
+            ],
+        })
+    }
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -315,8 +352,8 @@ function ShopDetail() {
                     </CardContent>
                     <CardActions>
                         <Button size="small" onClick={hasRecommended ? unRecommend : recommend} disabled={atk === null}>{hasRecommended ? "추천 해제" : "추천"}</Button>
-                        <Button size="small" onClick={hasMarked ? deleteShopMark : addShopMark} disabled={atk === null} >{hasMarked ? "관심 가게 해제" : "관심 가게 추가"}</Button>
-                        <Button size="small" onClick={()=>{shareKakao()}}>공유하기</Button>
+                        <Button size="small" onClick={hasMarked ? deleteShopMark : addShopMark} disabled={atk === null} >{hasMarked ? "관심 가게 해제" : "관심 가게 추가"}</Butto
+                        <Button size="small" onClick={() => { shareKakao(datas) }}>공유하기</Button>
                     </CardActions>
                 </Card>
                 }
@@ -351,7 +388,7 @@ function ShopDetail() {
             <h2>리뷰</h2>
             <List>
                 {(!reviewSummary || reviewSummary.length == 0) && <p>아직 리뷰가 없어요. 가게를 방문해보셨다면 리뷰를 남겨보세요</p>}
-                <Button variant="contained" component={Link} to={`/review/${shopId}`}>전체 리뷰보기</Button>
+                <Button variant="contained" component={Link} to={`/ review / ${shopId}`}>전체 리뷰보기</Button>
 
                 {reviewSummary && reviewSummary.map(review => {
                     return (
