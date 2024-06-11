@@ -123,9 +123,10 @@ function ShopDetail() {
     });
 
     useEffect(() => {
-        fetch(`${backend}/api/v1/subway/?latitude=${latitude}&longitude=${longitude}`)
-            .then(response => response.json())
-            .then(json => { console.log(json); setStations(json) });
+        if (latitude)
+            fetch(`${backend}/api/v1/subway/?latitude=${latitude}&longitude=${longitude}`)
+                .then(response => response.json())
+                .then(json => { console.log(json); setStations(json) });
     }, [latitude]);
 
     useEffect(() => {
@@ -323,23 +324,27 @@ function ShopDetail() {
                                     </MapMarker>
                                 )}
                             </Map>
-                            {stations.length > 0 && (() => {
+                            {stations && stations.length > 0 && (() => {
                                 const stationGroups = stations.reduce((acc, station) => {
                                     if (!acc[station.name]) {
-                                        acc[station.name] = [];
+                                        acc[station.name] = { lines: [], distances: [] };
                                     }
-                                    acc[station.name].push(station.distance * 1000);
+                                    if (!acc[station.name].lines.includes(station.line)) {
+                                        acc[station.name].lines.push(station.line);
+                                    }
+                                    acc[station.name].distances.push(station.distance * 1000);
                                     return acc;
                                 }, {});
 
                                 const stationAverages = Object.keys(stationGroups).map(name => {
-                                    const totalDistance = stationGroups[name].reduce((acc, distance) => acc + distance, 0);
-                                    const averageDistance = totalDistance / stationGroups[name].length;
-                                    return { name, averageDistance: Math.round(averageDistance) };
+                                    const totalDistance = stationGroups[name].distances.reduce((acc, distance) => acc + distance, 0);
+                                    const averageDistance = totalDistance / stationGroups[name].distances.length;
+                                    const lines = stationGroups[name].lines.join(',');
+                                    return { name, lines, averageDistance: Math.round(averageDistance) };
                                 });
 
                                 return stationAverages.map((station, index) => (
-                                    <p key={index}>{station.name}역에서 {station.averageDistance}m</p>
+                                    <p key={index}>{station.name}역({station.lines})에서 {station.averageDistance}m</p>
                                 ));
                             })()}
                         </CustomTabPanel>

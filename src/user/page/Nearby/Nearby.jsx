@@ -9,8 +9,7 @@ import MyLocationIcon from '@mui/icons-material/MyLocation';
 import { sectorSample } from '../../../data/sectorSample';
 import { Link } from 'react-router-dom';
 import NavigationIcon from '@mui/icons-material/Navigation';
-import BottomNavigation from '../../component/BottomNavigation/BottomNavigation';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import BottomNav from "../../component/BottomNavigation/BottomNav";
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
 function Nearby() {
@@ -137,14 +136,14 @@ function Nearby() {
                     })}
                     {!state.isLoading && (
                         <CustomOverlayMap position={state.center}>
-                            <div style={{ padding: "5px", margin:"10px", color: "#000" ,backgroundColor:"rgba(0,0,0,0.2)", borderRadius:'10px'}}>
+                            <div style={{ padding: "5px", margin: "10px", color: "#000", backgroundColor: "rgba(0,0,0,0.2)", borderRadius: '10px' }}>
                                 {state.errMsg ? state.errMsg : "여기에 계신가요?"}
                             </div>
                         </CustomOverlayMap>
                     )}
                 </Map>
                 <Button
-                    
+
                     startIcon={<NavigationIcon />}
                     size="large"
                     variant="contained"
@@ -157,7 +156,7 @@ function Nearby() {
                         zIndex: 10,
                         borderRadius: 3,
                         mt: 1,
-                        color:'black',
+                        color: 'black',
                         bgcolor: 'white',
                         ":hover": {
                             bgcolor: 'grey'
@@ -178,7 +177,7 @@ function Nearby() {
                         zIndex: 10,
                         borderRadius: 3,
                         width: '200px',
-                        color:'black',
+                        color: 'black',
                         bgcolor: 'white',
                         ":hover": {
                             bgcolor: 'grey'
@@ -195,7 +194,7 @@ function Nearby() {
                         bottom: '80px',
                         right: '16px',
                         zIndex: 10,
-                        color:'black',
+                        color: 'black',
                         bgcolor: 'white',
                         ":hover": {
                             bgcolor: 'grey'
@@ -224,11 +223,12 @@ function Nearby() {
                             {sectorSample.map(sector => (<MenuItem value={`${sector.id}`}>{`${sector.name}`}</MenuItem>))}
                         </Select>
                         <Button
-                            sx={{ mt: "10px",
-                                color:'black',
-                                bgcolor:"#98ABEE",
-                                ":hover" : {
-                                    bgcolor:"#98ABEE"
+                            sx={{
+                                mt: "10px",
+                                color: 'black',
+                                bgcolor: "#98ABEE",
+                                ":hover": {
+                                    bgcolor: "#98ABEE"
                                 }
                             }}
                             variant="outlined"
@@ -274,7 +274,7 @@ function Nearby() {
                     </List>
                 </div>
             </SwipeableDrawer>
-            <BottomNavigation />
+            <BottomNav />
         </div >
     )
 }
