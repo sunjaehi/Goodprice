@@ -9,8 +9,8 @@ import { styled } from '@mui/material/styles';
 import { Link, useNavigate, useParams } from "react-router-dom";
 import PropTypes from 'prop-types';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import { CopyToClipboard } from "react-copy-to-clipboard";
 
+const { Kakao } = window;
 const backend = process.env.REACT_APP_BACKEND_ADDR;
 const ImageContainer = styled('div')({
     width: '100%',
@@ -25,6 +25,8 @@ const Image = styled('img')({
     objectFit: 'cover',
     objectPosition: 'center'
 });
+
+
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
     return (
@@ -61,6 +63,7 @@ function ShopDetail() {
     const [longitude, setLongitude] = useState(null);
     const [stations, setStations] = useState(null);
     const atk = sessionStorage.getItem('atk');
+
     const { Kakao } = window;
 
     useEffect(() => {
@@ -100,19 +103,6 @@ function ShopDetail() {
         })
     }
 
-    function clipBoard() {
-        let clip = document.createElement('input');
-        // eslint-disable-next-line no-restricted-globals
-        const url = location.href;
-
-        document.body.appendChild(clip);
-        clip.value = url;
-        clip.select();
-        document.execCommand("copy");
-        alert("URL을 클립보드에 복사했습니다.");
-        document.body.removeChild(clip);
-    }
-
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -126,7 +116,7 @@ function ShopDetail() {
         isLoading: true,
 
     });
-
+    
     useEffect(() => {
         if (latitude)
             fetch(`${backend}/api/v1/subway/?latitude=${latitude}&longitude=${longitude}`)
@@ -362,7 +352,7 @@ function ShopDetail() {
                     </CardContent>
                     <CardActions>
                         <Button size="small" onClick={hasRecommended ? unRecommend : recommend} disabled={atk === null}>{hasRecommended ? "추천 해제" : "추천"}</Button>
-                        <Button size="small" onClick={hasMarked ? deleteShopMark : addShopMark} disabled={atk === null} >{hasMarked ? "관심 가게 해제" : "관심 가게 추가"}</Button>
+                        <Button size="small" onClick={hasMarked ? deleteShopMark : addShopMark} disabled={atk === null} >{hasMarked ? "관심 가게 해제" : "관심 가게 추가"}</Butto
                         <Button size="small" onClick={() => { shareKakao(datas) }}>공유하기</Button>
                     </CardActions>
                 </Card>
