@@ -20,12 +20,15 @@ function Reviewinput() {
     const { shopId } = useParams();
     const navigate = useNavigate();
     const formData = new FormData();
+    const navigateToLogin = () => {
+        navigate("/Login");
+    }
 
     useEffect(() => {
         const atk = sessionStorage.getItem('atk');
         if (atk === null) {
             alert('로그인 후 리뷰를 작성할 수 있습니다');
-            navigate(-1);
+            navigateToLogin();
         }
     }, [])
 
