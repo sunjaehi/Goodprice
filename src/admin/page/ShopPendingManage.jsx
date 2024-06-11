@@ -1,16 +1,17 @@
 import Box from '@mui/material/Box';
 import Adminlist from "../section/Adminlist";
-import Dashboard from './AdminDashboard';
+import Shoptable from '../section/Shoptable';
+import ShopPendingTable from '../section/ShopPendingTable';
 
 
-export default function Mainadmin() {
+export default function ShopPendingManage() {
     return (
         <Box sx={{
             display: "flex",
             flexDirection: "row",
         }}>
             <Adminlist />
-            <Dashboard />
+            <ShopPendingTable />
         </Box>
     )
 }

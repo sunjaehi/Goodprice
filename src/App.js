@@ -22,11 +22,9 @@ import ShopDetail from './user/page/ShopDetail/ShopDetail';
 import Review from './user/page/Review/Review';
 import Shoptable from './admin/section/Shoptable';
 import Mainadmin from './admin/page/Mainadmin';
-import Shopmanage from './admin/component/Shopmanage';
 import Reviewinput from './user/page/Review/Reviewinput';
 import Proposalmanage from './admin/page/Proposalmanage';
 import Registershop from './admin/page/Registershop';
-import NoticeTable from './admin/section/NoticeTable';
 import NoticeManage from './admin/page/NoticeManage';
 import NoticeDetail from './user/page/Notice/NoticeDetail';
 import Newsfeed from './user/page/Newsfeed/Newsfeed';
@@ -37,6 +35,10 @@ import ProposalAdminDetail from './admin/page/ProposalAdminDetail';
 import ReviewEdit from './user/page/Review/ReviewEdit';
 import Search from './user/page/Search/Search';
 import ShopList from './user/page/ShopList/ShopList';
+import ShopAdminDetail from './admin/component/ShopAdminDetail';
+import ShopManage from './admin/page/ShopManage';
+import ShopPendingManage from './admin/page/ShopPendingManage';
+import ShopPendingAdminDetail from './admin/component/ShopPendingAdminDetail';
 
 
 function App() {
@@ -67,7 +69,7 @@ function App() {
         <Route path="/Registershop" element={<Registershop />}></Route>
         <Route path="/Mainadmin" element={<Mainadmin />}></Route>
         <Route path="/NoticeInput" element={<NoticeInput />}></Route>
-        <Route path="/Shopmanage/:shopId" element={<Shopmanage />}></Route>
+        <Route path="/ShopAdminDetail/:shopId" element={<ShopAdminDetail />}></Route>
         <Route path="/Noticemanage" element={<NoticeManage />}></Route>
         <Route path="/Shoptable" element={<Shoptable />}></Route>
         <Route path="/Newsfeed" element={<Newsfeed />}></Route>
@@ -78,6 +80,9 @@ function App() {
         <Route path="/edit-review" element={<ReviewEdit />}></Route>
         <Route path="/search" element={<Search />}></Route>
         <Route path="/shop-list" element={<ShopList />}></Route>
+        <Route path="/shopmanage" element={<ShopManage />}></Route>
+        <Route path="/shop-pending-manage" element={<ShopPendingManage />}></Route>
+        <Route path="/shop-pending-detail/:shopId" element={<ShopPendingAdminDetail />}></Route>
       </Routes>
     </BrowserRouter >
   );
