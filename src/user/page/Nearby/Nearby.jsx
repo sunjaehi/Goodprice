@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Map, CustomOverlayMap, MapMarker } from 'react-kakao-maps-sdk';
+import { Map, CustomOverlayMap, MapMarker, MapInfoWindow } from 'react-kakao-maps-sdk';
 import {
     List, ListItem, ListItemText, ListItemButton, Typography, InputLabel,
     FormControl, MenuItem, Select, Button, ListItemAvatar, SwipeableDrawer, Fab
@@ -10,6 +10,7 @@ import { sectorSample } from '../../../data/sectorSample';
 import { Link } from 'react-router-dom';
 import NavigationIcon from '@mui/icons-material/Navigation';
 import BottomNav from "../../component/BottomNavigation/BottomNav";
+import './Nearby.css';
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
 function Nearby() {
@@ -119,24 +120,28 @@ function Nearby() {
                             "lng": data.longitude
                         }
                         return (
-                            <MapMarker
-                                key={`${data.id}`}
-                                position={latlang}
-                                image={{
-                                    src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
-                                    size: {
-                                        width: 24,
-                                        height: 35
-                                    },
-                                }}
-                                title={data.name}
+                                <MapMarker
+                                    key={`${data.id}`}
+                                    position={latlang}
+                                    image={{
+                                        src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
+                                        size: {
+                                            width: 24,
+                                            height: 35
+                                        },
+                                    }}
+                                // title={data.name}
                             >
-                                <div style={{ padding: "1px", color: "#000" }}>{data.name}</div>
-                            </MapMarker>);
+                                
+                                    <div style={{ padding: "1px", color: "#000", borderRadius: "100px", backgroundColor:'#fff'}}>{data.name}</div>
+                                
+                            </MapMarker>
+                            
+                            );
                     })}
                     {!state.isLoading && (
                         <CustomOverlayMap position={state.center}>
-                            <div style={{ padding: "5px", margin: "10px", color: "#000", backgroundColor: "rgba(0,0,0,0.2)", borderRadius: '10px' }}>
+                            <div style={{ padding: "5px", margin: "10px", color: "#000", backgroundColor: "rgba(0,0,0,0.2)", borderRadius: '5px' }}>
                                 {state.errMsg ? state.errMsg : "여기에 계신가요?"}
                             </div>
                         </CustomOverlayMap>
