@@ -352,7 +352,7 @@ function ShopDetail() {
                     </CardContent>
                     <CardActions>
                         <Button size="small" onClick={hasRecommended ? unRecommend : recommend} disabled={atk === null}>{hasRecommended ? "추천 해제" : "추천"}</Button>
-                        <Button size="small" onClick={hasMarked ? deleteShopMark : addShopMark} disabled={atk === null} >{hasMarked ? "관심 가게 해제" : "관심 가게 추가"}</Butto
+                        <Button size="small" onClick={hasMarked ? deleteShopMark : addShopMark} disabled={atk === null} >{hasMarked ? "관심 가게 해제" : "관심 가게 추가"}</Button>
                         <Button size="small" onClick={() => { shareKakao(datas) }}>공유하기</Button>
                     </CardActions>
                 </Card>
