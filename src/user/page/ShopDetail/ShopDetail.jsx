@@ -380,7 +380,7 @@ function ShopDetail() {
                                     alt="상품 이미지"
                                 />
                             )}
-                            <ListItemText primary={product.name} secondary={product.price} />
+                            <ListItemText primary={product.name} secondary={`${product.price}원`} />
                         </ListItem>
                     )
                 })}
@@ -388,7 +388,7 @@ function ShopDetail() {
             <h2>리뷰</h2>
             <List>
                 {(!reviewSummary || reviewSummary.length == 0) && <p>아직 리뷰가 없어요. 가게를 방문해보셨다면 리뷰를 남겨보세요</p>}
-                <Button variant="contained" component={Link} to={`/ review / ${shopId}`}>전체 리뷰보기</Button>
+                <Button variant="contained" component={Link} to={`/review/${shopId}`}>전체 리뷰보기</Button>
 
                 {reviewSummary && reviewSummary.map(review => {
                     return (
