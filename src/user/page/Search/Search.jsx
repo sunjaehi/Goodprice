@@ -17,13 +17,12 @@ const Search = () => {
         if (query) {
             loadShops(query, page);
         }
-    }, [page]);
+    }, [query, page]);
 
     const handleSearch = () => {
         setResults([]);
         setPage(0);
         setHasMore(true);
-        loadShops(query, 0);
     };
 
     const loadShops = (keyword, page) => {
