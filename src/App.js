@@ -39,6 +39,7 @@ import ShopAdminDetail from './admin/component/ShopAdminDetail';
 import ShopManage from './admin/page/ShopManage';
 import ShopPendingManage from './admin/page/ShopPendingManage';
 import ShopPendingAdminDetail from './admin/component/ShopPendingAdminDetail';
+import ChangePassword from './user/page/Mypage/ChangePassword';
 
 
 function App() {
@@ -83,6 +84,7 @@ function App() {
         <Route path="/shopmanage" element={<ShopManage />}></Route>
         <Route path="/shop-pending-manage" element={<ShopPendingManage />}></Route>
         <Route path="/shop-pending-detail/:shopId" element={<ShopPendingAdminDetail />}></Route>
+        <Route path="/change-password" element={<ChangePassword />}></Route>
       </Routes>
     </BrowserRouter >
   );
