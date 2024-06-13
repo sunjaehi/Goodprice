@@ -41,20 +41,21 @@ const CustomCarousel = ({ title, data, defaultImage, handleCardClick }) => {
     const settings = {
         infinite: true,
         speed: 500,
-        slidesToShow: 1,
+        slidesToShow: 3,
         slidesToScroll: 1,
-        centerMode: true,
-        centerPadding: '80px',
+        centerMode: false,
         responsive: [
             {
                 breakpoint: 768,
                 settings: {
+                    slidesToShow: 2,
                     centerPadding: '40px',
                 }
             },
             {
                 breakpoint: 480,
                 settings: {
+                    slidesToShow: 1,
                     centerPadding: '20px',
                 }
             }
@@ -66,16 +67,29 @@ const CustomCarousel = ({ title, data, defaultImage, handleCardClick }) => {
             <Typography gutterBottom variant="h6" component="div">
                 {title}
             </Typography>
-            <Slider {...settings}>
-                {data.map((item) => (
-                    <CarouselItem
-                        key={item.shopId}
-                        data={item}
-                        defaultImage={defaultImage}
-                        handleCardClick={handleCardClick}
-                    />
-                ))}
-            </Slider>
+            {data.length > 1 ? (
+                <Slider {...settings}>
+                    {data.map((item) => (
+                        <CarouselItem
+                            key={item.shopId}
+                            data={item}
+                            defaultImage={defaultImage}
+                            handleCardClick={handleCardClick}
+                        />
+                    ))}
+                </Slider>
+            ) : (
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    {data.map((item) => (
+                        <CarouselItem
+                            key={item.shopId}
+                            data={item}
+                            defaultImage={defaultImage}
+                            handleCardClick={handleCardClick}
+                        />
+                    ))}
+                </div>
+            )}
         </Box>
     );
 };
