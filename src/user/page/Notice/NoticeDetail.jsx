@@ -16,13 +16,14 @@ function NoticeDetail() {
 
     }, [])
     return (
-        <Container maxWidth="sm"    >
+        <Container maxWidth="sm">
             {notice && (<h3>{notice.title}</h3>)}
             {notice && (<p>{notice.author}</p>)}
             {notice && (<p>{notice.createdAt}</p>)}
+            {notice && (<p>조회수 : {notice.viewCount}</p>)}
 
             <hr />
-            {notice && (<p>{notice.content}</p>)}
+            {notice && (<p>내용 ==> {notice.content}</p>)}
             {notice && notice.imgUrls.map(imgUrl => (
                 <img src={imgUrl} style={{ width: '100%', height: 'auto' }} />
             ))}

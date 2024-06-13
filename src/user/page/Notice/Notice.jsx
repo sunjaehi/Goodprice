@@ -13,7 +13,7 @@ function Notice() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [page, setPage] = useState(searchParams.get('page') || 1);
     useEffect(() => {
-        fetch(`${backend}/api/v1/notice/?page=${page - 1}`)
+        fetch(`${backend}/api/v1/notice?page=${page - 1}`)
             .then(response => response.json())
             .then(json => {
                 setResponse(json);

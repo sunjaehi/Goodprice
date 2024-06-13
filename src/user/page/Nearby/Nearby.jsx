@@ -135,7 +135,7 @@ function Nearby() {
                     ref={mapRef}
                 >
                     {datas && Array.from(datas).map((data) => {
-                        const latlang = {
+                        const latlng = {
                             "lat": data.latitude,
                             "lng": data.longitude
                         };
