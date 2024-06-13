@@ -15,7 +15,6 @@ import Findpassword from './user/page/Findpassword/Findpassword';
 import Myfavorite from './user/page/Mypage/Myfavorite';
 import Myprofile from './user/page/Mypage/Myprofile';
 import Mypage from './user/page/Mypage/Mypage';
-import Entercorrection from './user/page/Mypage/Entercorrection';
 import NoticeInput from './admin/component/Noticeinput';
 import Servicecenter from './user/page/Servicecenter/Servicecenter';
 import ShopDetail from './user/page/ShopDetail/ShopDetail';
@@ -40,6 +39,8 @@ import ShopManage from './admin/page/ShopManage';
 import ShopPendingManage from './admin/page/ShopPendingManage';
 import ShopPendingAdminDetail from './admin/component/ShopPendingAdminDetail';
 import ChangePassword from './user/page/Mypage/ChangePassword';
+import ChangeNickname from './user/page/Mypage/ChangeNickname';
+import NotificationSettings from './user/page/Mypage/NotificationSettings';
 
 
 function App() {
@@ -64,7 +65,6 @@ function App() {
         <Route path="/Myfavorite" element={<Myfavorite />}></Route>
         <Route path="/Myprofile" element={<Myprofile />}></Route>
         <Route path="/Mypage" element={<Mypage />}></Route>
-        <Route path="/Entercorrection" element={<Entercorrection />}></Route>
         <Route path="/Servicecenter" element={<Servicecenter />}></Route>
         <Route path="/Proposalmanage" element={<Proposalmanage />}></Route>
         <Route path="/Registershop" element={<Registershop />}></Route>
@@ -85,6 +85,8 @@ function App() {
         <Route path="/shop-pending-manage" element={<ShopPendingManage />}></Route>
         <Route path="/shop-pending-detail/:shopId" element={<ShopPendingAdminDetail />}></Route>
         <Route path="/change-password" element={<ChangePassword />}></Route>
+        <Route path="/change-nickname" element={<ChangeNickname />}></Route>
+        <Route path="/notification-setting" element={<NotificationSettings />}></Route>
       </Routes>
     </BrowserRouter >
   );
