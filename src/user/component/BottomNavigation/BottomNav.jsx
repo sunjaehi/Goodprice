@@ -34,10 +34,10 @@ export default function BottomNav() {
     return (
         <div className="footer">
             <BottomNavigation sx={{
-                bgcolor: '#98ABEE', height: '6vh', width: '100%', justifyContent: 'space-between',
+                bgcolor: 'white', height: '6vh', width: '100%', justifyContent: 'space-between',
                 '&& .Mui-selected': {
-                    color: 'white'
-                }
+                    color: 'black'
+                },
             }} value={value} onChange={handleChange}>
                 <BottomNavigationAction
                     label="메인"

@@ -50,7 +50,7 @@ function Entercorrection() {
             }}
         >
             <ThemeProvider theme={theme}>
-            <Avatar sx={{m:1, bgcolor:'#435585'}}>
+            <Avatar sx={{m:1, bgcolor:'#2a75f3'}}>
                 <PinIcon />
            </Avatar> 
            <Typography variant="h1">
@@ -82,9 +82,9 @@ function Entercorrection() {
         <Button 
             variant="contained"
             type='submit'
-            sx={{width:'50%',mt:5,backgroundColor:'#435585',
+            sx={{width:'50%',mt:5,backgroundColor:'#2a75f3',
                 ":hover":{
-                    backgroundColor:'#435585'
+                    backgroundColor:'#4285f4'
                 }
             }}
             onClick={navigateToMyprofile}

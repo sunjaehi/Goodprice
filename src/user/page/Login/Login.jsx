@@ -113,7 +113,7 @@ function Login(props) {
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: '#435585' }}>
+                    <Avatar sx={{ m: 1, bgcolor: '#1266f1' }}>
                         <LoginIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
@@ -153,9 +153,9 @@ function Login(props) {
                             fullWidth
                             variant="contained"
                             sx={{
-                                mt: 3, mb: 2, backgroundColor: '#435585',
+                                mt: 3, mb: 2, backgroundColor: '#2a75f3',
                                 ":hover": {
-                                    backgroundColor: '#435585'
+                                    backgroundColor: '#4285f4'
                                 }
                             }}
                             //disabled={this.state.ID.includes('@') && PW.length>=5 ? false : true}

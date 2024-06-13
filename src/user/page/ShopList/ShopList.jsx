@@ -82,7 +82,7 @@ function ShopList() {
                     value={region}
                     onChange={handleRegionChange}
                     displayEmpty
-                    style={{ marginBottom: '16px', width: '100%' }}
+                    style={{ marginBottom: '16px', width: '100%', marginTop:'5px' }}
                 >
                     <MenuItem value="">
                         전체

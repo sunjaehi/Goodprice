@@ -148,26 +148,26 @@ function Reviewinput() {
                     }}
                 >
                     <Button
-                        variant="outlined"
+                        variant="contained"
                         type="submit"
                         sx={{
-                            backgroundColor: "black",
-                            color: "white",
+                            backgroundColor: '#2a75f3',
+                            ":hover": {
+                                backgroundColor: '#4285f4'
+                            },
                             borderColor: "black",
                             mx: "10px",
                             width: "100%",
-                            ":hover": {
-                                backgroundColor: "gray"
-                            }
+                            
                         }}
                     >리뷰 등록</Button>
                     <Button
                         variant="outlined"
                         type="button"
                         sx={{
-                            backgroundColor: "lightgray",
-                            color: "black",
-                            borderColor: "lightgray",
+                            // backgroundColor: "lightgray",
+                            // color: "#72a4f7",
+                            // borderColor: "lightgray",
                             margin: "10px",
                             width: "100%"
                         }}

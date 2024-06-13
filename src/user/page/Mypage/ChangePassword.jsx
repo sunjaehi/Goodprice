@@ -83,7 +83,7 @@ function ChangePassword() {
 
     return (
         <Container maxWidth="sm">
-            <Box sx={{ textAlign: 'center', marginBottom: 4 }}>
+            <Box sx={{ textAlign: 'center', marginBottom: 4, marginTop: 8 }}>
                 <Typography variant="h5">비밀번호 변경</Typography>
                 <Typography variant="subtitle1">새 비밀번호를 입력하세요.</Typography>
             </Box>

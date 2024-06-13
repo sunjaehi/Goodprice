@@ -38,7 +38,7 @@ function Mypage() {
 
     return (
         <Container maxWidth="sm">
-            <Box sx={{ textAlign: 'center', marginBottom: 4 }}>
+            <Box sx={{ textAlign: 'center', marginBottom: 4, marginTop:8 }}>
                 <Typography variant="h5">마이페이지</Typography>
                 <Typography variant="subtitle1">개인 정보 및 설정을 관리하세요.</Typography>
             </Box>

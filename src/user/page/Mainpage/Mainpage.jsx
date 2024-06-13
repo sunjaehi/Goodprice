@@ -137,7 +137,7 @@ function Mainpage() {
                 />
             )}
 
-            <Box my={4}>
+            <Box my={6}>
                 <Typography gutterBottom variant="h5" component="div">
                     업종별 베스트 가게
                 </Typography>
@@ -149,7 +149,7 @@ function Mainpage() {
                             </Typography>
                             <Card>
                                 <CardActionArea onClick={() => handleCardClick(`/detail/${bestShop.shopId}`)}>
-                                    <div style={{ width: '100%', paddingTop: '56.25%', position: 'relative' }}>
+                                    <div style={{ width: '100%', paddingTop: '56.25%', position: 'relative'}}>
                                         <img
                                             src={bestShop.imgUrl}
                                             alt="상점 이미지"
