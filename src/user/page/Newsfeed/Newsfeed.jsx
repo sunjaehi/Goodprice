@@ -12,6 +12,8 @@ function Newsfeed() {
   const [newsList, setNewsList] = useState([]);
   const [newsResponse, setNewsResponse] = useState(null);
   const [isLastPage, setIsLastPage] = useState(false);
+  const [bottomNavValue, setBottomNavValue] = useState(1);
+
 
   useEffect(() => {
     if (isLastPage) return; // 마지막 페이지면 요청을 보내지 않음
@@ -77,7 +79,7 @@ function Newsfeed() {
         )}
         <div ref={setTarget}></div>
       </Container>
-      <BottomNav />
+      <BottomNav value={bottomNavValue} onChange={setBottomNavValue} />
     </>
   );
 }
