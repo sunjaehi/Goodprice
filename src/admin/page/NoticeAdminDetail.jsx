@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Adminlist from "../section/Adminlist";
-import { Box, Button, Stack } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
@@ -42,16 +42,20 @@ export default function NoticeAdminDetail() {
         }}>
             <Adminlist />
             <div>
-                <h1>제목 : {notice && notice.title}</h1>
+                <Typography variant="h4" sx={{marginTop:2}}>제목 : {notice && notice.title}</Typography>
                 <hr />
-                <h2>내용 : {notice && notice.content}</h2>
+                <Typography variant="body2" sx={{whiteSpace:'pre-wrap'}}>내용 : {notice && notice.content}</Typography>
                 {
                     notice && notice.imgUrls.map(imgUrl => (
-                        <img src={imgUrl} style={{ width: '100%', height: 'auto' }} />
+                        <img src={imgUrl} style={{ width: '30%', height: '40%' }} />
                     ))
                 }
-                <Button variant="contained" onClick={() => navigate(`/noticeAdminEdit/${id}`)}>수정</Button>
-                <Button variant="contained" onClick={deleteNotice}>삭제</Button>
+                <br/>
+                <Box sx={{marginTop:3}}>
+                    <Button variant="contained" sx={{mr:2}} onClick={() => navigate(`/noticeAdminEdit/${id}`)}>수정</Button>
+                    <Button variant="contained" onClick={deleteNotice}>삭제</Button>
+                </Box>
+                
             </div>
         </Box >
     );
