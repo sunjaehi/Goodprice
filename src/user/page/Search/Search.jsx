@@ -10,6 +10,8 @@ const Search = () => {
     const [results, setResults] = useState([]);
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
+    const [bottomNavValue, setBottomNavValue] = useState(2);
+
     const observer = useRef();
     const navigate = useNavigate();
 
@@ -66,7 +68,6 @@ const Search = () => {
 
     return (
         <>
-            <BottomNav />
             <Container>
                 <Box display="flex" flexDirection="column" alignItems="center" sx={{ marginTop: '75px', padding: '20px', backgroundColor: '#f5f5f5', borderRadius: '8px' }}>
                     <Typography variant="h4" gutterBottom>
@@ -140,6 +141,7 @@ const Search = () => {
                     </List>
                 )}
             </Container>
+            <BottomNav value={bottomNavValue} onChange={setBottomNavValue} />
         </>
     );
 };
