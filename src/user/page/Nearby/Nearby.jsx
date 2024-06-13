@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Map, CustomOverlayMap, MapMarker, MapInfoWindow } from 'react-kakao-maps-sdk';
+import { Map, CustomOverlayMap, MapMarker } from 'react-kakao-maps-sdk';
 import {
     List, ListItem, ListItemText, ListItemButton, Typography, InputLabel,
     FormControl, MenuItem, Select, Button, ListItemAvatar, SwipeableDrawer, Fab
@@ -18,6 +18,9 @@ function Nearby() {
     const [sector, setSector] = useState('');
     const [filtered, setFiltered] = useState([]);
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const [infoDrawerOpen, setInfoDrawerOpen] = useState(false);
+    const [selectedShop, setSelectedShop] = useState(null);
+    const [selectedMarkerId, setSelectedMarkerId] = useState(null);
 
     const handleChange = (event) => {
         event.preventDefault();
@@ -59,7 +62,7 @@ function Nearby() {
         const currentLng = map.getCenter().getLng();
 
         fetch(`${backend}/api/v1/shop/?longitude=${currentLng}&latitude=${currentLat}&radius=2`)
-            .then(respone => respone.json())
+            .then(response => response.json())
             .then(json => { setData(json); return json; })
             .then(json => setFiltered(json));
     };
@@ -101,6 +104,23 @@ function Nearby() {
         setDrawerOpen(open);
     };
 
+    const toggleInfoDrawer = (open) => (event) => {
+        if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+            return;
+        }
+        setInfoDrawerOpen(open);
+        if (!open) {
+            setSelectedMarkerId(null);
+        }
+    };
+
+    const handleMarkerClick = (shop) => {
+        setSelectedShop(shop);
+        setSelectedMarkerId(shop.id);
+        setInfoDrawerOpen(true);
+    };
+
+
     return (
         <div>
             <div style={{ position: 'relative', width: '100vw', height: '88vh' }}>
@@ -118,26 +138,22 @@ function Nearby() {
                         const latlang = {
                             "lat": data.latitude,
                             "lng": data.longitude
-                        }
+                        };
+                        const isSelected = selectedMarkerId === data.id;
                         return (
-                                <MapMarker
-                                    key={`${data.id}`}
-                                    position={latlang}
-                                    image={{
-                                        src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
-                                        size: {
-                                            width: 24,
-                                            height: 35
-                                        },
-                                    }}
-                                // title={data.name}
-                            >
-                                
-                                    <div style={{ padding: "1px", color: "#000", borderRadius: "100px", backgroundColor:'#fff'}}>{data.name}</div>
-                                
-                            </MapMarker>
-                            
-                            );
+                            <MapMarker
+                                key={`${data.id}`}
+                                position={latlng}
+                                image={{
+                                    src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
+                                    size: {
+                                        width: isSelected ? 48 : 24,
+                                        height: isSelected ? 70 : 35
+                                    },
+                                }}
+                                onClick={() => handleMarkerClick(data)}
+                            />
+                        );
                     })}
                     {!state.isLoading && (
                         <CustomOverlayMap position={state.center}>
@@ -225,7 +241,7 @@ function Nearby() {
                     <FormControl sx={{ display: 'flex', minWidth: 300, mb: 2 }} >
                         <InputLabel id="sector-label">업종</InputLabel>
                         <Select labelId='sector-label' value={sector} label="업종" onChange={handleChange}>
-                            {sectorSample.map(sector => (<MenuItem value={`${sector.id}`}>{`${sector.name}`}</MenuItem>))}
+                            {sectorSample.map(sector => (<MenuItem key={sector.id} value={`${sector.id}`}>{`${sector.name}`}</MenuItem>))}
                         </Select>
                         <Button
                             sx={{
@@ -279,8 +295,57 @@ function Nearby() {
                     </List>
                 </div>
             </SwipeableDrawer>
+
+            <SwipeableDrawer
+                anchor="bottom"
+                open={infoDrawerOpen}
+                onClose={toggleInfoDrawer(false)}
+                onOpen={toggleInfoDrawer(true)}
+                PaperProps={{
+                    sx: { height: '25%' }
+                }}
+                ModalProps={{
+                    slotProps: {
+                        backdrop: {
+                            style: {
+                                backgroundColor: 'transparent',
+                            },
+                        },
+                    },
+                }}
+            >
+                {selectedShop && (
+                    <div
+                        role="presentation"
+                        style={{ padding: '20px' }}
+                    >
+                        <Typography variant="h6" component="div">
+                            {selectedShop.name}
+                        </Typography>
+                        <Typography variant="body1" component="div">
+                            {selectedShop.address}
+                        </Typography>
+                        {selectedShop.phone.length > 5 ? (
+                            <Typography variant="body1" component="div">
+                                <a href={`tel:${selectedShop.phone}`}>{selectedShop.phone}</a>
+                            </Typography>
+                        ) : (
+                            <Typography variant="body1" component="div">
+                                연락처 정보가 없습니다
+                            </Typography>
+                        )}
+                        <Typography variant="body1" component="div">
+                            추천 수: {selectedShop.recommend}
+                        </Typography>
+                        <Typography variant="body1" component="div">
+                            업종: {sectorSample[(Number(selectedShop.sectorId)) - 1].name}
+                        </Typography>
+                    </div>
+                )}
+            </SwipeableDrawer>
+
             <BottomNav />
-        </div >
+        </div>
     )
 }
 
