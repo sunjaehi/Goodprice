@@ -13,19 +13,6 @@ import ReviewSummary from "./ReviewSummary";
 import ShopNewsDrawer from "./ShopNewsDrawer";
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
-const ImageContainer = styled('div')({
-    width: '100%',
-    height: 450,
-    overflow: 'hidden',
-    position: 'relative'
-});
-
-const Image = styled('img')({
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-    objectPosition: 'center'
-});
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -51,6 +38,7 @@ CustomTabPanel.propTypes = {
 };
 
 function ShopDetail() {
+    const defaultImage = '/images/default_storeImage.png';
     const navigate = useNavigate();
     const [datas, setDatas] = useState(null);
     const [productDatas, setProductDatas] = useState(null);
@@ -267,11 +255,43 @@ function ShopDetail() {
             <div>
                 {datas && <Card sx={{ width: '100%' }}>
                     <Carousel autoPlay={false} animation="slide" timeout={1000} >
-                        {datas.shopImgUrls.map(url =>
+                        {datas.shopImgUrls.length > 0 ? datas.shopImgUrls.map(url =>
                             <Paper key={url}>
-                                <ImageContainer>
-                                    <Image src={url} alt="이미지 준비중" />
-                                </ImageContainer>
+                                <div style={{ width: '100%', height: 450, position: 'relative', overflow: 'hidden' }}>
+                                    <img
+                                        src={url || defaultImage}
+                                        alt="상점 이미지"
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'cover',
+                                            objectPosition: 'center'
+                                        }}
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = defaultImage;
+                                        }}
+                                    />
+                                </div>
+                            </Paper>
+                        ) : (
+                            <Paper>
+                                <div style={{ width: '100%', height: 450, position: 'relative', overflow: 'hidden' }}>
+                                    <img
+                                        src={defaultImage}
+                                        alt="상점 이미지"
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'cover',
+                                            objectPosition: 'center'
+                                        }}
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = defaultImage;
+                                        }}
+                                    />
+                                </div>
                             </Paper>
                         )}
                     </Carousel>
