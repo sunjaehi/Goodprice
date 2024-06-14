@@ -64,20 +64,24 @@ const CustomCarousel = ({ title, data, defaultImage, handleCardClick }) => {
 
     return (
         <Box my={4}>
-            <Typography gutterBottom variant="h6" component="div">
-                {title}
-            </Typography>
+            {data.length > 0 &&
+                (<Typography gutterBottom variant="h6" component="div">
+                    {title}
+                </Typography>)
+            }
             {data.length > 1 ? (
-                <Slider {...settings}>
-                    {data.map((item) => (
-                        <CarouselItem
-                            key={item.shopId}
-                            data={item}
-                            defaultImage={defaultImage}
-                            handleCardClick={handleCardClick}
-                        />
-                    ))}
-                </Slider>
+                <>
+                    <Slider {...settings}>
+                        {data.map((item) => (
+                            <CarouselItem
+                                key={item.shopId}
+                                data={item}
+                                defaultImage={defaultImage}
+                                handleCardClick={handleCardClick}
+                            />
+                        ))}
+                    </Slider>
+                </>
             ) : (
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     {data.map((item) => (
