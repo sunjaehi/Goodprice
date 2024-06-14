@@ -8,9 +8,10 @@ import Carousel from "react-material-ui-carousel";
 import { styled } from '@mui/material/styles';
 import { Link, useNavigate, useParams } from "react-router-dom";
 import PropTypes from 'prop-types';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ProductInfo from "./ProductInfo";
+import ReviewSummary from "./ReviewSummary";
+import ShopNewsDrawer from "./ShopNewsDrawer";
 
-const { Kakao } = window;
 const backend = process.env.REACT_APP_BACKEND_ADDR;
 const ImageContainer = styled('div')({
     width: '100%',
@@ -25,7 +26,6 @@ const Image = styled('img')({
     objectFit: 'cover',
     objectPosition: 'center'
 });
-
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -62,17 +62,18 @@ function ShopDetail() {
     const [latitude, setLatitude] = useState(null);
     const [longitude, setLongitude] = useState(null);
     const [stations, setStations] = useState(null);
+    const [shopNewsDatas, setShopNewsDatas] = useState([]);
     const atk = sessionStorage.getItem('atk');
-
     const { Kakao } = window;
+
+    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [page, setPage] = useState(0);
 
     useEffect(() => {
         console.log(Kakao);
         Kakao.cleanup();
         Kakao.init('26629afca566a85d39b41a0e7760267d');
     }, []);
-
-
 
     const shareKakao = (datas) => {
         Kakao.Share.sendDefault({
@@ -184,6 +185,11 @@ function ShopDetail() {
                 result = await fetch(`${backend}/api/v1/review/summary?shopId=${shopId}`);
                 json = await result.json();
                 setReviewSummary(json);
+
+                result = await fetch(`${backend}/api/v1/shop-news/${shopId}`)
+                json = await result.json();
+                setShopNewsDatas(json.newsList);
+                console.log(json.newsList);
             } catch (error) {
                 console.error('Failed to fetch data:', error);
             }
@@ -246,13 +252,24 @@ function ShopDetail() {
         setHasMarked(false);
     }
 
+    const fetchMoreData = async () => {
+        try {
+            const result = await fetch(`${backend}/api/v1/shop-news/${shopId}?page=${page}`);
+            const json = await result.json();
+            setShopNewsDatas(prev => [...prev, ...json.newsList]);
+            setPage(prev => prev + 1);
+        } catch (error) {
+            console.error('Failed to fetch more data:', error);
+        }
+    };
+
     return (
         <Container maxWidth="sm" sx={{ marginTop: '75px' }}>
             <div>
                 {datas && <Card sx={{ width: '100%' }}>
                     <Carousel autoPlay={false} animation="slide" timeout={1000} >
                         {datas.shopImgUrls.map(url =>
-                            <Paper>
+                            <Paper key={url}>
                                 <ImageContainer>
                                     <Image src={url} alt="이미지 준비중" />
                                 </ImageContainer>
@@ -270,7 +287,7 @@ function ShopDetail() {
                         </Box>
                         <Box display="flex" alignItems="baseline">
                             <img src="https://img.icons8.com/fluency/48/thumb-up.png" width={25} height={25} alt="recommendation icon" />
-                            <Typography variant="body2" color="text.secondary" style={{ marginLeft: 4}}>
+                            <Typography variant="body2" color="text.secondary" style={{ marginLeft: 4 }}>
                                 {datas.recommend}
                             </Typography>
                         </Box>
@@ -358,75 +375,19 @@ function ShopDetail() {
                 </Card>
                 }
             </div>
-            <h2>상품</h2>
-            <hr />
-            <List>
-                {(!productDatas || productDatas.length === 0) && <p>아직 상품이 없어요</p>}
-                {productDatas && productDatas.map(product => {
-                    return (
-                        <ListItem divider>
-                            {product.imgUrl && (
-                                <img
-                                    src={product.imgUrl}
-                                    style={{
-                                        width: '100px',
-                                        height: '100px',
-                                        objectFit: 'cover',
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        overflowX: 'auto',
-                                        marginRight: '16px'
-                                    }}
-                                    alt="상품 이미지"
-                                />
-                            )}
-                            <ListItemText primary={product.name} secondary={`${product.price}원`} />
-                        </ListItem>
-                    )
-                })}
-            </List>
-            <h2>리뷰</h2>
-            <List>
-                {(!reviewSummary || reviewSummary.length == 0) && <p>아직 리뷰가 없어요. 가게를 방문해보셨다면 리뷰를 남겨보세요</p>}
-                <Button variant="contained" sx={{
-                                mt: 3, mb: 2, backgroundColor: '#2a75f3',
-                                ":hover": {
-                                    backgroundColor: '#4285f4'
-                                }
-                            }}component={Link} to={`/review/${shopId}`}>전체 리뷰보기</Button>
+            <ProductInfo productDatas={productDatas} />
+            <ReviewSummary reviewSummary={reviewSummary} shopId={shopId} />
 
-                {reviewSummary && reviewSummary.map(review => {
-                    return (
-                        <Card key={review.id} sx={{ marginBottom: 2 }}>
-                            <CardContent>
-                                <Box display="flex" justifyContent="space-between" alignItems="center">
-                                    <Typography variant="h6">{review.memberNickname}</Typography>
-                                </Box>
-                                <Typography variant="body2" color="textSecondary">{review.createdAt}</Typography>
-                                <Typography variant="body1" paragraph>{review.comment}</Typography>
-                                <Rating name="read-only" value={review.score} precision={0.5} readOnly />
-                                {review.imgUrls && review.imgUrls.length > 0 &&
-                                    <ImageList sx={{ width: '100%', display: 'flex', flexDirection: 'row', overflowX: 'auto' }}>
-                                        {review.imgUrls.map(imgurl => {
-                                            return (
-                                                <a href={imgurl} style={{ marginRight: '10px' }}>
-                                                    <img
-                                                        src={imgurl}
-                                                        width={100}
-                                                        height={100}
-                                                        style={{ objectFit: 'cover' }}
-                                                    />
-                                                </a>
-                                            )
-                                        })}
-                                    </ImageList>
-                                }
-                            </CardContent>
-                        </Card>
-                    )
-                })}
-            </List>
-        </Container >
-    )
+            <Button onClick={() => setDrawerOpen(true)}>test</Button>
+            <ShopNewsDrawer
+                open={drawerOpen}
+                onClose={() => setDrawerOpen(false)}
+                onOpen={() => setDrawerOpen(true)}
+                shopNewsDatas={shopNewsDatas}
+                fetchMoreData={fetchMoreData}
+            />
+        </Container>
+    );
 }
+
 export default ShopDetail;
