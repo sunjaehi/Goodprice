@@ -70,7 +70,7 @@ function Myfavorite() {
 
     return (
         <Container maxWidth="sm">
-            <Typography variant="h5">즐겨찾기</Typography>
+            <Typography variant="h5" textAlign="center" sx={{marginTop:8}}>즐겨찾기</Typography>
             <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                 {shopMarks && shopMarks.map(shopMark => (
                     <ListItem key={shopMark.id} disablePadding>

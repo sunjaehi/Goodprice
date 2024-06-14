@@ -51,47 +51,54 @@ const NotificationSettings = () => {
 
     return (
         <Container maxWidth="sm" style={{ marginTop: '2rem' }}>
-            <Typography variant="h5" gutterBottom>
+            <Typography variant="h5" textAlign="center" gutterBottom sx={{marginTop:8, marginBottom: 4}}>
                 알림 설정
             </Typography>
-            <Grid container spacing={2}>
+            <Grid container spacing={8}>
                 <Grid item xs={12}>
-                    <Typography variant="h6">
-                        이메일 알림
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                        이메일 알림을 설정하면 관심 지역 가게 알림을 받을 수 있습니다.
-                    </Typography>
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={emailNotifications}
-                                onChange={handleEmailToggle}
-                                name="emailNotifications"
-                                color="primary"
-                            />
+                    <Box sx={{display:'flex', justifyContent:'space-between'}}>
+                        <Typography variant="h6">
+                            이메일 알림
+                        </Typography>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={emailNotifications}
+                                    onChange={handleEmailToggle}
+                                    name="emailNotifications"
+                                    color="primary"
+                                />
                         }
-                        label="이메일 알림"
+                        
                     />
+                    </Box>
+                    <Typography variant="body2" color="textSecondary">
+                        이메일 알림을 설정하면 <br/>관심 지역 가게 알림을 받을 수 있습니다.
+                    </Typography>
+                    
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography variant="h6">
-                        푸시 알림
-                    </Typography>
+                    <Box sx={{display:'flex', justifyContent:'space-between'}}>
+                        <Typography variant="h6">
+                            푸시 알림
+                        </Typography>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={pushNotifications}
+                                    onChange={handlePushToggle}
+                                    name="pushNotifications"
+                                    color="primary"
+                                />
+                            }
+                            
+                        />
+                    </Box>
+                    
                     <Typography variant="body2" color="textSecondary">
-                        푸시 알림을 설정하면 관심 지역의 가게 추가 알림, 관심 가게의 새 소식 알림을 받을 수 있습니다.
+                        푸시 알림을 설정하면 관심 지역의 가게 추가 알림, <br/>관심 가게의 새 소식 알림을 받을 수 있습니다.
                     </Typography>
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={pushNotifications}
-                                onChange={handlePushToggle}
-                                name="pushNotifications"
-                                color="primary"
-                            />
-                        }
-                        label="푸시 알림"
-                    />
+                    
                 </Grid>
                 <Grid item xs={12} style={{ textAlign: 'center', marginTop: '2rem' }}>
                     <Button variant="contained" color="primary" onClick={handleSave}>

@@ -76,10 +76,11 @@ function ChangeNickname() {
                         marginTop: 8,
                         display: 'flex',
                         flexDirection: 'column',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        
                     }}
                 >
-                    <Typography variant="h1">
+                    <Typography variant="h5" sx={{marginBottom: 4}}>
                         닉네임 변경
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
