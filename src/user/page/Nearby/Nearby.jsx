@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Map, CustomOverlayMap, MapMarker } from 'react-kakao-maps-sdk';
 import {
-    List, ListItem, ListItemText, ListItemButton, Typography, InputLabel,
+    List, ListItem, ListItemText, ListItemButton, Typography, InputLabel, useMediaQuery,
     FormControl, MenuItem, Select, Button, ListItemAvatar, SwipeableDrawer, Fab
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
@@ -11,9 +11,12 @@ import { Link } from 'react-router-dom';
 import NavigationIcon from '@mui/icons-material/Navigation';
 import BottomNav from "../../component/BottomNavigation/BottomNav";
 import './Nearby.css';
+import { styled, useTheme } from '@mui/material/styles';
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
 function Nearby() {
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.up('sm'));
     const [datas, setData] = useState(null);
     const [sector, setSector] = useState('');
     const [filtered, setFiltered] = useState([]);
@@ -158,7 +161,7 @@ function Nearby() {
                     })}
                     {!state.isLoading && (
                         <MapMarker position={state.center} >
-                            <div style={{ padding: "3px", margin: "10px", color: "#000", textAlign:"center"}}>
+                            <div style={{ padding: "3px", margin: "10px", color: "#000", textAlign: "center" }}>
                                 {state.errMsg ? state.errMsg : "현재 위치"}
                             </div>
                         </MapMarker>
@@ -232,7 +235,11 @@ function Nearby() {
                 onClose={toggleDrawer(false)}
                 onOpen={toggleDrawer(true)}
                 PaperProps={{
-                    sx: { height: '90%' }
+                    sx: {
+                        height: '90%',
+                        maxWidth: isSmallScreen ? theme.breakpoints.values.sm : '100%',
+                        margin: '0 auto',
+                    }
                 }}
             >
                 <div

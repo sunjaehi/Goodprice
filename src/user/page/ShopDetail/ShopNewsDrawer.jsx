@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { SwipeableDrawer, Box, Typography, Card, CardContent } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { SwipeableDrawer, Box, Typography, Card, CardContent, useMediaQuery } from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
 import Carousel from 'react-material-ui-carousel';
 
 const drawerBleeding = 56;
@@ -25,6 +25,8 @@ const Image = styled('img')({
 
 const ShopNewsDrawer = ({ open, onClose, onOpen, shopNewsDatas, fetchMoreData }) => {
     const observerRef = useRef();
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.up('sm'));
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -62,6 +64,8 @@ const ShopNewsDrawer = ({ open, onClose, onOpen, shopNewsDatas, fetchMoreData })
                 sx: {
                     height: `calc(80% - ${drawerBleeding}px)`,
                     overflow: 'visible',
+                    maxWidth: isSmallScreen ? theme.breakpoints.values.sm : '100%',
+                    margin: '0 auto',
                 },
             }}
         >
