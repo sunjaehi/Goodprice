@@ -157,7 +157,7 @@ function Mainpage() {
             )}
 
             <Box my={6}>
-                <Typography gutterBottom variant="h5" component="div">
+                <Typography gutterBottom variant="h6" component="div">
                     업종별 베스트 가게
                 </Typography>
                 <Grid container spacing={2}>
