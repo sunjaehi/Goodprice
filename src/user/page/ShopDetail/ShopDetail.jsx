@@ -67,7 +67,7 @@ function ShopDetail() {
     const { Kakao } = window;
 
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(0);
 
     useEffect(() => {
         console.log(Kakao);
