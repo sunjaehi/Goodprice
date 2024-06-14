@@ -12,6 +12,7 @@ import NavigationIcon from '@mui/icons-material/Navigation';
 import BottomNav from "../../component/BottomNavigation/BottomNav";
 import './Nearby.css';
 import { styled, useTheme } from '@mui/material/styles';
+import { FindReplaceOutlined } from "@mui/icons-material";
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
 const defaultImage = '/images/default_storeImage.png';
@@ -170,7 +171,7 @@ function Nearby() {
                 </Map>
                 <Button
 
-                    startIcon={<NavigationIcon />}
+                    startIcon={<FindReplaceOutlined />}
                     size="large"
                     variant="contained"
                     onClick={handleSubmit}
