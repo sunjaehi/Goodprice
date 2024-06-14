@@ -14,6 +14,8 @@ import './Nearby.css';
 import { styled, useTheme } from '@mui/material/styles';
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
+const defaultImage = '/images/default_storeImage.png';
+
 function Nearby() {
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.up('sm'));
@@ -274,9 +276,18 @@ function Nearby() {
                                 <ListItemButton component={Link} to={`/detail/${data.id}`} >
                                     <ListItemAvatar sx={{ width: 100, height: 100, overflow: 'hidden', marginRight: 2 }}>
                                         <img
-                                            alt={data.name}
-                                            src={data.imgUrl}
-                                            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
+                                            src={data.imgUrl || defaultImage}
+                                            alt="상점 이미지"
+                                            style={{
+                                                width: '100%',
+                                                height: '100%',
+                                                objectFit: 'cover',
+                                                objectPosition: 'center'
+                                            }}
+                                            onError={(e) => {
+                                                e.target.onerror = null;
+                                                e.target.src = defaultImage;
+                                            }}
                                         />
                                     </ListItemAvatar>
                                     <ListItemText
