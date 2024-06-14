@@ -41,6 +41,7 @@ import ShopPendingAdminDetail from './admin/component/ShopPendingAdminDetail';
 import ChangePassword from './user/page/Mypage/ChangePassword';
 import ChangeNickname from './user/page/Mypage/ChangeNickname';
 import NotificationSettings from './user/page/Mypage/NotificationSettings';
+import ShopNewsInput from './user/page/ShopNewsInput/ShopNewsInput';
 
 
 function App() {
@@ -87,6 +88,7 @@ function App() {
         <Route path="/change-password" element={<ChangePassword />}></Route>
         <Route path="/change-nickname" element={<ChangeNickname />}></Route>
         <Route path="/notification-setting" element={<NotificationSettings />}></Route>
+        <Route path="/shop-news-input" element={<ShopNewsInput />}></Route>
       </Routes>
     </BrowserRouter >
   );

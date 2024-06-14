@@ -1,19 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactLoading from 'react-loading';
-import { Card, CardContent, Container, Typography } from '@mui/material';
+import { Card, CardContent, Container, Typography, Fab } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import BottomNav from '../../component/BottomNavigation/BottomNav';
+import { useNavigate } from 'react-router-dom';
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
+
 function Newsfeed() {
   const [target, setTarget] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
   const [page, setPage] = useState(0);
   const [newsList, setNewsList] = useState([]);
   const [newsResponse, setNewsResponse] = useState(null);
   const [isLastPage, setIsLastPage] = useState(false);
   const [bottomNavValue, setBottomNavValue] = useState(1);
-
+  const [permittedShops, setPermittedShops] = useState([]);
+  const atk = sessionStorage.getItem('atk');
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isLastPage) return; // 마지막 페이지면 요청을 보내지 않음
@@ -37,6 +41,18 @@ function Newsfeed() {
       .catch(error => {
         console.error('Error fetching news:', error);
       });
+
+    if (atk !== null) {
+      fetch(`${backend}/api/v1/shop-manager/check-permissions`,
+        {
+          method: "GET",
+          headers: {
+            "Authorization": "Bearer " + atk
+          }
+        }
+      ).then(response => response.json())
+        .then(json => setPermittedShops(json));
+    }
   }, [page, isLastPage]);
 
   const onIntersect = async ([entry], observer) => {
@@ -79,6 +95,16 @@ function Newsfeed() {
         )}
         <div ref={setTarget}></div>
       </Container>
+      {permittedShops && permittedShops.length > 0 && (
+        <Fab
+          color="primary"
+          aria-label="add"
+          style={{ position: 'fixed', bottom: 80, right: 16 }}
+          onClick={() => navigate('/shop-news-input')}
+        >
+          <AddIcon />
+        </Fab>
+      )}
       <BottomNav value={bottomNavValue} onChange={setBottomNavValue} />
     </>
   );
