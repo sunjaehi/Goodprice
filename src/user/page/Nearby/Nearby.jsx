@@ -247,10 +247,10 @@ function Nearby() {
                         <Button
                             sx={{
                                 mt: "10px",
-                                color: 'black',
-                                bgcolor: "#98ABEE",
+                                color: 'white',
+                                bgcolor: "#2a75f3",
                                 ":hover": {
-                                    bgcolor: "#98ABEE"
+                                    bgcolor: "#4285f4"
                                 }
                             }}
                             variant="outlined"
