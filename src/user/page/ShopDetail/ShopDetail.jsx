@@ -301,6 +301,13 @@ function ShopDetail() {
                             <Tab label="홈" />
                             <Tab label="지도" />
                             <Tab label="기타 정보" />
+                            <Tab
+                                label={
+                                    <Button onClick={() => setDrawerOpen(true)} sx={{ width: '100%', height: '100%' }}>
+                                        소식
+                                    </Button>
+                                }
+                            />
                         </Tabs>
                         <CustomTabPanel value={value} index={0}>
                             <Typography>주소</Typography>
@@ -383,7 +390,6 @@ function ShopDetail() {
             <ProductInfo productDatas={productDatas} />
             <ReviewSummary reviewSummary={reviewSummary} shopId={shopId} />
 
-            <Button onClick={() => setDrawerOpen(true)}>test</Button>
             <ShopNewsDrawer
                 open={drawerOpen}
                 onClose={() => setDrawerOpen(false)}
