@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TextField, Box, MenuItem, FormControlLabel, Checkbox } from "@mui/material";
 import Stack from '@mui/material/Stack';
 import AddIcon from '@mui/icons-material/Add';
@@ -14,72 +14,66 @@ import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { Check, CheckBox } from "@mui/icons-material";
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
 
-function Registershop() {
+function RegisterShop() {
     const [sectors, setSectors] = useState(null);
-    const [sector, setSector] = useState(null);
+    const [selectedSector, setSelectedSector] = useState(null);
     const [zipcode, setZipcode] = useState(null);
     const [address, setAddress] = useState(null);
     const [regionId, setRegionId] = useState(null);
 
     const [startTime, setStartTime] = useState(dayjs('2024-05-20T09:00'));
     const [endTime, setEndTime] = useState(dayjs());
-    const [allday, setAllday] = useState(false);
+    const [isAllDay, setIsAllDay] = useState(false);
     const [isLocalFranchise, setIsLocalFranchise] = useState(false);
-    const idInput = useRef(null);
-    const nameInput = useRef(null);
-    const phoneInput = useRef(null);
-    const boastInput = useRef(null);
-    const infoInput = useRef(null);
-    const imageInput = useRef(null);
 
-    const [formItem, setFormItem] = useState({
-        zipcode: '',
-        shopname: '',
-        shopPhone: '',
-        reason: '',
+    const [formData, setFormData] = useState({
+        shopName: '',
+        phone: '',
+        boast: '',
         info: '',
+        zipcode: '',
+        shopPhone: '',
     });
-    const handleInput = (e) => {
+
+    const handleFormInputChange = (e) => {
         const { id, value } = e.target;
-        setFormItem((prevData) => ({
+        setFormData((prevData) => ({
             ...prevData,
             [id]: value,
         }));
     };
-    const isFormValid = () => {
-        return formItem.zipcode && formItem.shopname && formItem.shopPhone
-            && formItem.reason && formItem.info;
-    }
 
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [previews, setPreviews] = useState([]);
 
-    const handleChange = (e) => {
-        setSector(e.target.value);
-    }
+    const handleSectorChange = (e) => {
+        setSelectedSector(e.target.value);
+    };
+
     const navigate = useNavigate();
 
     useEffect(() => {
         fetch(`${backend}/api/v1/sector/`)
             .then(result => result.json())
             .then(json => setSectors(json));
-    }, [])
+    }, []);
+
     const open = useDaumPostcodePopup(postcodeScriptUrl);
-    const handleComplete = (data) => {
+
+    const handleAddressComplete = (data) => {
         if (data.addressType === 'R') {
-            console.log(data);
             setAddress(data.roadAddress);
             setZipcode(data.zonecode);
             setRegionId(data.sigunguCode);
         }
-    }
-    const handleSearch = () => {
-        open({ onComplete: handleComplete });
-    }
+    };
+
+    const handleAddressSearch = () => {
+        open({ onComplete: handleAddressComplete });
+    };
 
     const handleStartTimeChange = (newValue) => {
         setStartTime(newValue);
@@ -92,60 +86,54 @@ function Registershop() {
     const formatTime = (time) => {
         return time.format('HH:mm');
     };
-    const onChangeFile = (e) => {
+
+    const handleFileChange = (e) => {
         let newFiles = Array.from(e.target.files);
         setSelectedFiles(prevFiles => [...prevFiles, ...newFiles]);
 
         const newPreviews = newFiles.map(file => URL.createObjectURL(file));
         setPreviews(prevPreviews => [...prevPreviews, ...newPreviews]);
-    }
+    };
 
     const removeImage = (index) => {
         setSelectedFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
         setPreviews(prevPreviews => prevPreviews.filter((_, i) => i !== index));
-    }
+    };
 
-    function submit(event) {
+    const submit = (event) => {
         event.preventDefault();
-        const businessHours = allday ? `00:00 - 24:00` : `${formatTime(startTime)} - ${formatTime(endTime)}`
+        const businessHours = isAllDay ? `00:00 - 24:00` : `${formatTime(startTime)} - ${formatTime(endTime)}`;
 
-        const formData = new FormData();
-        formData.append('id', idInput.current.value);
-        formData.append('name', nameInput.current.value);
-        formData.append('address', address);
-        formData.append('sectorId', sector);
-        formData.append('regionId', regionId);
-        formData.append('phone', phoneInput.current.value);
-        formData.append('boast', boastInput.current.value);
-        formData.append('info', infoInput.current.value);
-        formData.append('businessHours', businessHours);
-        formData.append('isLocalFranchise', isLocalFranchise ? 1 : 0);
-        formData.append('zipcode', zipcode);
-        selectedFiles.forEach(file => formData.append('files', file));
+        const formDataToSend = new FormData();
+        formDataToSend.append('name', formData.shopName);
+        formDataToSend.append('address', address);
+        formDataToSend.append('sectorId', selectedSector);
+        formDataToSend.append('regionId', regionId);
+        formDataToSend.append('phone', formData.phone);
+        formDataToSend.append('boast', formData.boast);
+        formDataToSend.append('info', formData.info);
+        formDataToSend.append('businessHours', businessHours);
+        formDataToSend.append('isLocalFranchise', isLocalFranchise ? 1 : 0);
+        formDataToSend.append('zipcode', zipcode);
+        selectedFiles.forEach(file => formDataToSend.append('files', file));
 
         fetch(`${backend}/api/v1/shop/register`, {
             method: "POST",
             headers: {
                 "Authorization": "Bearer " + sessionStorage.getItem("atk")
             },
-            body: formData,
+            body: formDataToSend,
         }).then(response => {
             if (response.status === 200) {
                 navigate('/');
-            }
-            else {
+            } else {
                 alert("등록 실패");
             }
-        })
-    }
+        });
+    };
 
     return (
-        <Box
-            sx={{
-                flexDirection: "row",
-                display: "flex"
-            }}
-        >
+        <Box sx={{ flexDirection: "row", display: "flex" }}>
             <Adminlist />
             <Stack
                 component="form"
@@ -156,62 +144,34 @@ function Registershop() {
                 margin={5}
                 ml={10}
             >
-                <TextField
-                    id="zipcode"
-                    label="가게 ID"
-                    multiline
-                    variant="standard"
-                    inputRef={idInput}
-                    value={formItem.zipcode}
-                    onChange={handleInput}
-                />
-                <Box
-                    sx={{
-                        display: "flex",
-                        minWidth: "100",
-                        flexDirection: "row",
-                        gap: 3
-                    }}
-                >
+                <Box sx={{ display: "flex", minWidth: "100", flexDirection: "row", gap: 3 }}>
                     <TextField
-                        id="shopname"
+                        id="shopName"
                         label="상호명"
                         multiline
-                        //maxrows
                         variant="standard"
-                        inputRef={nameInput}
                         sx={{ width: '50%' }}
-                        value={formItem.shopname}
-                        onChange={handleInput}
+                        value={formData.shopName}
+                        onChange={handleFormInputChange}
                     />
-                    {/* <InputLabel id="sector">업종별</InputLabel> */}
                     <FormControl sx={{ width: '50%' }}>
                         <InputLabel id="select-label">업종 분류</InputLabel>
                         <Select
                             labelId="sector-label"
                             id="sector"
-                            value={sector}
+                            value={selectedSector}
                             label="업종별"
-                            onChange={handleChange}
+                            onChange={handleSectorChange}
                         >
                             {sectors && sectors.map((sector) => (
-                                <MenuItem
-                                    value={`${sector.id}`}
-                                >{`${sector.name}`}</MenuItem>
+                                <MenuItem key={sector.id} value={sector.id}>{sector.name}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>
                 </Box>
-                <Box
-                    sx={{
-                        display: "flex",
-                        minWidth: "100",
-                        flexDirection: "row",
-                    }}
-                    gap={3}
-                >
+                <Box sx={{ display: "flex", minWidth: "100", flexDirection: "row", gap: 3 }}>
                     <TextField
-                        id="postcode"
+                        id="zipcode"
                         placeholder="우편번호"
                         multiline
                         inputProps={{ readOnly: true, disableUnderline: true }}
@@ -220,7 +180,7 @@ function Registershop() {
                         sx={{ width: "80%" }}
                     />
                     <Button
-                        onClick={handleSearch}
+                        onClick={handleAddressSearch}
                         variant="contained"
                         sx={{
                             bgcolor: 'black',
@@ -230,40 +190,36 @@ function Registershop() {
                             }
                         }}
                     >주소 찾기</Button>
-
                 </Box>
                 <TextField
-                    id="detailAddress"
+                    id="address"
                     placeholder="가게 주소"
                     inputProps={{ readOnly: true, disableUnderline: true }}
                     multiline
                     value={address}
-                    //maxrows
                     variant="standard"
                 />
-                {/* <DaumPostcode /> */}
                 <TextField
                     id="shopPhone"
                     label="연락처"
                     multiline
-                    inputRef={phoneInput}
                     variant="standard"
-                    value={formItem.shopPhone}
-                    onChange={handleInput}
+                    value={formData.shopPhone}
+                    onChange={handleFormInputChange}
                 />
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <div>
                         <TimePicker
                             label="시작시간"
-                            defaultValue={startTime}
-                            disabled={allday}
+                            value={startTime}
+                            disabled={isAllDay}
                             onChange={handleStartTimeChange}
                             sx={{ width: '50%' }}
                         />
                         <TimePicker
                             label="종료시간"
                             value={endTime}
-                            disabled={allday}
+                            disabled={isAllDay}
                             onChange={handleEndTimeChange}
                             sx={{ width: '50%' }}
                         />
@@ -271,30 +227,28 @@ function Registershop() {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={allday}
-                                onChange={(e) => setAllday(e.target.checked)}
+                                checked={isAllDay}
+                                onChange={(e) => setIsAllDay(e.target.checked)}
                             />
                         }
                         label="24시간"
                     />
                 </LocalizationProvider>
                 <TextField
-                    id="reason"
+                    id="boast"
                     label="자랑거리"
                     multiline
-                    inputRef={boastInput}
                     variant="standard"
-                    value={formItem.reason}
-                    onChange={handleInput}
+                    value={formData.boast}
+                    onChange={handleFormInputChange}
                 />
                 <TextField
                     id="info"
                     label="기타정보"
                     multiline
-                    inputRef={infoInput}
                     variant="standard"
-                    value={formItem.info}
-                    onChange={handleInput}
+                    value={formData.info}
+                    onChange={handleFormInputChange}
                 />
                 <FormControlLabel
                     control={
@@ -305,10 +259,7 @@ function Registershop() {
                     }
                     label="서울사랑상품권 사용 가능"
                 />
-                <Box
-                    flexDirection="row"
-                    gap={5}
-                >
+                <Box flexDirection="row" gap={5}>
                     <Button
                         variant="contained"
                         type="submit"
@@ -317,8 +268,8 @@ function Registershop() {
                             bgcolor: 'grey'
                         }}
                         onClick={submit}
-                        disabled={!isFormValid()}
-                    >등록
+                    >
+                        등록
                     </Button>
                     <Button
                         variant="contained"
@@ -328,32 +279,46 @@ function Registershop() {
                                 bgcolor: 'grey'
                             }
                         }}
-                    >초기화</Button>
-
+                        onClick={() => setFormData({
+                            shopName: '',
+                            phone: '',
+                            boast: '',
+                            info: '',
+                            zipcode: '',
+                            shopPhone: '',
+                        })}
+                    >
+                        초기화
+                    </Button>
                 </Box>
             </Stack>
-            <Box
-                display="flex"
-                mt={5}
-            >
+            <Box display="flex" mt={5}>
                 <input
                     type="file"
                     multiple
                     accept="image/*"
-                    ref={imageInput}
                     id="file"
-                    onChange={onChangeFile}
+                    onChange={handleFileChange}
                     style={{ display: "none" }}
                 />
-                <Button startIcon={<AddIcon />} variant="contained"
+                <Button
+                    startIcon={<AddIcon />}
+                    variant="contained"
                     sx={{
-                        color: "black", backgroundColor: "lightgrey", borderRadius: "10px", mt: "10px", ml: "5px", height: "50px",
+                        color: "black",
+                        backgroundColor: "lightgrey",
+                        borderRadius: "10px",
+                        mt: "10px",
+                        ml: "5px",
+                        height: "50px",
                         ":hover": {
                             backgroundColor: "grey"
                         }
                     }}
-                    onClick={() => imageInput.current.click()}
-                >사진 추가</Button>
+                    onClick={() => document.getElementById('file').click()}
+                >
+                    사진 추가
+                </Button>
             </Box>
             <div className="preview" style={{ display: 'flex', flexWrap: 'wrap', marginTop: '10px' }}>
                 {previews.map((preview, index) => (
@@ -376,6 +341,6 @@ function Registershop() {
             </div>
         </Box>
     );
-
 }
-export default Registershop;
+
+export default RegisterShop;
