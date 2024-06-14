@@ -63,6 +63,7 @@ function ShopDetail() {
     const [longitude, setLongitude] = useState(null);
     const [stations, setStations] = useState(null);
     const [shopNewsDatas, setShopNewsDatas] = useState([]);
+    const [hasMoreData, setHasMoreData] = useState(true);
     const atk = sessionStorage.getItem('atk');
     const { Kakao } = window;
 
@@ -189,6 +190,7 @@ function ShopDetail() {
                 result = await fetch(`${backend}/api/v1/shop-news/${shopId}`)
                 json = await result.json();
                 setShopNewsDatas(json.newsList);
+                setHasMoreData(json.newsList.length > 0);
                 console.log(json.newsList);
             } catch (error) {
                 console.error('Failed to fetch data:', error);
@@ -256,13 +258,16 @@ function ShopDetail() {
         try {
             const result = await fetch(`${backend}/api/v1/shop-news/${shopId}?page=${page}`);
             const json = await result.json();
-            setShopNewsDatas(prev => [...prev, ...json.newsList]);
-            setPage(prev => prev + 1);
+            if (json.newsList.length > 0) {
+                setShopNewsDatas(prev => [...prev, ...json.newsList]);
+                setPage(prev => prev + 1);
+            } else {
+                setHasMoreData(false);
+            }
         } catch (error) {
             console.error('Failed to fetch more data:', error);
         }
     };
-
     return (
         <Container maxWidth="sm" sx={{ marginTop: '75px' }}>
             <div>
@@ -385,6 +390,7 @@ function ShopDetail() {
                 onOpen={() => setDrawerOpen(true)}
                 shopNewsDatas={shopNewsDatas}
                 fetchMoreData={fetchMoreData}
+                hasMoreData={hasMoreData}
             />
         </Container>
     );
