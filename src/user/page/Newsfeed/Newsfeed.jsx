@@ -4,98 +4,156 @@ import { Card, CardContent, Container, Typography, Fab } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import BottomNav from '../../component/BottomNavigation/BottomNav';
 import { useNavigate } from 'react-router-dom';
+import Carousel from 'react-material-ui-carousel';
+import { styled } from '@mui/material/styles';
+import { grey } from '@mui/material/colors';
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
 
+const ImageContainer = styled('div')({
+  width: '100%',
+  height: 200,
+  overflow: 'hidden',
+  position: 'relative'
+});
+
+const Image = styled('img')({
+  width: '100%',
+  height: '100%',
+  objectFit: 'cover',
+  objectPosition: 'center'
+});
+
 function Newsfeed() {
-  const [target, setTarget] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [newsList, setNewsList] = useState([]);
-  const [newsResponse, setNewsResponse] = useState(null);
   const [isLastPage, setIsLastPage] = useState(false);
   const [bottomNavValue, setBottomNavValue] = useState(1);
   const [permittedShops, setPermittedShops] = useState([]);
   const atk = sessionStorage.getItem('atk');
   const navigate = useNavigate();
+  const observerRef = useRef();
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
-    if (isLastPage) return; // 마지막 페이지면 요청을 보내지 않음
+    if (isLastPage || !atk) return;
 
-    fetch(`${backend}/api/v1/shop-news/feed?page=${page}`, {
-      headers: {
-        "Authorization": "Bearer " + sessionStorage.getItem('atk')
-      }
-    })
-      .then(response => response.json())
-      .then(json => {
-        setNewsResponse(json);
-        return json; // 다음 then 블록에서 json을 사용하기 위해 반환
-      })
-      .then(json => {
-        if (json && json.newsList) { // json과 json.newsList가 유효한지 확인
-          setNewsList(prev => prev.concat(json.newsList));
-          setIsLastPage(json.lastPage); // json.lastPage를 사용하여 isLastPage 설정
-        }
-      })
-      .catch(error => {
+    const fetchNews = async () => {
+      try {
+        const response = await fetch(`${backend}/api/v1/shop-news/feed?page=${page}`, {
+          headers: {
+            "Authorization": `Bearer ${atk}`
+          }
+        });
+        const json = await response.json();
+        setNewsList(prev => prev.concat(json.newsList));
+        setIsLastPage(json.lastPage);
+      } catch (error) {
         console.error('Error fetching news:', error);
-      });
+      }
+    };
 
-    if (atk !== null) {
-      fetch(`${backend}/api/v1/shop-manager/check-permissions`,
-        {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      fetchNews();
+    }
+  }, [page, atk, isLastPage]);
+
+  const [isFirst, setFirst] = useState(true);
+
+  useEffect(() => {
+    if (!atk) return;
+
+    const fetchPermissions = async () => {
+      try {
+        const response = await fetch(`${backend}/api/v1/shop-manager/check-permissions`, {
           method: "GET",
           headers: {
-            "Authorization": "Bearer " + atk
+            "Authorization": `Bearer ${atk}`
           }
-        }
-      ).then(response => response.json())
-        .then(json => setPermittedShops(json));
-    }
-  }, [page, isLastPage]);
+        });
+        const json = await response.json();
+        setPermittedShops(json);
+      } catch (error) {
+        console.error('Error fetching permissions:', error);
+      }
+    };
 
-  const onIntersect = async ([entry], observer) => {
-    if (entry.isIntersecting && !isLoading && !isLastPage) {
-      observer.unobserve(entry.target);
-      setIsLoading(true);
+    fetchPermissions();
+  }, [atk]);
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setPage((prev) => prev + 1);
-      setIsLoading(false);
-      observer.observe(entry.target);
-    }
-  };
   useEffect(() => {
-    let observer;
-    if (target) {
-      observer = new IntersectionObserver(onIntersect, {
-        threshold: 0.8,
-      });
-      observer.observe(target);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !isLoading && !isLastPage) {
+          setIsLoading(true);
+          setPage((prev) => prev + 1);
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
     }
-    return () => observer && observer.disconnect();
-  }, [target, newsResponse]);
+
+    return () => {
+      if (observerRef.current) {
+        observer.unobserve(observerRef.current);
+      }
+    };
+  }, [isLoading, isLastPage]);
+
+  useEffect(() => {
+    if (!isLoading) return;
+    const fetchMoreNews = async () => {
+      try {
+        const response = await fetch(`${backend}/api/v1/shop-news/feed?page=${page}`, {
+          headers: {
+            "Authorization": `Bearer ${atk}`
+          }
+        });
+        const json = await response.json();
+        setNewsList(prev => prev.concat(json.newsList));
+        setIsLastPage(json.lastPage);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching more news:', error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchMoreNews();
+  }, [isLoading, page, atk]);
 
   return (
     <>
       <Container maxWidth="sm">
-        {newsList && newsList.map((news, index) => (
-          <Card key={index}>
+        {newsList.map((news, index) => (
+          <Card key={index} sx={{ mb: 2 }}>
             <CardContent>
+              <Typography variant="body" color="text.secondary">{news.shopName}</Typography>
               <Typography variant="h6">{news.title}</Typography>
-              <Typography variant='body2'>{news.content}</Typography>
+              <Typography variant="body2" color="text.secondary">{news.content}</Typography>
+              {news.imgUrls && news.imgUrls.length > 0 && (
+                <Carousel autoPlay={false} animation="slide" timeout={1000}>
+                  {news.imgUrls.map((url, idx) => (
+                    <ImageContainer key={idx}>
+                      <Image src={url} alt={`뉴스 이미지 ${idx + 1}`} />
+                    </ImageContainer>
+                  ))}
+                </Carousel>
+              )}
             </CardContent>
           </Card>
         ))}
-        {isLoading && !isLastPage ? (
+        {isLoading && !isLastPage && (
           <ReactLoading type="spin" color="#00008b" />
-        ) : (
-          ""
         )}
-        <div ref={setTarget}></div>
+        <div ref={observerRef}></div>
       </Container>
-      {permittedShops && permittedShops.length > 0 && (
+      {permittedShops.length > 0 && (
         <Fab
           color="primary"
           aria-label="add"
@@ -109,4 +167,5 @@ function Newsfeed() {
     </>
   );
 }
+
 export default Newsfeed;
