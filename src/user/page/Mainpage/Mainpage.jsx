@@ -87,7 +87,7 @@ function Mainpage() {
     const [sectors, setSectors] = useState(null);
     const [bestShops, setBestShops] = useState(null);
     const [dailyShops, setDailyShops] = useState(null);
-
+    const [bottomNavValue, setBottomNavValue] = useState(0);
     const defaultImage = '/images/default_storeImage.png';
 
     const navigate = useNavigate();
@@ -149,7 +149,7 @@ function Mainpage() {
                             </Typography>
                             <Card>
                                 <CardActionArea onClick={() => handleCardClick(`/detail/${bestShop.shopId}`)}>
-                                    <div style={{ width: '100%', paddingTop: '56.25%', position: 'relative'}}>
+                                    <div style={{ width: '100%', paddingTop: '56.25%', position: 'relative' }}>
                                         <img
                                             src={bestShop.imgUrl}
                                             alt="상점 이미지"
@@ -182,7 +182,7 @@ function Mainpage() {
                 </Grid>
             </Box>
 
-            <BottomNav />
+            <BottomNav value={bottomNavValue} onChange={setBottomNavValue} />
         </Container>
     );
 }

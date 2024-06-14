@@ -21,6 +21,7 @@ function Nearby() {
     const [infoDrawerOpen, setInfoDrawerOpen] = useState(false);
     const [selectedShop, setSelectedShop] = useState(null);
     const [selectedMarkerId, setSelectedMarkerId] = useState(null);
+    const [bottomNavValue, setBottomNavValue] = useState(3);
 
     const handleChange = (event) => {
         event.preventDefault();
@@ -343,8 +344,8 @@ function Nearby() {
                     </div>
                 )}
             </SwipeableDrawer>
+            <BottomNav value={bottomNavValue} onChange={setBottomNavValue} />
 
-            <BottomNav />
         </div>
     )
 }

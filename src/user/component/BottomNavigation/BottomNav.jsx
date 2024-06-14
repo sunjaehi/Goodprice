@@ -8,9 +8,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { useNavigate } from "react-router-dom";
 import { Search } from "@mui/icons-material";
 
-export default function BottomNav() {
-    const [value, setValue] = useState('recents');
-
+export default function BottomNav({ value, onChange }) {
     const navigate = useNavigate();
     const navigateToFeed = () => {
         navigate("/Newsfeed");
@@ -26,11 +24,6 @@ export default function BottomNav() {
         navigate("/search");
     }
 
-    const handleChange = (event, newValue) => {
-        
-        setValue(newValue);
-    };
-
     return (
         <div className="footer">
             <BottomNavigation sx={{
@@ -38,17 +31,17 @@ export default function BottomNav() {
                 '&& .Mui-selected': {
                     color: 'black'
                 },
-            }} value={value} onChange={handleChange}>
+            }} value={value} onChange={(event, newValue) => { onChange(newValue) }}>
                 <BottomNavigationAction
                     label="메인"
-                    value="home"
+                    value={0}
                     icon={<OtherHousesOutlinedIcon />}
                     onClick={navigateToHome}
                 />
 
                 <BottomNavigationAction
                     label="피드"
-                    value="feed"
+                    value={1}
                     icon={<FeedOutlinedIcon />}
                     onClick={navigateToFeed}
 
@@ -56,14 +49,14 @@ export default function BottomNav() {
 
                 <BottomNavigationAction
                     label="검색"
-                    value="search"
+                    value={2}
                     icon={<Search />}
                     onClick={navigateToSearch}
                 />
 
                 <BottomNavigationAction
                     label="내 주변"
-                    value="nearby"
+                    value={3}
                     icon={<LocationOnIcon />}
                     onClick={navigateToNearby}
                 />
