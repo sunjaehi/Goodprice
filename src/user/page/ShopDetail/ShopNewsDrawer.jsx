@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { SwipeableDrawer, Box, Typography, Card, CardContent } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import Carousel from 'react-material-ui-carousel';
 
 const drawerBleeding = 56;
 
@@ -91,10 +92,14 @@ const ShopNewsDrawer = ({ open, onClose, onOpen, shopNewsDatas, fetchMoreData })
                             <Typography variant="body" color="text.secondary">{news.shopName}</Typography>
                             <Typography variant="h6">{news.title}</Typography>
                             <Typography variant="body2" color="text.secondary">{news.content}</Typography>
-                            {news.imageUrl && (
-                                <ImageContainer>
-                                    <Image src={news.imageUrl} alt="뉴스 이미지" />
-                                </ImageContainer>
+                            {news.imgUrls && news.imgUrls.length > 0 && (
+                                <Carousel autoPlay={false} animation="slide" timeout={1000}>
+                                    {news.imgUrls.map((url, idx) => (
+                                        <ImageContainer key={idx}>
+                                            <Image src={url} alt={`뉴스 이미지 ${idx + 1}`} />
+                                        </ImageContainer>
+                                    ))}
+                                </Carousel>
                             )}
                         </CardContent>
                     </Card>
