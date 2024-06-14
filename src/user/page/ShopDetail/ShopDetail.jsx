@@ -95,12 +95,6 @@ function ShopDetail() {
                         mobileWebUrl: `https://good-companion.shop/detail/${datas.shopId}`,
                     },
                 },
-                {
-                    title: '착한동행 웹 사이트 방문',
-                    link: {
-                        mobileWebUrl: 'https://good-companion.shop',
-                    },
-                },
             ],
         })
     }
