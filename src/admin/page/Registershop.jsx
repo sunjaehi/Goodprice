@@ -100,8 +100,16 @@ function RegisterShop() {
         setPreviews(prevPreviews => prevPreviews.filter((_, i) => i !== index));
     };
 
+    const isFormValid = () => {
+        return formData.shopName && selectedSector && zipcode && address && formData.shopPhone && formData.boast && formData.info;
+    };
+
     const submit = (event) => {
         event.preventDefault();
+        if (!isFormValid()) {
+            alert("모든 필수 항목을 입력해주세요.");
+            return;
+        }
         const businessHours = isAllDay ? `00:00 - 24:00` : `${formatTime(startTime)} - ${formatTime(endTime)}`;
 
         const formDataToSend = new FormData();
@@ -268,6 +276,7 @@ function RegisterShop() {
                             bgcolor: 'grey'
                         }}
                         onClick={submit}
+                        disabled={!isFormValid()} // 버튼 비활성화 조건 추가
                     >
                         등록
                     </Button>
