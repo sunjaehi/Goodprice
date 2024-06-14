@@ -165,7 +165,7 @@ function Login(props) {
                         </Button>
                         {showSnackbar && (
                             <CustomSnackbar>
-                                <Alert severity="error">로그인에 실패했습니다.</Alert>
+                                <Alert severity="error">이메일과 비밀번호를 확인해주세요.</Alert>
                             </CustomSnackbar>
                         )}
                         <Grid container>

@@ -96,7 +96,10 @@ function ChangeNickname() {
                             variant="contained"
                             fullWidth
                             onClick={checkNickname}
-                            sx={{ mt: 2 }}
+                            sx={{ mt: 2, backgroundColor: '#2a75f3',
+                                ":hover": {
+                                    backgroundColor: '#4285f4'
+                                } }}
                         >
                             닉네임 중복 확인
                         </Button>

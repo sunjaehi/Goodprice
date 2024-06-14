@@ -53,7 +53,7 @@ export default function NoticeAdminDetail() {
                 <br/>
                 <Box sx={{marginTop:3}}>
                     <Button variant="contained" sx={{mr:2}} onClick={() => navigate(`/noticeAdminEdit/${id}`)}>수정</Button>
-                    <Button variant="contained" onClick={deleteNotice}>삭제</Button>
+                    <Button variant="outlined" sx={{color:'black', borderColor:'black'}} onClick={deleteNotice}>삭제</Button>
                 </Box>
                 
             </div>

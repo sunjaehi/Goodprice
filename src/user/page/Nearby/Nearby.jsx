@@ -157,11 +157,11 @@ function Nearby() {
                         );
                     })}
                     {!state.isLoading && (
-                        <CustomOverlayMap position={state.center}>
-                            <div style={{ padding: "5px", margin: "10px", color: "#000", backgroundColor: "rgba(0,0,0,0.2)", borderRadius: '5px' }}>
-                                {state.errMsg ? state.errMsg : "여기에 계신가요?"}
+                        <MapMarker position={state.center} >
+                            <div style={{ padding: "3px", margin: "10px", color: "#000", textAlign:"center"}}>
+                                {state.errMsg ? state.errMsg : "현재 위치"}
                             </div>
-                        </CustomOverlayMap>
+                        </MapMarker>
                     )}
                 </Map>
                 <Button
