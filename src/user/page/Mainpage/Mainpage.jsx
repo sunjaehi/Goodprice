@@ -41,22 +41,23 @@ const CustomCarousel = ({ title, data, defaultImage, handleCardClick }) => {
     const settings = {
         infinite: true,
         speed: 500,
-        slidesToShow: 3,
+        slidesToShow: 1,
         slidesToScroll: 1,
-        centerMode: false,
+        centerMode: true,
+        centerPadding: '20%',
         responsive: [
             {
                 breakpoint: 768,
                 settings: {
-                    slidesToShow: 2,
-                    centerPadding: '40px',
+                    slidesToShow: 1,
+                    centerPadding: '15%',
                 }
             },
             {
                 breakpoint: 480,
                 settings: {
                     slidesToShow: 1,
-                    centerPadding: '20px',
+                    centerPadding: '10%',
                 }
             }
         ]
