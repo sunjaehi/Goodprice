@@ -12,7 +12,7 @@ const CarouselItem = ({ data, defaultImage, handleCardClick }) => (
             <CardActionArea onClick={() => handleCardClick(`/detail/${data.shopId}`)}>
                 <div style={{ width: '100%', paddingTop: '56.25%', position: 'relative' }}>
                     <img
-                        src={data.imgUrl}
+                        src={data.imgUrl || defaultImage}
                         alt="상점 이미지"
                         style={{
                             width: '100%',
