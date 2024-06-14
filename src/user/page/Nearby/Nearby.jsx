@@ -39,7 +39,6 @@ function Nearby() {
 
     const filterData = () => {
         setFiltered(datas.filter(data => data.sectorId === sector));
-        console.log(filtered);
     }
 
     const [state, setState] = useState({
@@ -271,6 +270,7 @@ function Nearby() {
                         </Button>
                     </FormControl>
                     <List sx={{ minWidth: 360, bgcolor: 'background.paper' }}>
+                        <Typography variant="body1" align="center">{filtered.length}개의 가게가 있습니다.</Typography>
                         {filtered && filtered.map((data) => (
                             <ListItem key={data.id}>
                                 <ListItemButton component={Link} to={`/detail/${data.id}`} >
