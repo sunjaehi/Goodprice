@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactLoading from 'react-loading';
-import { Card, CardContent, Container, Typography, Fab } from '@mui/material';
+import { Card, CardContent, Container, Typography, Fab, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import BottomNav from '../../component/BottomNavigation/BottomNav';
 import { useNavigate } from 'react-router-dom';
 import Carousel from 'react-material-ui-carousel';
 import { styled } from '@mui/material/styles';
-import { grey } from '@mui/material/colors';
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
 
@@ -59,8 +58,6 @@ function Newsfeed() {
       fetchNews();
     }
   }, [page, atk, isLastPage]);
-
-  const [isFirst, setFirst] = useState(true);
 
   useEffect(() => {
     if (!atk) return;
@@ -126,7 +123,42 @@ function Newsfeed() {
 
     fetchMoreNews();
   }, [isLoading, page, atk]);
+  if (atk === null) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '85vh',
+          textAlign: 'center',
+        }}
+      >
+        <Typography variant='h6'>로그인 후 관심 가게의 새 소식을 받아보세요.</Typography>
+        <BottomNav value={bottomNavValue} onChange={setBottomNavValue} />
 
+      </Box>
+    );
+  } else if (newsList.length === 0) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '85vh',
+          textAlign: 'center',
+        }}
+      >
+        <Typography variant='h6'>아직 새 소식이 없어요.</Typography>
+        <Typography variant='body2'>관심 가게를 추가하고 새 소식을 받아보세요.</Typography>
+        <BottomNav value={bottomNavValue} onChange={setBottomNavValue} />
+
+      </Box>
+    );
+  }
   return (
     <>
       <Container maxWidth="sm">
