@@ -1,15 +1,32 @@
 import React from 'react';
-import { SwipeableDrawer, Typography } from '@mui/material';
+import { SwipeableDrawer, Typography, Button } from '@mui/material';
 import { sectorSample } from '../../../data/sectorSample';
+import { useTheme } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 const ShopInfoDrawer = ({ open, onClose, onOpen, selectedShop }) => {
+    const theme = useTheme();
+    const navigate = useNavigate();
+
+    const handleDetailClick = () => {
+        if (selectedShop) {
+            navigate(`/detail/${selectedShop.id}`);
+        }
+    };
+
     return (
         <SwipeableDrawer
             anchor="bottom"
             open={open}
             onClose={onClose}
             onOpen={onOpen}
-            PaperProps={{ sx: { height: '25%' } }}
+            PaperProps={{
+                sx: {
+                    height: '25%',
+                    maxWidth: theme.breakpoints.values.sm,
+                    margin: '0 auto',
+                },
+            }}
             ModalProps={{
                 slotProps: {
                     backdrop: {
@@ -41,6 +58,14 @@ const ShopInfoDrawer = ({ open, onClose, onOpen, selectedShop }) => {
                     <Typography variant="body1" component="div">
                         업종: {sectorSample[(Number(selectedShop.sectorId)) - 1].name}
                     </Typography>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleDetailClick}
+                        sx={{ mt: 2 }}
+                    >
+                        자세히 보기
+                    </Button>
                 </div>
             )}
         </SwipeableDrawer>
