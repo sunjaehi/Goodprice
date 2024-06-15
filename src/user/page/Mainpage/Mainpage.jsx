@@ -45,6 +45,7 @@ const CustomCarousel = ({ title, data, defaultImage, handleCardClick }) => {
         slidesToScroll: 1,
         centerMode: true,
         centerPadding: '20%',
+        arrows: false,
         responsive: [
             {
                 breakpoint: 768,
