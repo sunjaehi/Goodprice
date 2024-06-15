@@ -28,6 +28,7 @@ function Nearby() {
         isLoading: true,
     });
     const [level, setLevel] = useState(5);
+    const [savedCoordinates, setSavedCoordinates] = useState(null);
     const mapRef = useRef();
 
     const handleChange = (event) => {
@@ -61,14 +62,16 @@ function Nearby() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
+                    const initialCenter = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                    };
                     setState(prev => ({
                         ...prev,
-                        center: {
-                            lat: position.coords.latitude,
-                            lng: position.coords.longitude,
-                        },
+                        center: initialCenter,
                         isLoading: false,
                     }));
+                    setSavedCoordinates(initialCenter); // 초기 위치 저장
                 },
                 (err) => {
                     setState(prev => ({
@@ -110,12 +113,24 @@ function Nearby() {
         setInfoDrawerOpen(true);
     };
 
+    const handleFabClick = () => {
+        if (savedCoordinates) {
+            setState(prev => ({
+                ...prev,
+                center: savedCoordinates,
+            }));
+            if (mapRef.current) {
+                mapRef.current.setCenter(new window.kakao.maps.LatLng(savedCoordinates.lat, savedCoordinates.lng));
+            }
+        }
+    };
+
     return (
         <div>
             <div style={{ position: 'relative', width: '100vw', height: '88vh' }}>
                 <Map
                     center={state.center}
-                    isPanto={state.isPanto}
+                    isPanto={true}
                     style={{ width: "100%", height: "100%" }}
                     level={level}
                     ref={mapRef}
@@ -193,6 +208,7 @@ function Nearby() {
                 <Fab
                     color="primary"
                     aria-label="current location"
+                    onClick={handleFabClick}
                     sx={{
                         position: 'absolute',
                         bottom: '80px',
