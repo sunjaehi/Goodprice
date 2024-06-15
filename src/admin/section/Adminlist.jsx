@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import ListSubheader from '@mui/material/ListSubheader';
 import List from '@mui/material/List';
 import { Box } from "@mui/material";
@@ -9,15 +9,14 @@ import { useNavigate } from "react-router-dom";
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
 import AssignmentLateOutlinedIcon from '@mui/icons-material/AssignmentLateOutlined';
-import { Pending, PendingOutlined, Storefront } from "@mui/icons-material";
+import { PendingOutlined, Storefront } from "@mui/icons-material";
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 
 export default function Adminlist() {
     const navigate = useNavigate();
     return (
         <Box sx={{
             width: "15%",
-            // position:"fixed",
-            // height:"100%"
         }}>
             <List
                 sx={{ maxWidth: "100%", bgcolor: 'background.paper' }}
@@ -53,14 +52,19 @@ export default function Adminlist() {
                     </ListItemIcon>
                     <ListItemText primary="공지사항 관리" />
                 </ListItemButton>
-                <ListItemButton>
+                <ListItemButton onClick={() => navigate('/ProposalManage')}>
                     <ListItemIcon>
                         <MessageOutlinedIcon />
                     </ListItemIcon>
-                    <ListItemText primary="가게 등록 요청 관리" onClick={() => navigate('/ProposalManage')} />
+                    <ListItemText primary="가게 등록 요청 관리" />
+                </ListItemButton>
+                <ListItemButton onClick={() => navigate('/member-manage')}>
+                    <ListItemIcon>
+                        <PersonOutlineIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="회원 관리" />
                 </ListItemButton>
             </List>
         </Box>
-
     );
 }
