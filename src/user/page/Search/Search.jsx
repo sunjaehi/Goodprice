@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { TextField, Button, List, ListItem, ListItemText, Container, Box, Typography, Paper, Divider } from '@mui/material';
+import { TextField, Button, List, ListItem, ListItemText, Container, Box, Typography, Card, CardContent, Divider, IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import BottomNav from '../../component/BottomNavigation/BottomNav';
+import SearchIcon from '@mui/icons-material/Search';
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
 
@@ -73,18 +74,18 @@ const Search = () => {
                     <Typography variant="h4" gutterBottom>
                         가게 검색
                     </Typography>
-                    <Box display="flex" justifyContent="center" alignItems="center" sx={{ marginBottom: '20px' }}>
+                    <Box display="flex" justifyContent="center" alignItems="center" sx={{ marginBottom: '20px', width: '100%' }}>
                         <TextField
                             label="가게 이름 검색"
                             variant="outlined"
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
                             onKeyDown={handleKeyDown}
-                            style={{ marginRight: '8px' }}
+                            sx={{ marginRight: '8px', flexGrow: 1 }} // Adjust width as needed
                         />
-                        <Button variant="contained" color="primary" onClick={handleSearch}>
-                            검색
-                        </Button>
+                        <IconButton variant="contained" color="primary" onClick={handleSearch}>
+                            <SearchIcon />
+                        </IconButton>
                     </Box>
                 </Box>
                 {results.length === 0 && !hasMore ? (
@@ -97,43 +98,45 @@ const Search = () => {
                     <List>
                         {results.map((result, index) => (
                             <React.Fragment key={result.id}>
-                                <Paper elevation={3} style={{ margin: '8px 0', padding: '16px' }}>
+                                <Card elevation={3} style={{ margin: '8px' }}>
                                     <ListItem alignItems="flex-start" button onClick={() => handleShopClick(result.id)}>
-                                        <ListItemText
-                                            primary={
-                                                <>
-                                                    <Typography variant="h6" component="div">
-                                                        {highlight(result.name, query)}
-                                                    </Typography>
-                                                    <Typography variant="body2" color="textSecondary">
-                                                        {result.address}
-                                                    </Typography>
-                                                </>
-                                            }
-                                            secondary={
-                                                <>
-                                                    {result.phone && (
+                                        <CardContent>
+                                            <ListItemText
+                                                primary={
+                                                    <>
+                                                        <Typography variant="h6" component="div">
+                                                            {highlight(result.name, query)}
+                                                        </Typography>
+                                                        <Typography variant="body2" color="text.secondary">
+                                                            {result.address}
+                                                        </Typography>
+                                                    </>
+                                                }
+                                                secondary={
+                                                    <>
+                                                        {result.phone && (
+                                                            <Typography
+                                                                component="span"
+                                                                variant="body2"
+                                                                color="textPrimary"
+                                                            >
+                                                                연락처: {result.phone.trim()}
+                                                            </Typography>
+                                                        )}
+                                                        <br />
                                                         <Typography
                                                             component="span"
                                                             variant="body2"
                                                             color="textPrimary"
                                                         >
-                                                            연락처: {result.phone.trim()}
+                                                            추천수: {result.recommend}
                                                         </Typography>
-                                                    )}
-                                                    <br />
-                                                    <Typography
-                                                        component="span"
-                                                        variant="body2"
-                                                        color="textPrimary"
-                                                    >
-                                                        추천수: {result.recommend}
-                                                    </Typography>
-                                                </>
-                                            }
-                                        />
+                                                    </>
+                                                }
+                                            />
+                                        </CardContent>
                                     </ListItem>
-                                </Paper>
+                                </Card>
                                 {index < results.length - 1 && <Divider />}
                             </React.Fragment>
                         ))}
