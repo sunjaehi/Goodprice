@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import './BottomNav.css';
+import React from "react";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import OtherHousesOutlinedIcon from '@mui/icons-material/OtherHousesOutlined';
@@ -19,49 +18,50 @@ export default function BottomNav({ value, onChange }) {
     const navigateToNearby = () => {
         navigate("/Nearby");
     }
-
     const navigateToSearch = () => {
         navigate("/search");
     }
 
     return (
-        <div className="footer">
-            <BottomNavigation sx={{
-                bgcolor: 'white', height: '6vh', width: '100%', justifyContent: 'space-between',
+        <BottomNavigation
+            sx={{
+                position: 'fixed',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                bgcolor: 'white',
+                borderTop: '1px solid #ccc',
                 '&& .Mui-selected': {
                     color: 'black'
                 },
-            }} value={value} onChange={(event, newValue) => { onChange(newValue) }}>
-                <BottomNavigationAction
-                    label="메인"
-                    value={0}
-                    icon={<OtherHousesOutlinedIcon />}
-                    onClick={navigateToHome}
-                />
-
-                <BottomNavigationAction
-                    label="피드"
-                    value={1}
-                    icon={<FeedOutlinedIcon />}
-                    onClick={navigateToFeed}
-
-                />
-
-                <BottomNavigationAction
-                    label="검색"
-                    value={2}
-                    icon={<Search />}
-                    onClick={navigateToSearch}
-                />
-
-                <BottomNavigationAction
-                    label="내 주변"
-                    value={3}
-                    icon={<LocationOnIcon />}
-                    onClick={navigateToNearby}
-                />
-            </BottomNavigation>
-        </div>
-
+            }}
+            value={value}
+            onChange={(event, newValue) => { onChange(newValue) }}
+        >
+            <BottomNavigationAction
+                label="메인"
+                value={0}
+                icon={<OtherHousesOutlinedIcon />}
+                onClick={navigateToHome}
+            />
+            <BottomNavigationAction
+                label="피드"
+                value={1}
+                icon={<FeedOutlinedIcon />}
+                onClick={navigateToFeed}
+            />
+            <BottomNavigationAction
+                label="검색"
+                value={2}
+                icon={<Search />}
+                onClick={navigateToSearch}
+            />
+            <BottomNavigationAction
+                label="내 주변"
+                value={3}
+                icon={<LocationOnIcon />}
+                onClick={navigateToNearby}
+            />
+        </BottomNavigation>
     );
 }

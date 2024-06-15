@@ -12,7 +12,7 @@ const CarouselItem = ({ data, defaultImage, handleCardClick }) => (
             <CardActionArea onClick={() => handleCardClick(`/detail/${data.shopId}`)}>
                 <div style={{ width: '100%', paddingTop: '56.25%', position: 'relative' }}>
                     <img
-                        src={data.imgUrl}
+                        src={data.imgUrl || defaultImage}
                         alt="상점 이미지"
                         style={{
                             width: '100%',
@@ -41,22 +41,24 @@ const CustomCarousel = ({ title, data, defaultImage, handleCardClick }) => {
     const settings = {
         infinite: true,
         speed: 500,
-        slidesToShow: 3,
+        slidesToShow: 1,
         slidesToScroll: 1,
-        centerMode: false,
+        centerMode: true,
+        centerPadding: '20%',
+        arrows: false,
         responsive: [
             {
                 breakpoint: 768,
                 settings: {
-                    slidesToShow: 2,
-                    centerPadding: '40px',
+                    slidesToShow: 1,
+                    centerPadding: '15%',
                 }
             },
             {
                 breakpoint: 480,
                 settings: {
                     slidesToShow: 1,
-                    centerPadding: '20px',
+                    centerPadding: '10%',
                 }
             }
         ]
@@ -156,7 +158,7 @@ function Mainpage() {
             )}
 
             <Box my={6}>
-                <Typography gutterBottom variant="h5" component="div">
+                <Typography gutterBottom variant="h6" component="div">
                     업종별 베스트 가게
                 </Typography>
                 <Grid container spacing={2}>

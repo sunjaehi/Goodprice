@@ -1,19 +1,19 @@
 import React, { useState } from "react";
-import './Header.css';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from '@mui/material/ListItemText';
-import { useNavigate, BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import MenuIcon from '@mui/icons-material/Menu';
+import { useNavigate, Link } from "react-router-dom";
 import Mymodal from "../Modal/Mymodal";
 import Loginmodal from "../Modal/Loginmodal";
 import Adminmodal from "../Modal/Adminmodal";
-import { Typography } from "@mui/material";
-
 
 function Header() {
     const [open, setOpen] = useState(false);
@@ -61,26 +61,31 @@ function Header() {
     )
 
     return (
-        <div className="head">
-            <div className="one">
-                <Button
-                    sx={{ textDecoration: 'none', color: 'white' }}
-                    onClick={toggleDrawer(true)}><MenuIcon /></Button>
+        <AppBar position="fixed" sx={{ backgroundColor: '#1266f1' }}>
+            <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <IconButton
+                    edge="start"
+                    color="inherit"
+                    aria-label="menu"
+                    onClick={toggleDrawer(true)}
+                >
+                    <MenuIcon />
+                </IconButton>
                 <Drawer open={open} onClose={toggleDrawer(false)}>
                     {DrawerList}
                 </Drawer>
-            </div>
-            <Link to="/" className="link">
-                <Typography color='white' variant="h5">착한 동행</Typography>
-            </Link>
-            <>
-                {(admin === 'ROLE_USER') ? (<Loginmodal />)
-                    : (admin === 'ROLE_ADMIN') ? (<Adminmodal />)
-                        : (<Mymodal />)
-                }
-            </>
-        </div>
-
+                <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>
+                    <Typography variant="h5">착한 동행</Typography>
+                </Link>
+                <>
+                    {(admin === 'ROLE_USER') ? (<Loginmodal />)
+                        : (admin === 'ROLE_ADMIN') ? (<Adminmodal />)
+                            : (<Mymodal />)
+                    }
+                </>
+            </Toolbar>
+        </AppBar>
     );
 }
+
 export default Header;

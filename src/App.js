@@ -42,6 +42,8 @@ import ChangePassword from './user/page/Mypage/ChangePassword';
 import ChangeNickname from './user/page/Mypage/ChangeNickname';
 import NotificationSettings from './user/page/Mypage/NotificationSettings';
 import ShopNewsInput from './user/page/ShopNewsInput/ShopNewsInput';
+import MemberManage from './admin/page/MemberManage';
+import MemberAdminDetail from './admin/page/MemberAdminDetail';
 
 
 function App() {
@@ -89,6 +91,8 @@ function App() {
         <Route path="/change-nickname" element={<ChangeNickname />}></Route>
         <Route path="/notification-setting" element={<NotificationSettings />}></Route>
         <Route path="/shop-news-input" element={<ShopNewsInput />}></Route>
+        <Route path="/member-manage" element={<MemberManage />}></Route>
+        <Route path="/member-admin-detail/:id" element={<MemberAdminDetail />}></Route>
       </Routes>
     </BrowserRouter >
   );
