@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Container, TextField, Button, Select, MenuItem, InputLabel, FormControl, Typography, Box } from '@mui/material';
 import { PhotoCamera } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
 
 const ShopNewsInput = () => {
+    const navigate = useNavigate();
     const [shop, setShop] = useState('');
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -70,6 +72,7 @@ const ShopNewsInput = () => {
 
             if (response.ok) {
                 alert('가게 소식이 성공적으로 등록되었습니다.');
+                navigate('/newsfeed');
             } else {
                 alert('가게 소식 등록에 실패했습니다.');
             }
