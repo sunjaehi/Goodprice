@@ -166,8 +166,9 @@ function Newsfeed() {
         newsList.map((news, index) => (
             <Card key={index} sx={{ mb: 2 }}>
                 <CardContent>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Typography variant="body" color="text.secondary">{news.shopName}</Typography>
+                        <Typography variant='body2' color="text.secondary">{news.createdAt}</Typography>
                         {isManaging && (
                             <IconButton onClick={() => handleDelete(news.id)}>
                                 <DeleteIcon />
@@ -175,6 +176,7 @@ function Newsfeed() {
                         )}
                     </Box>
                     <Typography variant="h6">{news.title}</Typography>
+                    <Typography variant='body'>{news.createdAt}</Typography>
                     <Typography variant="body2" color="text.secondary">{news.content}</Typography>
                     {news.imgUrls && news.imgUrls.length > 0 && (
                         <Carousel autoPlay={false} animation="slide" timeout={1000}>
