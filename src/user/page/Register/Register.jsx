@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
   Stepper, Step, StepLabel, StepContent, Button, Typography, TextField,
-  Box, FormControlLabel, Snackbar, Paper, Grid, Alert, Checkbox
+  Box, FormControlLabel, Snackbar, Paper, Grid, Alert, Checkbox,
+  Container
 } from '@mui/material';
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
@@ -266,39 +267,41 @@ function Register() {
   };
 
   return (
-    <Box sx={{ width: '95%', margin: '0 auto', marginTop: 10 }}>
-      <Stepper activeStep={activeStep} orientation="vertical">
-        {steps.map((step, index) => (
-          <Step key={step.label}>
-            <StepLabel>{step.label}</StepLabel>
-            <StepContent>
-              <Typography>{step.description}</Typography>
-              {renderStepContent(index)}
-              <Box sx={{ mb: 2 }}>
-                <div>
-                  <Button
-                    variant="contained"
-                    onClick={handleNext}
-                    sx={{ mt: 1, mr: 1 }}
-                    disabled={!isNextButtonEnabled()}
-                  >
-                    {index === steps.length - 1 ? '완료' : '다음'}
-                  </Button>
-                </div>
-              </Box>
-            </StepContent>
-          </Step>
-        ))}
-      </Stepper>
-      {activeStep === steps.length && (
-        <Paper square elevation={0} sx={{ p: 3 }}>
-          <Typography>버튼을 눌러 회원가입을 완료하세요.</Typography>
-          <Button sx={{ mt: 1, mr: 1 }} onClick={submit} >
-            회원가입 완료
-          </Button>
-        </Paper>
-      )}
-    </Box>
+    <Container maxWidth="sm">
+      <Box sx={{ width: '95%', margin: '0 auto', marginTop: 10 }}>
+        <Stepper activeStep={activeStep} orientation="vertical">
+          {steps.map((step, index) => (
+            <Step key={step.label}>
+              <StepLabel>{step.label}</StepLabel>
+              <StepContent>
+                <Typography>{step.description}</Typography>
+                {renderStepContent(index)}
+                <Box sx={{ mb: 2 }}>
+                  <div>
+                    <Button
+                      variant="contained"
+                      onClick={handleNext}
+                      sx={{ mt: 1, mr: 1 }}
+                      disabled={!isNextButtonEnabled()}
+                    >
+                      {index === steps.length - 1 ? '완료' : '다음'}
+                    </Button>
+                  </div>
+                </Box>
+              </StepContent>
+            </Step>
+          ))}
+        </Stepper>
+        {activeStep === steps.length && (
+          <Paper square elevation={0} sx={{ p: 3 }}>
+            <Typography>버튼을 눌러 회원가입을 완료하세요.</Typography>
+            <Button sx={{ mt: 1, mr: 1 }} onClick={submit} >
+              회원가입 완료
+            </Button>
+          </Paper>
+        )}
+      </Box>
+    </Container>
   );
 }
 
