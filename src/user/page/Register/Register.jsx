@@ -4,6 +4,7 @@ import {
   Box, FormControlLabel, Snackbar, Paper, Grid, Alert, Checkbox,
   Container
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
 const steps = [
@@ -25,39 +26,51 @@ const steps = [
   },
 ];
 
-function Register() {
-  const [isAvailableEmail, setIsAvailableEmail] = useState(false);
-  const [checked, setChecked] = useState(false);
-  const [email, setEmail] = useState(null);
-  const [emailVerifyCode, setEmailVerifyCode] = useState(null);
-  const [nickname, setNickname] = useState(null);
-  const [password, setPassword] = useState('');
-  const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [currentStep, setCurrentStep] = useState(0);
-  const [isEmailVerified, setIsEmailVerified] = useState(false);
-  const [isNicknameVerified, setIsNicknameVerified] = useState(false);
-  const [isPasswordVerified, setIsPasswordVerified] = useState(false);
+const Register = () => {
+  const navigate = useNavigate();
   const [state, setState] = useState({
-    open: false,
-    vertical: 'top',
-    horizontal: 'center'
+    isAvailableEmail: false,
+    checked: false,
+    email: '',
+    emailVerifyCode: '',
+    nickname: '',
+    password: '',
+    passwordConfirm: '',
+    currentStep: 0,
+    isEmailVerified: false,
+    isNicknameVerified: false,
+    isPasswordValid: false,
+    isPasswordMatch: false,
+    snackbar: {
+      open: false,
+      vertical: 'bottom',
+      horizontal: 'center',
+      message: ''
+    },
+    activeStep: 0,
+    timer: 0,
+    isButtonDisabled: false
   });
-  const { vertical, horizontal, open } = state;
-  const [activeStep, setActiveStep] = useState(0);
-  const [timer, setTimer] = useState(0);
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+  const { vertical, horizontal, open, message } = state.snackbar;
 
   useEffect(() => {
     let interval;
-    if (timer > 0) {
+    if (state.timer > 0) {
       interval = setInterval(() => {
-        setTimer((prevTimer) => prevTimer - 1);
+        setState(prevState => ({
+          ...prevState,
+          timer: prevState.timer - 1
+        }));
       }, 1000);
     } else {
-      setIsButtonDisabled(false);
+      setState(prevState => ({
+        ...prevState,
+        isButtonDisabled: false
+      }));
     }
     return () => clearInterval(interval);
-  }, [timer]);
+  }, [state.timer]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -66,18 +79,61 @@ function Register() {
   };
 
   const isNextButtonEnabled = () => {
-    switch (currentStep) {
+    switch (state.currentStep) {
       case 0:
-        return checked;
+        return state.checked;
       case 1:
-        return isEmailVerified;
+        return state.isEmailVerified;
       case 2:
-        return isNicknameVerified;
+        return state.isNicknameVerified;
       case 3:
-        return isPasswordVerified;
+        return state.isPasswordValid && state.isPasswordMatch;
       default:
         return true;
     }
+  };
+
+  const handleSnackbarClose = () => {
+    setState(prevState => ({
+      ...prevState,
+      snackbar: {
+        ...prevState.snackbar,
+        open: false
+      }
+    }));
+  };
+
+  const handleNext = () => {
+    setState(prevState => ({
+      ...prevState,
+      activeStep: prevState.activeStep + 1,
+      currentStep: prevState.currentStep + 1
+    }));
+  };
+
+  const handlePasswordChange = (e) => {
+    const newPassword = e.target.value;
+    const isValid = validatePassword(newPassword);
+    setState(prevState => ({
+      ...prevState,
+      password: newPassword,
+      isPasswordValid: isValid,
+      isPasswordMatch: isValid && newPassword === prevState.passwordConfirm
+    }));
+  };
+
+  const handlePasswordConfirmChange = (e) => {
+    const newPasswordConfirm = e.target.value;
+    setState(prevState => ({
+      ...prevState,
+      passwordConfirm: newPasswordConfirm,
+      isPasswordMatch: prevState.isPasswordValid && prevState.password === newPasswordConfirm
+    }));
+  };
+
+  const validatePassword = (password) => {
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+    return passwordRegex.test(password);
   };
 
   const submit = () => {
@@ -87,12 +143,17 @@ function Register() {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        email: email,
-        nickname: nickname,
-        password: password
+        email: state.email,
+        nickname: state.nickname,
+        password: state.password
       })
     }).then(response => {
-      response.status === 200 ? alert('회원가입 성공!') : alert('회원가입 실패ㅜ');
+      if (response.status === 200) {
+        alert('회원가입이 완료되었습니다');
+        navigate('/login');
+      } else {
+        alert('서버 오류가 발생했습니다. 다시 시도해주세요');
+      }
     });
   };
 
@@ -102,15 +163,22 @@ function Register() {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ email: email })
+      body: JSON.stringify({ email: state.email })
     })
       .then(response => response.json())
       .then(json => {
-        setIsAvailableEmail(json === true);
-        setTimer(180); // 3분 타이머 설정
-        setIsButtonDisabled(true);
+        setState(prevState => ({
+          ...prevState,
+          isAvailableEmail: json === true,
+          timer: 180, // 3분 타이머 설정
+          isButtonDisabled: true,
+          snackbar: {
+            ...newState,
+            open: true,
+            message: json === true ? "인증번호가 전송되었습니다." : "이미 가입 이력이 있는 이메일입니다."
+          }
+        }));
       });
-    setState({ ...newState, open: true });
   };
 
   const verifyCode = (newState) => () => {
@@ -120,50 +188,38 @@ function Register() {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        email: email,
-        code: emailVerifyCode
+        email: state.email,
+        code: state.emailVerifyCode
       })
     })
       .then(result => result.json())
       .then(json => {
-        setIsEmailVerified(json === true);
-        alert(json === true ? '인증 완료!' : '인증 실패');
+        setState(prevState => ({
+          ...prevState,
+          isEmailVerified: json === true,
+          snackbar: {
+            ...newState,
+            open: true,
+            message: json === true ? '인증이 완료 되었습니다' : '인증에 실패했습니다. 인증번호를 확인해주세요'
+          }
+        }));
       });
-  };
-
-  const handleClose = () => {
-    setState({ ...state, open: false });
   };
 
   const verifyNickname = () => {
-    fetch(`${backend}/api/v1/member/check-nickname?nickname=${nickname}`)
+    fetch(`${backend}/api/v1/member/check-nickname?nickname=${state.nickname}`)
       .then(result => result.json())
       .then(json => {
-        alert(json === false ? '사용 가능한 닉네임입니다.' : '사용 불가능한 닉네임입니다');
-        setIsNicknameVerified(json === false);
+        setState(prevState => ({
+          ...prevState,
+          isNicknameVerified: json === false,
+          snackbar: {
+            ...prevState.snackbar,
+            open: true,
+            message: json === false ? '사용 가능한 닉네임입니다.' : '사용 불가능한 닉네임입니다'
+          }
+        }));
       });
-  };
-
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setCurrentStep((prevCurrentStep) => prevCurrentStep + 1);
-  };
-
-  const validatePassword = (password) => {
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-    return passwordRegex.test(password);
-  };
-
-  const handlePasswordChange = (e) => {
-    const newPassword = e.target.value;
-    setPassword(newPassword);
-    setIsPasswordVerified(validatePassword(newPassword) && newPassword === passwordConfirm);
-  };
-
-  const handlePasswordConfirmChange = (e) => {
-    const newPasswordConfirm = e.target.value;
-    setPasswordConfirm(newPasswordConfirm);
-    setIsPasswordVerified(validatePassword(password) && password === newPasswordConfirm);
   };
 
   const renderStepContent = (step) => {
@@ -173,7 +229,7 @@ function Register() {
           <Box component="form" noValidate>
             <Grid item xs={12}>
               <FormControlLabel
-                control={<Checkbox onChange={(e) => setChecked(e.target.checked)} color="primary" />}
+                control={<Checkbox onChange={(e) => setState(prevState => ({ ...prevState, checked: e.target.checked }))} color="primary" />}
                 label="회원가입에 동의합니다."
               />
             </Grid>
@@ -188,21 +244,21 @@ function Register() {
                   fullWidth
                   type='email'
                   label='이메일'
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => setState(prevState => ({ ...prevState, email: e.target.value }))}
                 />
               </Grid>
               <Grid item xs={4} sx={{ mt: 1 }}>
                 <Button
-                  onClick={sendVerifyCode({ vertical: 'top', horizontal: 'center' })}
-                  disabled={isButtonDisabled}
+                  onClick={sendVerifyCode({ vertical: 'bottom', horizontal: 'center' })}
+                  disabled={state.isButtonDisabled}
                 >
-                  인증번호 전송 {isButtonDisabled && `(${formatTime(timer)})`}
+                  인증번호 전송 {state.isButtonDisabled && `(${formatTime(state.timer)})`}
                 </Button>
                 <Snackbar
                   anchorOrigin={{ vertical, horizontal }}
                   open={open}
-                  onClose={handleClose}
-                  message={isAvailableEmail ? "인증번호가 전송되었습니다." : "이미 가입 이력이 있는 이메일입니다."}
+                  onClose={handleSnackbarClose}
+                  message={message}
                   key={vertical + horizontal}
                 />
               </Grid>
@@ -213,11 +269,11 @@ function Register() {
                   fullWidth
                   type='number'
                   label='인증 번호'
-                  onChange={(e) => setEmailVerifyCode(e.target.value)}
+                  onChange={(e) => setState(prevState => ({ ...prevState, emailVerifyCode: e.target.value }))}
                 />
               </Grid>
               <Grid item xs={4} sx={{ mt: 1 }}>
-                <Button onClick={verifyCode({ vertical: 'top', horizontal: 'center' })}>
+                <Button onClick={verifyCode({ vertical: 'bottom', horizontal: 'center' })}>
                   인증번호 확인
                 </Button>
               </Grid>
@@ -229,7 +285,7 @@ function Register() {
           <Box sx={{ marginTop: 2 }}>
             <TextField
               fullWidth
-              onChange={(e) => setNickname(e.target.value)}
+              onChange={(e) => setState(prevState => ({ ...prevState, nickname: e.target.value }))}
               label='닉네임'
             />
             <Button variant='primary' onClick={verifyNickname}>닉네임 중복확인</Button>
@@ -246,8 +302,8 @@ function Register() {
                 placeholder='숫자+영문자+특수문자 2개 이상 조합 8자리 이상'
                 onChange={handlePasswordChange}
               />
-              {!isPasswordVerified && <Alert severity='warning'>숫자, 영문자, 특수문자 중 두 개 이상을 포함하여 8자리 이상을 입력하세요</Alert>}
-              {isPasswordVerified && <Alert severity='success'>사용 가능한 비밀번호입니다.</Alert>}
+              {state.isPasswordValid && <Alert severity='success'>유효한 비밀번호입니다.</Alert>}
+              {!state.isPasswordValid && <Alert severity='warning'>숫자, 영문자, 특수문자 중 두 개 이상을 포함하여 8자리 이상을 입력하세요</Alert>}
               <TextField
                 sx={{ marginTop: '8px' }}
                 fullWidth
@@ -256,8 +312,8 @@ function Register() {
                 placeholder='비밀번호를 다시 한 번 입력해주세요'
                 onChange={handlePasswordConfirmChange}
               />
-              {password !== passwordConfirm && <Alert severity='warning'>비밀번호가 일치하지 않습니다.</Alert>}
-              {password === passwordConfirm && password !== '' && <Alert severity='success'>비밀번호가 일치합니다.</Alert>}
+              {state.password !== state.passwordConfirm && <Alert severity='warning'>비밀번호가 일치하지 않습니다.</Alert>}
+              {state.password === state.passwordConfirm && state.password !== '' && <Alert severity='success'>비밀번호가 일치합니다.</Alert>}
             </Grid>
           </Box>
         );
@@ -269,7 +325,7 @@ function Register() {
   return (
     <Container maxWidth="sm">
       <Box sx={{ width: '95%', margin: '0 auto', marginTop: 10 }}>
-        <Stepper activeStep={activeStep} orientation="vertical">
+        <Stepper activeStep={state.activeStep} orientation="vertical">
           {steps.map((step, index) => (
             <Step key={step.label}>
               <StepLabel>{step.label}</StepLabel>
@@ -292,7 +348,7 @@ function Register() {
             </Step>
           ))}
         </Stepper>
-        {activeStep === steps.length && (
+        {state.activeStep === steps.length && (
           <Paper square elevation={0} sx={{ p: 3 }}>
             <Typography>버튼을 눌러 회원가입을 완료하세요.</Typography>
             <Button sx={{ mt: 1, mr: 1 }} onClick={submit} >
@@ -301,6 +357,13 @@ function Register() {
           </Paper>
         )}
       </Box>
+      <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={open}
+        onClose={handleSnackbarClose}
+        message={message}
+        key={vertical + horizontal}
+      />
     </Container>
   );
 }
