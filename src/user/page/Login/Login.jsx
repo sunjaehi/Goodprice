@@ -13,7 +13,6 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from 'react-redux';
 import base64 from 'base-64';
 import { Snackbar, Alert } from "@mui/material";
 import sessionStorage from "redux-persist/es/storage/session";
@@ -22,16 +21,17 @@ import { useCookies } from "react-cookie";
 const defaultTheme = createTheme();
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
-function Login(props) {
+function Login() {
     const navigate = useNavigate();
-    //const dispatch = useDispatch();
     const API = `${backend}/api/v1/member/login`;
     const [userEmail, setUseremail] = useState('');
     const [userPw, setUserpw] = useState('');
     const [loginCheck, setLoginCheck] = useState(false);
 
     const [showSnackbar, setShowSnackbar] = useState(false);
-    const handleClick = () => {
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const handleClick = (message) => {
+        setSnackbarMessage(message);
         setShowSnackbar(true);
     };
     const handleClose = (event) => {
@@ -42,7 +42,7 @@ function Login(props) {
             autoHideDuration={6000}
             open={showSnackbar}
             onClose={handleClose}
-            anchorOrigin={{ horizontal: 'center', vertical: 'top' }}
+            anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
             children={props.children}
         ></Snackbar>
     )
@@ -54,21 +54,13 @@ function Login(props) {
             setUseremail(cookies.rememberUserEmail);
             setIsRemember(true);
         }
-    },[]);
+    }, []);
     const handleOnChange = (e) => {
         setIsRemember(e.target.checked);
-        if (e.target.checked) {
-            setCookie('rememberUserEmail', userEmail);
-        } else {
-            removeCookie('rememberUserEmail');
-        }
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(userEmail, userPw);
-        //const user = {userEmail, userPw};
-        //await new Promise((r)=setTimeout(r,1000));
         const response = await fetch(API, {
             method: "POST",
             headers: {
@@ -78,7 +70,7 @@ function Login(props) {
                 email: userEmail,
                 password: userPw
             }),
-        }) //만약 method:'POST'로 요청하는 경우, headers에 필수로 담아야 함
+        });
         const result = await response.json();
 
         if (response.status === 200) {
@@ -92,15 +84,23 @@ function Login(props) {
             sessionStorage.setItem('atk', atk);
             sessionStorage.setItem('role', loginedAuth);
             sessionStorage.setItem('id', memberPk);
+
+            if (isRemember) {
+                removeCookie('rememberUserEmail');
+                setCookie('rememberUserEmail', userEmail);
+            } else {
+                removeCookie('rememberUserEmail');
+            }
+
             navigate("/");
         } else if (response.status === 401) {
-            handleClick();
+            handleClick('이메일과 비밀번호를 확인해주세요.');
             setLoginCheck(true);
         } else {
-            alert('서버 오류. 나중에 시도하시오');
+            handleClick('서버 오류가 발생하였습니다. 잠시 후 다시 시도해주세요.');
         }
-
     }
+
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
@@ -145,8 +145,8 @@ function Login(props) {
                         />
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" onChange={handleOnChange}
-                            checked={isRemember}/>}
-                            label="아이디 저장"
+                                checked={isRemember} />}
+                            label="이메일 저장"
                         />
                         <Button
                             type="submit"
@@ -158,14 +158,13 @@ function Login(props) {
                                     backgroundColor: '#4285f4'
                                 }
                             }}
-                            //disabled={this.state.ID.includes('@') && PW.length>=5 ? false : true}
                             onClick={handleSubmit}
                         >
                             로그인
                         </Button>
                         {showSnackbar && (
                             <CustomSnackbar>
-                                <Alert severity="error">이메일과 비밀번호를 확인해주세요.</Alert>
+                                <Alert severity="error">{snackbarMessage}</Alert>
                             </CustomSnackbar>
                         )}
                         <Grid container>
