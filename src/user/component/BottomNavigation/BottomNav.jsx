@@ -25,6 +25,7 @@ export default function BottomNav({ value, onChange }) {
     return (
         <BottomNavigation
             sx={{
+                zIndex: 999,
                 position: 'fixed',
                 bottom: 0,
                 left: 0,

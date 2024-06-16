@@ -77,7 +77,7 @@ function App() {
         <Route path="/Noticemanage" element={<NoticeManage />}></Route>
         <Route path="/Shoptable" element={<Shoptable />}></Route>
         <Route path="/Newsfeed" element={<Newsfeed />}></Route>
-        <Route path="/ResetPassword/:email/:uuid" element={<ResetPassword />}></Route>
+        <Route path="/ResetPassword/:uuid" element={<ResetPassword />}></Route>
         <Route path="/noticeAdminDetail/:id" element={<NoticeAdminDetail />}></Route>
         <Route path="/noticeAdminEdit/:id" element={<NoticeAdminEdit />}></Route>
         <Route path="/proposalAdminDetail/:id" element={<ProposalAdminDetail />}></Route>

@@ -19,7 +19,6 @@ export default function ResetPassword() {
     const [showPassword, setShowPassword] = useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-    const { email } = useParams();
     const { uuid } = useParams();
     const navigate = useNavigate();
 
@@ -35,11 +34,8 @@ export default function ResetPassword() {
     })
 
     function submit() {
-        console.log(newPassword);
-        console.log(newPasswordConfirm);
         const body = JSON.stringify(
             {
-                email: email,
                 uuid: uuid,
                 password: newPassword
             }
