@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Map, MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
 import {
     Card, CardActions, CardContent, Button, Typography, List, ListItem, ListItemText,
-    Chip, Container, ImageList, Paper, Rating, Tab, Tabs, Box, IconButton
+    Chip, Container, ImageList, Paper, Rating, Tab, Tabs, Box, IconButton, Snackbar, Alert
 } from '@mui/material';
 import Carousel from "react-material-ui-carousel";
 import { styled } from '@mui/material/styles';
@@ -57,6 +57,9 @@ function ShopDetail() {
 
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [page, setPage] = useState(0);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
     useEffect(() => {
         console.log(Kakao);
@@ -195,8 +198,18 @@ function ShopDetail() {
             body: JSON.stringify({
                 shopId: shopId
             })
+        }).then(response => {
+            if (response.status === 200) {
+                setHasRecommended(true);
+                setSnackbarMessage('추천되었습니다.');
+                setSnackbarSeverity('success');
+                setSnackbarOpen(true);
+            } else {
+                setSnackbarMessage('추천에 실패했습니다.');
+                setSnackbarSeverity('error');
+                setSnackbarOpen(true);
+            }
         });
-        setHasRecommended(true);
     }
 
     function unRecommend() {
@@ -209,8 +222,18 @@ function ShopDetail() {
             body: JSON.stringify({
                 shopId: shopId
             })
+        }).then(response => {
+            if (response.status === 200) {
+                setHasRecommended(false);
+                setSnackbarMessage('추천이 해제되었습니다.');
+                setSnackbarSeverity('success');
+                setSnackbarOpen(true);
+            } else {
+                setSnackbarMessage('추천 해제에 실패했습니다.');
+                setSnackbarSeverity('error');
+                setSnackbarOpen(true);
+            }
         });
-        setHasRecommended(false);
     }
 
     function addShopMark() {
@@ -221,8 +244,18 @@ function ShopDetail() {
                 "Authorization": "Bearer " + sessionStorage.getItem('atk')
             },
             body: JSON.stringify({ shopId: shopId })
+        }).then(response => {
+            if (response.status === 201) {
+                setHasMarked(true);
+                setSnackbarMessage('즐겨찾기에 추가되었습니다.');
+                setSnackbarSeverity('success');
+                setSnackbarOpen(true);
+            } else {
+                setSnackbarMessage('즐겨찾기 추가에 실패했습니다.');
+                setSnackbarSeverity('error');
+                setSnackbarOpen(true);
+            }
         });
-        setHasMarked(true);
     }
 
     function deleteShopMark() {
@@ -233,8 +266,18 @@ function ShopDetail() {
                 "Authorization": "Bearer " + sessionStorage.getItem('atk')
             },
             body: JSON.stringify({ shopId: shopId })
-        })
-        setHasMarked(false);
+        }).then(response => {
+            if (response.status === 200) {
+                setHasMarked(false);
+                setSnackbarMessage('즐겨찾기에서 제거되었습니다.');
+                setSnackbarSeverity('success');
+                setSnackbarOpen(true);
+            } else {
+                setSnackbarMessage('즐겨찾기 제거에 실패했습니다.');
+                setSnackbarSeverity('error');
+                setSnackbarOpen(true);
+            }
+        });
     }
 
     const fetchMoreData = async () => {
@@ -251,6 +294,14 @@ function ShopDetail() {
             console.error('Failed to fetch more data:', error);
         }
     };
+
+    const handleSnackbarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbarOpen(false);
+    };
+
     return (
         <Container maxWidth="sm" sx={{ marginTop: '75px' }}>
             <div>
@@ -396,7 +447,7 @@ function ShopDetail() {
                     </CardContent>
                     <CardActions>
                         <Button size="small" onClick={hasRecommended ? unRecommend : recommend} disabled={atk === null}>{hasRecommended ? "추천 해제" : "추천"}</Button>
-                        <Button size="small" onClick={hasMarked ? deleteShopMark : addShopMark} disabled={atk === null} >{hasMarked ? "관심 가게 해제" : "관심 가게 추가"}</Button>
+                        <Button size="small" onClick={hasMarked ? deleteShopMark : addShopMark} disabled={atk === null} >{hasMarked ? "즐겨찾기 해제" : "즐겨찾기 추가"}</Button>
                         <Button size="small" onClick={() => { shareKakao(datas) }}>공유하기</Button>
                     </CardActions>
                 </Card>
@@ -413,6 +464,15 @@ function ShopDetail() {
                 fetchMoreData={fetchMoreData}
                 hasMoreData={hasMoreData}
             />
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={handleSnackbarClose}
+            >
+                <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
         </Container>
     );
 }
