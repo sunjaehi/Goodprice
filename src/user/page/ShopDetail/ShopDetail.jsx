@@ -142,7 +142,8 @@ function ShopDetail() {
                             return date;
                         });
                         const now = new Date();
-                        setIsOpen(now >= start && now <= end);
+                        const isOpen = (now >= start && now <= end) || (start > end && (now >= start || now <= end));
+                        setIsOpen(isOpen);
                     }
                 } else if (result.status === 404) {
                     alert("존재하지 않는 가게입니다");
@@ -334,8 +335,8 @@ function ShopDetail() {
                             <Typography variant="body2" color="text.secondary">
                                 {datas.businessHours && datas.businessHours.length < 5 ? "영업시간 정보가 없습니다." : datas.businessHours} <br />(자세한 시간 정보는 기타 정보를 참고하세요.)
                             </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                {datas.businessHours && datas.businessHours.length >= 5 && isOpen ? "영업중입니다" : (datas.businessHours && "영업중이 아닙니다 ")}
+                            <Typography variant="body2" color={isOpen ? "green" : "red"}>
+                                {datas.businessHours && datas.businessHours.length >= 5 && isOpen ? "영업중입니다" : (datas.businessHours && "영업중이 아닙니다")}
                             </Typography>
                             <br />
                             {datas.isLocalFranchise == 1 && (<Chip label="서울사랑상품권" variant="outlined" color="primary" />)}
