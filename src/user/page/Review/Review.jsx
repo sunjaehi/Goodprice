@@ -3,7 +3,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ImageList from '@mui/material/ImageList';
 import Rating from '@mui/material/Rating';
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Box, Container, SpeedDial, SpeedDialAction, SpeedDialIcon, IconButton, Menu, MenuItem, Card, Typography, CardContent } from "@mui/material";
+import { Box, Container, SpeedDial, SpeedDialAction, SpeedDialIcon, IconButton, Menu, MenuItem, Card, Typography, CardContent, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import PersonIcon from '@mui/icons-material/Person';
@@ -20,6 +20,7 @@ function Review(props) {
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedReviewId, setSelectedReviewId] = useState(null);
     const [myReviewMode, setMyReviewMode] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     useEffect(() => {
         if (myReviewMode === false) {
@@ -65,8 +66,42 @@ function Review(props) {
         handleMenuClose();
     };
 
+    const handleReviewWrite = () => {
+        const atk = sessionStorage.getItem('atk');
+        if (!atk) {
+            setDialogOpen(true);
+        } else {
+            navigate(`/ReviewInput/${shopId}`);
+        }
+    };
+
+    const handleMyReview = () => {
+        const atk = sessionStorage.getItem('atk');
+        if (!atk) {
+            setDialogOpen(true);
+        } else {
+            setMyReviewMode(!myReviewMode);
+        }
+    };
+
+    const handleDialogClose = () => {
+        setDialogOpen(false);
+    };
+
+    const handleDialogConfirm = () => {
+        navigate('/login');
+    };
+
     return (
-        <Container maxWidth="sm">
+        <Container maxWidth="sm" sx={{ marginTop: 12 }}>
+            <Button
+                onClick={() => navigate(`/detail/${shopId}`)}
+                variant="outlined"
+                fullWidth
+                sx={{ textAlign: 'center' }}
+            >
+                가게 정보로 돌아가기
+            </Button>
             <Box sx={{ position: 'fixed', bottom: 16, right: 16 }}>
                 <SpeedDial
                     ariaLabel="Review actions"
@@ -77,73 +112,100 @@ function Review(props) {
                     <SpeedDialAction
                         icon={<RateReviewIcon />}
                         tooltipTitle="리뷰 작성하기"
-                        component={Link}
-                        to={`/ReviewInput/${shopId}`}
+                        onClick={handleReviewWrite}
                     />
                     <SpeedDialAction
                         icon={myReviewMode ? <GroupIcon /> : <PersonIcon />}
                         tooltipTitle="나의 리뷰"
-                        onClick={() => {
-                            if (myReviewMode) {
-                                setMyReviewMode(false);
-                            } else {
-                                setMyReviewMode(true);
-                            }
-                        }}
+                        onClick={handleMyReview}
                     />
                 </SpeedDial>
             </Box>
             {
-                reviews && reviews.map(review => {
-                    return (
-                        <Card key={review.id} sx={{ marginBottom: 2 }}>
-                            <CardContent>
-                                <Box display="flex" justifyContent="space-between" alignItems="center">
-                                    <Typography variant="h6">{review.memberNickname}</Typography>
-                                    <IconButton onClick={(event) => handleMenuOpen(event, review.id)}>
-                                        <MoreVertIcon />
-                                    </IconButton>
-                                </Box>
-                                <Typography variant="body2" color="textSecondary">{review.createdAt}</Typography>
-                                <Typography variant="body1" paragraph>{review.comment}</Typography>
-                                <Rating name="read-only" value={review.score} precision={0.5} readOnly />
-                                {review.imgUrls && review.imgUrls.length > 0 &&
-                                    <ImageList sx={{ width: '100%', display: 'flex', flexDirection: 'row', overflowX: 'auto' }}>
-                                        {review.imgUrls.map(imgurl => {
-                                            return (
-                                                <a href={imgurl} style={{ marginRight: '10px' }}>
-                                                    <img
-                                                        src={imgurl}
-                                                        width={100}
-                                                        height={100}
-                                                        style={{ objectFit: 'cover' }}
-                                                    />
-                                                </a>
-                                            )
-                                        })}
-                                    </ImageList>
-                                }
-                            </CardContent>
-                            <Menu
-                                anchorEl={anchorEl}
-                                open={Boolean(anchorEl) && selectedReviewId === review.id}
-                                onClose={handleMenuClose}
-                                getContentAnchorEl={null}
-                                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-                                transformOrigin={{ vertical: "top", horizontal: "center" }}
-                            >
-                                {review.memberId == sessionStorage.getItem('id') && (
-                                    <MenuItem onClick={() => handleEdit(review.id)}>수정</MenuItem>
-                                )}
-                                {(review.memberId == sessionStorage.getItem('id') || sessionStorage.getItem('role') === 'ROLE_ADMIN') && (
-                                    <MenuItem onClick={() => handleDelete(review.id)}>삭제</MenuItem>
-                                )}
-                            </Menu>
-                        </Card>
-                    )
-                })
+                reviews && reviews.length > 0 ? (
+                    reviews.map(review => {
+                        return (
+                            <Card key={review.id} sx={{ marginBottom: 2 }}>
+                                <CardContent>
+                                    <Box display="flex" justifyContent="space-between" alignItems="center">
+                                        <Typography variant="h6">{review.memberNickname}</Typography>
+                                        {(review.memberId == sessionStorage.getItem('id') || sessionStorage.getItem('role') === 'ROLE_ADMIN')
+                                            &&
+                                            <IconButton onClick={(event) => handleMenuOpen(event, review.id)}>
+                                                <MoreVertIcon />
+                                            </IconButton>
+                                        }
+                                    </Box>
+                                    <Typography variant="body2" color="textSecondary">{review.createdAt}</Typography>
+                                    <Typography variant="body1" paragraph>{review.comment}</Typography>
+                                    <Rating name="read-only" value={review.score} precision={0.5} readOnly />
+                                    {review.imgUrls && review.imgUrls.length > 0 &&
+                                        <ImageList sx={{ width: '100%', display: 'flex', flexDirection: 'row', overflowX: 'auto' }}>
+                                            {review.imgUrls.map(imgurl => {
+                                                return (
+                                                    <a href={imgurl} style={{ marginRight: '10px' }}>
+                                                        <img
+                                                            src={imgurl}
+                                                            width={100}
+                                                            height={100}
+                                                            style={{ objectFit: 'cover' }}
+                                                        />
+                                                    </a>
+                                                )
+                                            })}
+                                        </ImageList>
+                                    }
+                                </CardContent>
+                                <Menu
+                                    anchorEl={anchorEl}
+                                    open={Boolean(anchorEl) && selectedReviewId === review.id}
+                                    onClose={handleMenuClose}
+                                    getContentAnchorEl={null}
+                                    anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                                    transformOrigin={{ vertical: "top", horizontal: "center" }}
+                                >
+                                    {review.memberId == sessionStorage.getItem('id') && (
+                                        <MenuItem onClick={() => handleEdit(review.id)}>수정</MenuItem>
+                                    )}
+                                    {(review.memberId == sessionStorage.getItem('id') || sessionStorage.getItem('role') === 'ROLE_ADMIN') && (
+                                        <MenuItem onClick={() => handleDelete(review.id)}>삭제</MenuItem>
+                                    )}
+                                </Menu>
+                            </Card>
+                        )
+                    })
+                ) : (
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '50vh',
+                            textAlign: 'center'
+                        }}
+                    >
+                        <Typography variant='h6'>아직 리뷰가 없어요.</Typography>
+                    </Box>
+                )
             }
-        </Container>
+            <Dialog
+                open={dialogOpen}
+                onClose={handleDialogClose}
+            >
+                <DialogTitle>로그인 필요</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        로그인 후 사용할 수 있는 기능입니다. 로그인 하시겠어요?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDialogClose}>아니오</Button>
+                    <Button onClick={handleDialogConfirm} autoFocus>
+                        예
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </Container >
     );
 }
 
