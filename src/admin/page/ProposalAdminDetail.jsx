@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Adminlist from "../section/Adminlist";
-import { Box, Stack, TextField, Button, FormControlLabel, Checkbox, Grid } from "@mui/material";
+import { Box, Stack, TextField, Button, FormControlLabel, Checkbox, Select, MenuItem, InputLabel, FormControl, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { LocalizationProvider } from "@mui/x-date-pickers";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { TimePicker } from "@mui/x-date-pickers";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
 
@@ -17,53 +16,62 @@ export default function ProposalAdminDetail() {
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
     const [is24Hours, setIs24Hours] = useState(false);
-
-    function parseTimeString(timeString) {
-        if (timeString === null)
-            return [null, null];
-
-        const [start, end] = timeString.split('-');
-        const [startHours, startMinutes] = start.split(':').map(Number);
-        const [endHours, endMinutes] = end.split(':').map(Number);
-
-        const startDate = dayjs().hour(startHours).minute(startMinutes);
-        const endDate = dayjs().hour(endHours).minute(endMinutes);
-
-        return [startDate, endDate];
-    };
+    const [sectors, setSectors] = useState([]);
+    const [selectedSector, setSelectedSector] = useState("");
+    const [boast, setBoast] = useState("");
+    const [memo, setMemo] = useState("");
+    const [isLocalFranchise, setIsLocalFranchise] = useState(0);
 
     useEffect(() => {
-        const fetchData = async () => {
-            let result = await fetch(`${backend}/api/v1/proposal/${id}`);
-            if (result.status === 404) {
+        const fetchSector = fetch(`${backend}/api/v1/sector/`).then(response => response.json());
+        const fetchData = fetch(`${backend}/api/v1/proposal/${id}`).then(response => {
+            if (response.status === 404) {
                 alert('존재하지 않는 요청입니다');
                 navigate(-1);
-                return;
+                return null;
             }
-            let json = await result.json();
-            setShopInfo(json);
-            console.log(json);
-            if (json.businessHours === "00:00 - 24:00") {
-                setIs24Hours(true);
-            } else {
-                if (json.businessHours !== "") {
-                    const [parsedStartTime, parsedEndTime] = parseTimeString(json.businessHours);
-                    setStartTime(parsedStartTime);
-                    setEndTime(parsedEndTime);
+            return response.json();
+        });
+
+        Promise.all([fetchSector, fetchData]).then(([sectorsData, shopData]) => {
+            if (shopData) {
+                setShopInfo(shopData);
+                if (shopData.businessHours === "00:00 - 24:00") {
+                    setIs24Hours(true);
+                } else if (shopData.businessHours) {
+                    const [start, end] = shopData.businessHours.split('-');
+                    setStartTime(dayjs().hour(Number(start.split(':')[0])).minute(Number(start.split(':')[1])));
+                    setEndTime(dayjs().hour(Number(end.split(':')[0])).minute(Number(end.split(':')[1])));
                 }
+                setSelectedSector(shopData.sectorId);
+                setIsLocalFranchise(shopData.isLocalFranchise ? 1 : 0);
             }
-        }
-        fetchData();
-    }, [id, navigate])
+            setSectors(sectorsData);
+        });
+    }, [id, navigate]);
 
     const navigateToMainadmin = () => {
         navigate("/Mainadmin");
-    }
+    };
 
     const approveProposal = () => {
-        alert('test');
-        fetch(`${backend}/api/v1/proposal/${shopInfo.id}/approval`, {
-            method: "POST"
+        const businessHours = is24Hours ? `00:00 - 24:00` : `${startTime.format('HH:mm')} - ${endTime.format('HH:mm')}`;
+        const updatedShopInfo = {
+            id: shopInfo.id,
+            shopPhone: shopInfo.shopPhone,
+            info: shopInfo.info,
+            businessHours: businessHours,
+            boast: boast,
+            memo: memo,
+            isLocalFranchise: isLocalFranchise
+        };
+
+        fetch(`${backend}/api/v1/proposal/approval`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(updatedShopInfo)
         })
             .then(response => {
                 if (response.status === 200) {
@@ -71,158 +79,196 @@ export default function ProposalAdminDetail() {
                 } else {
                     alert('승인 실패');
                 }
-            })
-    }
+            });
+    };
 
     const rejectProposal = () => {
-        fetch(`${backend}/api/v1/proposal/${shopInfo.id}/reject`)
+        const rejectData = {
+            id: shopInfo.id,
+            memo: memo
+        };
+
+
+        fetch(`${backend}/api/v1/proposal/reject`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(rejectData)
+        })
             .then(response => {
                 if (response.status === 200) {
                     alert('반려 완료');
                 } else {
                     alert('반려 실패');
                 }
-            })
-    }
+            });
+    };
 
-    const approveAndRegister = () => {
-        alert('test');
-    }
     return (
-        <>
-            <Box sx={{
-                display: "flex",
-                flexDirection: "row"
-            }}>
-                <Adminlist />
-                <hr />
-                {shopInfo && (
-                    <Stack
-                        component="form"
-                        spacing={3}
-                        autoComplete="off"
-                        width="70%"
-                        justifyContent="center"
-                        margin={5}
-                        ml={10}
-                    >
-                        <h1>등록 요청자</h1>
-                        <p>{shopInfo.memberNickname}({shopInfo.memberEmail})</p>
-                        <TextField
-                            InputProps={{ readOnly: true }}
-                            label="상호명"
-                            variant="outlined"
-                            value={shopInfo.shopName}
-                        />
-                        <TextField
-                            InputProps={{ readOnly: true }}
-                            label="연락처"
-                            multiline
-                            variant="outlined"
-                            value={shopInfo.shopPhone}
-                        />
-                        <TextField
-                            label="주소"
-                            InputProps={{ readOnly: true }}
-                            variant="outlined"
-                            value={shopInfo.shopAddress}
-                        />
-                        <TextField
-                            label="우편번호"
-                            InputProps={{ readOnly: true }}
-                            variant="outlined"
-                            value={shopInfo.zipcode}
-                        />
-                        <TextField
-                            InputProps={{ readOnly: true }}
-                            label="기타정보"
-                            multiline
-                            variant="outlined"
-                            value={shopInfo.info}
-                        />
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DemoContainer components={['TimePicker', 'TimePicker']}>
-                                <Stack direction="row" spacing={2} alignItems="center">
-                                    <TimePicker
-                                        label="시작시간"
-                                        value={startTime}
-                                        sx={{ width: "50%" }}
-                                        disabled
-                                    />
-                                    <TimePicker
-                                        label="종료시간"
-                                        value={endTime}
-                                        sx={{ width: '50%' }}
-                                        disabled
-                                    />
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={is24Hours}
-                                                disabled
-                                            />
-                                        }
-                                        label="24시간"
-                                    />
-                                </Stack>
-                            </DemoContainer>
-                        </LocalizationProvider>
-                        <TextField
-                            name="reason"
-                            label="요청 사유"
-                            multiline
-                            variant="outlined"
-                            value={shopInfo.reason}
-                        />
-
-                        <Stack
-                            direction="row-reverse"
-                            gap={3}
+        <Box sx={{ display: "flex", flexDirection: "row" }}>
+            <Adminlist />
+            <hr />
+            {shopInfo && (
+                <Stack
+                    component="form"
+                    spacing={3}
+                    autoComplete="off"
+                    width="70%"
+                    justifyContent="center"
+                    margin={5}
+                    ml={10}
+                >
+                    <Typography variant="body1">
+                        등록 요청자: {shopInfo.memberNickname} ({shopInfo.memberEmail})
+                    </Typography>
+                    <TextField
+                        InputProps={{ readOnly: true }}
+                        label="상호명"
+                        variant="outlined"
+                        value={shopInfo.shopName}
+                        fullWidth
+                    />
+                    <FormControl fullWidth>
+                        <InputLabel id="sector-label">업종</InputLabel>
+                        <Select
+                            labelId="sector-label"
+                            id="sector-select"
+                            value={selectedSector}
+                            label="업종"
+                            onChange={(e) => setSelectedSector(e.target.value)}
                         >
-                            < Button
-                                variant="contained"
-                                sx={{
-                                    mr: '10px',
-                                    borderRadius: "15px",
-                                    backgroundColor: "black",
-                                    ":hover": { backgroundColor: "grey" }
-                                }}
-                                onClick={approveAndRegister}
-                            >승인(등록 메뉴로 이동)</Button>
-                            < Button
-                                variant="contained"
-                                sx={{
-                                    mr: '10px',
-                                    borderRadius: "15px",
-                                    backgroundColor: "black",
-                                    ":hover": { backgroundColor: "grey" }
-                                }}
-                                onClick={approveProposal}
-                            >승인</Button>
-                            <Button
-                                variant="contained"
-                                sx={{
-                                    mr: '10px',
-                                    borderRadius: "15px",
-                                    backgroundColor: "black",
-                                    ":hover": { backgroundColor: "grey" }
-                                }}
-                                onClick={rejectProposal}
-                            >반려</Button>
-                            <Button
-                                variant="contained"
-                                sx={{
-                                    borderRadius: "15px",
-                                    backgroundColor: "lightgrey",
-                                    color: "black",
-                                    ":hover": { backgroundColor: "grey" }
-                                }}
-                                onClick={navigateToMainadmin}
-                            >취소</Button>
+                            {sectors.map((sector) => (
+                                <MenuItem key={sector.id} value={sector.id}>
+                                    {sector.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <TextField
+                        label="연락처"
+                        multiline
+                        variant="outlined"
+                        value={shopInfo.shopPhone}
+                        onChange={(e) => setShopInfo({ ...shopInfo, shopPhone: e.target.value })}
+                    />
+                    <TextField
+                        label="주소"
+                        InputProps={{ readOnly: true }}
+                        variant="outlined"
+                        value={shopInfo.shopAddress}
+                    />
+                    <TextField
+                        label="우편번호"
+                        InputProps={{ readOnly: true }}
+                        variant="outlined"
+                        value={shopInfo.zipcode}
+                    />
+                    <TextField
+                        label="기타정보"
+                        multiline
+                        variant="outlined"
+                        value={shopInfo.info}
+                        onChange={(e) => setShopInfo({ ...shopInfo, info: e.target.value })}
+                    />
+                    <TextField
+                        label="자랑거리"
+                        multiline
+                        variant="outlined"
+                        value={boast}
+                        onChange={(e) => setBoast(e.target.value)}
+                    />
+                    <TextField
+                        label="메모"
+                        multiline
+                        variant="outlined"
+                        value={memo}
+                        onChange={(e) => setMemo(e.target.value)}
+                    />
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <Stack direction="row" spacing={2} alignItems="center">
+                            <TimePicker
+                                label="시작시간"
+                                value={startTime}
+                                disabled={is24Hours}
+                                onChange={(newValue) => setStartTime(newValue)}
+                                sx={{ width: "50%" }}
+                            />
+                            <TimePicker
+                                label="종료시간"
+                                value={endTime}
+                                disabled={is24Hours}
+                                onChange={(newValue) => setEndTime(newValue)}
+                                sx={{ width: '50%' }}
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={is24Hours}
+                                        onChange={(e) => setIs24Hours(e.target.checked)}
+                                    />
+                                }
+                                label="24시간"
+                            />
                         </Stack>
+                    </LocalizationProvider>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={isLocalFranchise === 1}
+                                onChange={(e) => setIsLocalFranchise(e.target.checked ? 1 : 0)}
+                            />
+                        }
+                        label="서울지역사랑상품권 가맹점 여부"
+                    />
+                    <TextField
+                        name="reason"
+                        label="요청 사유"
+                        multiline
+                        variant="outlined"
+                        value={shopInfo.reason}
+                    />
+                    <Stack direction="row-reverse" gap={3}>
+                        <Button
+                            variant="contained"
+                            sx={{
+                                mr: '10px',
+                                borderRadius: "15px",
+                                backgroundColor: "black",
+                                ":hover": { backgroundColor: "grey" }
+                            }}
+                            onClick={approveProposal}
+                        >
+                            승인
+                        </Button>
+                        <Button
+                            variant="contained"
+                            sx={{
+                                mr: '10px',
+                                borderRadius: "15px",
+                                backgroundColor: "black",
+                                ":hover": { backgroundColor: "grey" }
+                            }}
+                            onClick={rejectProposal}
+                        >
+                            반려
+                        </Button>
+                        <Button
+                            variant="contained"
+                            sx={{
+                                borderRadius: "15px",
+                                backgroundColor: "lightgrey",
+                                color: "black",
+                                ":hover": { backgroundColor: "grey" }
+                            }}
+                            onClick={navigateToMainadmin}
+                        >
+                            취소
+                        </Button>
                     </Stack>
-                )}
-            </Box >
-        </>
+                </Stack>
+            )}
+        </Box>
     );
 }
+
