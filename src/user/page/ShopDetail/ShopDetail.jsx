@@ -62,7 +62,6 @@ function ShopDetail() {
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
     useEffect(() => {
-        console.log(Kakao);
         Kakao.cleanup();
         Kakao.init('26629afca566a85d39b41a0e7760267d');
     }, []);
@@ -403,12 +402,9 @@ function ShopDetail() {
                                 level={level}
                                 ref={mapRef}
                             >
-                                <CustomOverlayMap position={state.center}>
-                                    <div className="overlay">Here !</div>
-                                </CustomOverlayMap>
                                 {!state.isLoading && (
                                     <MapMarker position={state.center}>
-                                        <div style={{ padding: "5px", color: "#000" }}>
+                                        <div style={{ width: "150px", color: "#000", textAlign: "center" }}>
                                             {state.errMsg ? state.errMsg : datas && datas.shopName}
                                         </div>
                                     </MapMarker>
