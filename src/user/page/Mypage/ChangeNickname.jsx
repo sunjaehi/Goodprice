@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { Container, CssBaseline } from '@mui/material';
+import { Container, CssBaseline, Alert } from '@mui/material';
 import { createTheme, ThemeProvider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -21,10 +21,23 @@ function ChangeNickname() {
     const [nickname, setNickname] = useState("");
     const [isNicknameVerified, setNicknameVerified] = useState(false);
     const navigate = useNavigate();
+    const [currentNickname, setCurrentNickname] = useState("");
+    const [alertMessage, setAlertMessage] = useState("");
+    const [alertSeverity, setAlertSeverity] = useState("success");
+
+    useEffect(() => {
+        const id = sessionStorage.getItem('id');
+        fetch(`${backend}/api/v1/member/info?memberId=${id}`)
+            .then(response => response.json())
+            .then(json => {
+                setNickname(json.nickname);
+                setCurrentNickname(json.nickname)
+            });
+    }, [])
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (isNicknameVerified) {
+        if (isNicknameVerified && nickname !== currentNickname) {
             fetch(`${backend}/api/v1/member/change-nickname`, {
                 method: "PATCH",
                 headers: {
@@ -35,10 +48,12 @@ function ChangeNickname() {
             })
                 .then(response => {
                     if (response.status === 200) {
-                        alert('닉네임이 정상적으로 변경되었습니다');
+                        setAlertMessage('닉네임이 정상적으로 변경되었습니다');
+                        setAlertSeverity('success');
                         navigate('/mypage');
                     } else {
-                        alert('닉네임 변경에 실패하였습니다. 잠시 후 다시 시도해주세요');
+                        setAlertMessage('닉네임 변경에 실패하였습니다. 잠시 후 다시 시도해주세요');
+                        setAlertSeverity('error');
                     }
                 })
         }
@@ -47,6 +62,7 @@ function ChangeNickname() {
     const handleNicknameChange = (e) => {
         setNickname(e.target.value);
         setNicknameVerified(false);
+        setAlertMessage("");
     };
 
     const navigateToHome = () => {
@@ -58,10 +74,12 @@ function ChangeNickname() {
             .then(response => response.json())
             .then(json => {
                 if (!json) {
-                    alert('사용 가능한 닉네임입니다');
+                    setAlertMessage('사용 가능한 닉네임입니다');
+                    setAlertSeverity('success');
                     setNicknameVerified(true);
                 } else {
-                    alert('사용 불가능한 닉네임입니다');
+                    setAlertMessage('사용 불가능한 닉네임입니다');
+                    setAlertSeverity('error');
                     setNicknameVerified(false);
                 }
             });
@@ -77,10 +95,10 @@ function ChangeNickname() {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        
+
                     }}
                 >
-                    <Typography variant="h5" sx={{marginBottom: 4}}>
+                    <Typography variant="h5" sx={{ marginBottom: 4 }}>
                         닉네임 변경
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
@@ -88,8 +106,8 @@ function ChangeNickname() {
                             required
                             fullWidth
                             label="새 닉네임"
-                            autoFocus
                             value={nickname}
+                            autoFocus
                             onChange={handleNicknameChange}
                         />
                         <Button
@@ -97,22 +115,29 @@ function ChangeNickname() {
                             variant="contained"
                             fullWidth
                             onClick={checkNickname}
-                            sx={{ mt: 2, backgroundColor: '#2a75f3',
+                            sx={{
+                                mt: 2, backgroundColor: '#2a75f3',
                                 ":hover": {
                                     backgroundColor: '#4285f4'
-                                } }}
+                                }
+                            }}
                         >
                             닉네임 중복 확인
                         </Button>
+                        {alertMessage && (
+                            <Alert severity={alertSeverity} sx={{ mt: 2, width: '100%' }}>
+                                {alertMessage}
+                            </Alert>
+                        )}
                         <Box sx={{ display: 'flex', flexDirection: 'row', mt: 2 }}>
                             <Button
                                 type="submit"
                                 variant="contained"
-                                disabled={!isNicknameVerified}
+                                disabled={!isNicknameVerified || nickname === currentNickname}
                                 sx={{
-                                    mr: 2, width: '50%', backgroundColor: isNicknameVerified ? '#435585' : 'grey', color: 'white',
+                                    mr: 2, width: '50%', backgroundColor: (!isNicknameVerified || nickname === currentNickname) ? 'grey' : '#435585', color: 'white',
                                     ":hover": {
-                                        backgroundColor: isNicknameVerified ? '#435585' : 'grey'
+                                        backgroundColor: (!isNicknameVerified || nickname === currentNickname) ? 'grey' : '#435585'
                                     }
                                 }}
                             >
