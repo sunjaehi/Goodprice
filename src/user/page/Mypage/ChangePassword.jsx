@@ -106,7 +106,7 @@ function ChangePassword() {
                     required
                 />
                 {!validatePassword(newPassword) && (
-                    <Alert severity='warning'>숫자, 영문자, 특수문자 중 두 개 이상을 포함하여 8자리 이상을 입력하세요</Alert>
+                    <Alert severity='warning'>비밀번호는 최소 8자 이상이어야 하며, 영문자, 숫자, 특수 문자가 각각 최소 하나 이상 포함되어야 합니다.</Alert>
                 )}
                 {validatePassword(newPassword) && (
                     <Alert severity='success'>사용 가능한 비밀번호입니다.</Alert>
