@@ -65,8 +65,8 @@ function ChangeNickname() {
         setAlertMessage("");
     };
 
-    const navigateToHome = () => {
-        navigate("/");
+    const navigateBack = () => {
+        navigate(-1);
     };
 
     function checkNickname() {
@@ -95,13 +95,21 @@ function ChangeNickname() {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-
                     }}
                 >
                     <Typography variant="h5" sx={{ marginBottom: 4 }}>
                         닉네임 변경
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={navigateBack}
+                        fullWidth
+                        sx={{ marginBottom: 2 }}
+                    >
+                        뒤로 가기
+                    </Button>
+                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, width: '100%' }}>
                         <TextField
                             required
                             fullWidth
@@ -129,29 +137,20 @@ function ChangeNickname() {
                                 {alertMessage}
                             </Alert>
                         )}
-                        <Box sx={{ display: 'flex', flexDirection: 'row', mt: 2 }}>
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                disabled={!isNicknameVerified || nickname === currentNickname}
-                                sx={{
-                                    mr: 2, width: '50%', backgroundColor: (!isNicknameVerified || nickname === currentNickname) ? 'grey' : '#435585', color: 'white',
-                                    ":hover": {
-                                        backgroundColor: (!isNicknameVerified || nickname === currentNickname) ? 'grey' : '#435585'
-                                    }
-                                }}
-                            >
-                                변경 완료
-                            </Button>
-                            <Button
-                                type="button"
-                                variant="outlined"
-                                sx={{ ml: 2, width: '50%', color: 'black', borderColor: 'black' }}
-                                onClick={navigateToHome}
-                            >
-                                취소
-                            </Button>
-                        </Box>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            disabled={!isNicknameVerified || nickname === currentNickname}
+                            fullWidth
+                            sx={{
+                                mt: 2, backgroundColor: (!isNicknameVerified || nickname === currentNickname) ? 'grey' : '#435585', color: 'white',
+                                ":hover": {
+                                    backgroundColor: (!isNicknameVerified || nickname === currentNickname) ? 'grey' : '#435585'
+                                }
+                            }}
+                        >
+                            변경 완료
+                        </Button>
                     </Box>
                 </Box>
             </Container>

@@ -1,5 +1,5 @@
 import { Delete } from "@mui/icons-material";
-import { Container, IconButton, List, ListItem, ListItemButton, ListItemText, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Snackbar, Alert } from "@mui/material";
+import { Container, IconButton, List, ListItem, ListItemButton, ListItemText, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Snackbar, Alert, Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -98,34 +98,62 @@ function Myfavorite() {
         setSnackbarOpen(false);
     };
 
+    const handleBack = () => {
+        navigate(-1);
+    };
+
     return (
         <Container maxWidth="sm">
-            <Typography variant="h5" textAlign="center" sx={{ marginTop: 8 }}>즐겨찾기</Typography>
-            <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                {shopMarks.map(shopMark => (
-                    <ListItem key={shopMark.id} disablePadding>
-                        <ListItemButton role={undefined} onClick={() => handleListItemClick(shopMark.shopId)}>
-                            <ListItemText>
-                                <Typography variant="h6">
-                                    {shopMark.shopName}
-                                </Typography>
-                                <Typography variant="body2">
-                                    {shopMark.shopAddress}
-                                </Typography>
-                            </ListItemText>
-                            <IconButton
-                                aria-label="delete"
-                                onClick={(event) => {
-                                    event.stopPropagation();
-                                    handleDeleteClick(shopMark);
-                                }}
-                            >
-                                <Delete />
-                            </IconButton>
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
+            <Box display="flex" flexDirection="column" alignItems="center" textAlign="center">
+                <Typography variant="h5" gutterBottom>
+                    즐겨찾기
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                    즐겨 찾는 가게 목록이에요.<br /> 가게를 클릭하여 상세 정보를 확인하거나 삭제할 수 있어요.
+                </Typography>
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleBack}
+                    fullWidth
+                    sx={{ marginBottom: 2 }}
+                >
+                    뒤로 가기
+                </Button>
+            </Box>
+            {shopMarks.length === 0 ? (
+                <Box display="flex" justifyContent="center" alignItems="center" height="50vh">
+                    <Typography variant="body1">
+                        즐겨찾는 가게가 없어요. 즐겨찾는 가게를 추가해보세요.
+                    </Typography>
+                </Box>
+            ) : (
+                <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                    {shopMarks.map(shopMark => (
+                        <ListItem key={shopMark.id} disablePadding>
+                            <ListItemButton role={undefined} onClick={() => handleListItemClick(shopMark.shopId)}>
+                                <ListItemText>
+                                    <Typography variant="h6">
+                                        {shopMark.shopName}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        {shopMark.shopAddress}
+                                    </Typography>
+                                </ListItemText>
+                                <IconButton
+                                    aria-label="delete"
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        handleDeleteClick(shopMark);
+                                    }}
+                                >
+                                    <Delete />
+                                </IconButton>
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
+                </List>
+            )}
             <DeleteConfirmationDialog
                 open={dialogOpen}
                 onClose={handleDialogClose}

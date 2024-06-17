@@ -81,12 +81,25 @@ function ChangePassword() {
         });
     };
 
+    const navigateBack = () => {
+        navigate(-1);
+    };
+
     return (
         <Container maxWidth="sm">
             <Box sx={{ textAlign: 'center', marginBottom: 4, marginTop: 8 }}>
                 <Typography variant="h5">비밀번호 변경</Typography>
                 <Typography variant="subtitle1">새 비밀번호를 입력하세요.</Typography>
             </Box>
+            <Button
+                variant="outlined"
+                color="primary"
+                onClick={navigateBack}
+                fullWidth
+                sx={{ marginBottom: 2 }}
+            >
+                뒤로 가기
+            </Button>
             <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <TextField
                     label="현재 비밀번호"
