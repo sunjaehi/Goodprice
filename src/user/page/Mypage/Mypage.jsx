@@ -7,10 +7,13 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import EditIcon from '@mui/icons-material/Edit';
 import LockIcon from '@mui/icons-material/Lock';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import RateReviewIcon from '@mui/icons-material/RateReview'; // 리뷰 내역 아이콘 추가
 import { useNavigate } from "react-router-dom";
 import { Container, Typography } from "@mui/material";
 
@@ -40,7 +43,7 @@ function Mypage() {
         <Container maxWidth="sm">
             <Box sx={{ textAlign: 'center', marginBottom: 4, marginTop: 8 }}>
                 <Typography variant="h5">마이페이지</Typography>
-                <Typography variant="subtitle1">개인 정보 및 설정을 관리하세요.</Typography>
+                <Typography variant="subtitle1">여기서 개인 정보와 설정을 관리하세요.</Typography>
             </Box>
             <List>
                 <ListItem disablePadding>
@@ -59,10 +62,49 @@ function Mypage() {
                 <ListItem disablePadding>
                     <CustomListItemButton onClick={() => handleNavigation("/Myfavorite")} divider>
                         <ListItemIcon>
-                            <FavoriteBorderIcon fontSize="large" />
+                            <FavoriteIcon fontSize="large" />
                         </ListItemIcon>
                         <ListItemText
                             primary="즐겨찾기 관리"
+                            primaryTypographyProps={{
+                                variant: 'body1'
+                            }}
+                        />
+                    </CustomListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                    <CustomListItemButton onClick={() => handleNavigation("/review-history")} divider>
+                        <ListItemIcon>
+                            <RateReviewIcon fontSize="large" />
+                        </ListItemIcon>
+                        <ListItemText
+                            primary="리뷰 내역"
+                            primaryTypographyProps={{
+                                variant: 'body1'
+                            }}
+                        />
+                    </CustomListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                    <CustomListItemButton onClick={() => handleNavigation("/recommend-history")} divider>
+                        <ListItemIcon>
+                            <VisibilityIcon fontSize="large" />
+                        </ListItemIcon>
+                        <ListItemText
+                            primary="추천 내역"
+                            primaryTypographyProps={{
+                                variant: 'body1'
+                            }}
+                        />
+                    </CustomListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                    <CustomListItemButton onClick={() => handleNavigation("/requests")} divider>
+                        <ListItemIcon>
+                            <AddCircleIcon fontSize="large" />
+                        </ListItemIcon>
+                        <ListItemText
+                            primary="등록 요청 내역"
                             primaryTypographyProps={{
                                 variant: 'body1'
                             }}
