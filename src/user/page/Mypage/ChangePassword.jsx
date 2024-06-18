@@ -81,12 +81,25 @@ function ChangePassword() {
         });
     };
 
+    const navigateBack = () => {
+        navigate(-1);
+    };
+
     return (
         <Container maxWidth="sm">
             <Box sx={{ textAlign: 'center', marginBottom: 4, marginTop: 8 }}>
                 <Typography variant="h5">비밀번호 변경</Typography>
                 <Typography variant="subtitle1">새 비밀번호를 입력하세요.</Typography>
             </Box>
+            <Button
+                variant="outlined"
+                color="primary"
+                onClick={navigateBack}
+                fullWidth
+                sx={{ marginBottom: 2 }}
+            >
+                뒤로 가기
+            </Button>
             <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <TextField
                     label="현재 비밀번호"
@@ -106,7 +119,7 @@ function ChangePassword() {
                     required
                 />
                 {!validatePassword(newPassword) && (
-                    <Alert severity='warning'>숫자, 영문자, 특수문자 중 두 개 이상을 포함하여 8자리 이상을 입력하세요</Alert>
+                    <Alert severity='warning'>비밀번호는 최소 8자 이상이어야 하며, 영문자, 숫자, 특수 문자가 각각 최소 하나 이상 포함되어야 합니다.</Alert>
                 )}
                 {validatePassword(newPassword) && (
                     <Alert severity='success'>사용 가능한 비밀번호입니다.</Alert>

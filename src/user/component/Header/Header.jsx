@@ -64,7 +64,6 @@ function Header() {
         <AppBar position="fixed" sx={{ backgroundColor: '#1266f1' }}>
             <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <IconButton
-                    edge="start"
                     color="inherit"
                     aria-label="menu"
                     onClick={toggleDrawer(true)}

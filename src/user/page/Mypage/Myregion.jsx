@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import Switch from '@mui/material/Switch';
 import Button from '@mui/material/Button';
 import { regionSample } from "../../../data/regionSample";
-import { Container, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import { Container, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, Box } from "@mui/material";
 const backend = process.env.REACT_APP_BACKEND_ADDR;
 
 function Myregion() {
     const [selected, setSelcted] = useState(new Set());
+
     useEffect(() => {
         fetch(`${backend}/api/v1/regionMark/`, {
             headers: {
@@ -52,8 +53,29 @@ function Myregion() {
         })
     };
 
+    const handleBack = () => {
+        window.history.back();
+    };
+
     return (
         <Container maxWidth="sm">
+            <Box display="flex" flexDirection="column" alignItems="center" textAlign="center">
+                <Typography variant="h5" gutterBottom>
+                    관심 지역 설정
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                    관심 있는 지역을 선택하여 설정하세요.<br /> 선택한 지역은 신규 가게가 추가될 경우 알림을 받을 수 있어요.
+                </Typography>
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleBack}
+                    fullWidth
+                    sx={{ marginBottom: 2 }}
+                >
+                    뒤로 가기
+                </Button>
+            </Box>
             <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                 {regionSample.map((region) => (
                     <React.Fragment key={region.id}>

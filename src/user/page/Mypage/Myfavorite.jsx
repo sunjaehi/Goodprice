@@ -1,5 +1,5 @@
-import { MoreVert } from "@mui/icons-material";
-import { Container, IconButton, List, ListItem, ListItemButton, ListItemText, Menu, MenuItem, Typography } from "@mui/material";
+import { Delete } from "@mui/icons-material";
+import { Container, IconButton, List, ListItem, ListItemButton, ListItemText, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Snackbar, Alert, Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -7,105 +7,190 @@ const backend = process.env.REACT_APP_BACKEND_ADDR;
 
 function Myfavorite() {
     const navigate = useNavigate();
-    const [shopMarks, setShopMarks] = useState(null);
-    const [anchorEl, setAnchorEl] = useState(null);
+    const [shopMarks, setShopMarks] = useState([]);
     const [selectedShopMark, setSelectedShopMark] = useState(null);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
     useEffect(() => {
         const atk = sessionStorage.getItem('atk');
-        if (atk === null) {
+        if (!atk) {
             alert('로그인이 필요합니다');
             navigate(-1);
+            return;
         }
 
-        fetch(`${backend}/api/v1/shopmark/`, {
-            method: "GET",
-            headers: {
-                "Authorization": "Bearer " + atk
-            }
-        }).then(response => {
-            if (response.status === 200)
-                return response.json();
-            if (response.status === 401 || response.status == 403) {
+        fetchShopMarks(atk);
+    }, [navigate]);
+
+    const fetchShopMarks = async (atk) => {
+        try {
+            const response = await fetch(`${backend}/api/v1/shopmark/`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${atk}`
+                }
+            });
+
+            if (response.status === 200) {
+                const json = await response.json();
+                setShopMarks(json);
+            } else if (response.status === 401 || response.status === 403) {
                 alert('권한이 없습니다');
-                return;
             } else {
                 alert('서버 오류');
-                return;
             }
-        }).then(json => setShopMarks(json));
-    }, []);
-
-    const handleMenuClick = (event, shopMark) => {
-        setAnchorEl(event.currentTarget);
-        setSelectedShopMark(shopMark);
+        } catch (error) {
+            console.error('Failed to fetch shop marks:', error);
+            alert('서버 오류');
+        }
     };
 
-    const handleMenuClose = () => {
-        setAnchorEl(null);
+    const handleDeleteClick = (shopMark) => {
+        setSelectedShopMark(shopMark);
+        setDialogOpen(true);
+    };
+
+    const handleDialogClose = () => {
+        setDialogOpen(false);
         setSelectedShopMark(null);
     };
 
-    const handleShare = () => {
-        if (selectedShopMark) {
-            alert(selectedShopMark.shopName);
+    const handleDeleteConfirm = async () => {
+        try {
+            const response = await fetch(`${backend}/api/v1/shopmark/`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${sessionStorage.getItem('atk')}`
+                },
+                body: JSON.stringify({ shopId: selectedShopMark.shopId })
+            });
+
+            if (response.status === 200) {
+                setShopMarks(shopMarks.filter(mark => mark.shopId !== selectedShopMark.shopId));
+                setSnackbarMessage('삭제되었습니다');
+                setSnackbarSeverity('success');
+            } else {
+                setSnackbarMessage('삭제에 실패했습니다');
+                setSnackbarSeverity('error');
+            }
+            setSnackbarOpen(true);
+        } catch (error) {
+            console.error('Failed to delete shop mark:', error);
+            setSnackbarMessage('삭제에 실패했습니다');
+            setSnackbarSeverity('error');
+            setSnackbarOpen(true);
         }
-        handleMenuClose();
+        handleDialogClose();
     };
 
-    const handleDelete = () => {
-        fetch(`${backend}/api/v1/shopmark/`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + sessionStorage.getItem('atk')
-            },
-            body: JSON.stringify({ shopId: selectedShopMark.shopId })
-        }).then(response => {
-            if (response.status === 200)
-                alert('삭제되었습니다');
-        })
-        handleMenuClose();
+    const handleListItemClick = (shopId) => {
+        navigate(`/detail/${shopId}`);
+    };
+
+    const handleSnackbarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbarOpen(false);
+    };
+
+    const handleBack = () => {
+        navigate(-1);
     };
 
     return (
         <Container maxWidth="sm">
-            <Typography variant="h5" textAlign="center" sx={{marginTop:8}}>즐겨찾기</Typography>
-            <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                {shopMarks && shopMarks.map(shopMark => (
-                    <ListItem key={shopMark.id} disablePadding>
-                        <ListItemButton role={undefined}>
-                            <ListItemText>
-                                <Typography variant="h6">
-                                    {shopMark.shopName}
-                                </Typography>
-                                <Typography variant="body2">
-                                    {shopMark.shopAddress}
-                                </Typography>
-                            </ListItemText>
-                            <IconButton
-                                aria-label="more"
-                                aria-controls="long-menu"
-                                aria-haspopup="true"
-                                onClick={(event) => handleMenuClick(event, shopMark)}
-                            >
-                                <MoreVert />
-                            </IconButton>
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-            <Menu
-                id="long-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleMenuClose}
+            <Box display="flex" flexDirection="column" alignItems="center" textAlign="center">
+                <Typography variant="h5" gutterBottom>
+                    즐겨찾기
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                    즐겨 찾는 가게 목록이에요.<br /> 가게를 클릭하여 상세 정보를 확인하거나 삭제할 수 있어요.
+                </Typography>
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleBack}
+                    fullWidth
+                    sx={{ marginBottom: 2 }}
+                >
+                    뒤로 가기
+                </Button>
+            </Box>
+            {shopMarks.length === 0 ? (
+                <Box display="flex" justifyContent="center" alignItems="center" height="50vh">
+                    <Typography variant="body1">
+                        즐겨찾는 가게가 없어요. 즐겨찾는 가게를 추가해보세요.
+                    </Typography>
+                </Box>
+            ) : (
+                <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                    {shopMarks.map(shopMark => (
+                        <ListItem key={shopMark.id} disablePadding>
+                            <ListItemButton role={undefined} onClick={() => handleListItemClick(shopMark.shopId)}>
+                                <ListItemText>
+                                    <Typography variant="h6">
+                                        {shopMark.shopName}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        {shopMark.shopAddress}
+                                    </Typography>
+                                </ListItemText>
+                                <IconButton
+                                    aria-label="delete"
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        handleDeleteClick(shopMark);
+                                    }}
+                                >
+                                    <Delete />
+                                </IconButton>
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
+                </List>
+            )}
+            <DeleteConfirmationDialog
+                open={dialogOpen}
+                onClose={handleDialogClose}
+                onConfirm={handleDeleteConfirm}
+            />
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={handleSnackbarClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             >
-                <MenuItem onClick={handleShare}>공유</MenuItem>
-                <MenuItem onClick={handleDelete}>삭제</MenuItem>
-            </Menu>
+                <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
         </Container>
+    );
+}
+
+function DeleteConfirmationDialog({ open, onClose, onConfirm }) {
+    return (
+        <Dialog open={open} onClose={onClose}>
+            <DialogTitle>삭제 확인</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    삭제하시겠습니까?
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={onClose} color="primary">
+                    취소
+                </Button>
+                <Button onClick={onConfirm} color="primary" autoFocus>
+                    삭제
+                </Button>
+            </DialogActions>
+        </Dialog>
     );
 }
 

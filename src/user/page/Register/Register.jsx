@@ -299,11 +299,11 @@ const Register = () => {
                 fullWidth
                 type='password'
                 label='비밀번호'
-                placeholder='숫자+영문자+특수문자 2개 이상 조합 8자리 이상'
+                placeholder='비밀번호는 최소 8자 이상이어야 하며, 영문자, 숫자, 특수 문자가 각각 최소 하나 이상 포함되어야 합니다.'
                 onChange={handlePasswordChange}
               />
               {state.isPasswordValid && <Alert severity='success'>유효한 비밀번호입니다.</Alert>}
-              {!state.isPasswordValid && <Alert severity='warning'>숫자, 영문자, 특수문자 중 두 개 이상을 포함하여 8자리 이상을 입력하세요</Alert>}
+              {!state.isPasswordValid && <Alert severity='warning'>비밀번호는 최소 8자 이상이어야 하며, 영문자, 숫자, 특수 문자가 각각 최소 하나 이상 포함되어야 합니다.</Alert>}
               <TextField
                 sx={{ marginTop: '8px' }}
                 fullWidth

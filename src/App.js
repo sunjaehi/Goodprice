@@ -44,6 +44,8 @@ import NotificationSettings from './user/page/Mypage/NotificationSettings';
 import ShopNewsInput from './user/page/ShopNewsInput/ShopNewsInput';
 import MemberManage from './admin/page/MemberManage';
 import MemberAdminDetail from './admin/page/MemberAdminDetail';
+import RecommendHistory from './user/page/Mypage/RecommendHistory';
+import ReviewHistory from './user/page/Mypage/ReviewHistory';
 
 
 function App() {
@@ -93,6 +95,9 @@ function App() {
         <Route path="/shop-news-input" element={<ShopNewsInput />}></Route>
         <Route path="/member-manage" element={<MemberManage />}></Route>
         <Route path="/member-admin-detail/:id" element={<MemberAdminDetail />}></Route>
+        <Route path="/recommend-history" element={<RecommendHistory />}></Route>
+        <Route path="/review-history" element={<ReviewHistory />}></Route>
+
       </Routes>
     </BrowserRouter >
   );
