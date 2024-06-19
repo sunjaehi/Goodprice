@@ -151,15 +151,7 @@ function Nearby() {
                     })}
                     {!state.isLoading && (
                         <MapMarker position={state.center}>
-                            <div style={{
-                                padding: "3px",
-                                margin: "10px",
-                                color: "#000",
-                                textAlign: "center",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center"
-                            }}>
+                            <div style={{ width: "150px", paddingTop: "px", color: "#000", textAlign: "center" }}>
                                 {state.errMsg ? state.errMsg : "현재 위치"}
                             </div>
                         </MapMarker>
@@ -180,7 +172,7 @@ function Nearby() {
                         mt: 1,
                         color: 'black',
                         bgcolor: 'white',
-                        ":hover": { bgcolor: 'grey' }
+                        ":hover": { bgcolor: 'white' }
                     }}
                 >
                     여기서 재검색
@@ -199,7 +191,7 @@ function Nearby() {
                         width: '200px',
                         color: 'black',
                         bgcolor: 'white',
-                        ":hover": { bgcolor: 'grey' }
+                        ":hover": { bgcolor: 'white' }
                     }}
                 >
                     목록 보기
@@ -215,7 +207,7 @@ function Nearby() {
                         zIndex: 10,
                         color: 'black',
                         bgcolor: 'white',
-                        ":hover": { bgcolor: 'grey' }
+                        ":hover": { bgcolor: 'white' }
                     }}
                 >
                     <MyLocationIcon />
