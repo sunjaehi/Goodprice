@@ -22,7 +22,7 @@ const ShopInfoDrawer = ({ open, onClose, onOpen, selectedShop }) => {
             onOpen={onOpen}
             PaperProps={{
                 sx: {
-                    height: '25%',
+                    height: '30%',
                     maxWidth: theme.breakpoints.values.sm,
                     margin: '0 auto',
                 },
@@ -30,7 +30,7 @@ const ShopInfoDrawer = ({ open, onClose, onOpen, selectedShop }) => {
             ModalProps={{
                 slotProps: {
                     backdrop: {
-                        style: { backgroundColor: 'transparent' },
+                        // style: { backgroundColor: 'transparent' },
                     },
                 },
             }}
