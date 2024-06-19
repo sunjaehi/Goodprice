@@ -3,7 +3,6 @@ import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import { Button, Fab, useMediaQuery } from '@mui/material';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import BottomNav from "../../component/BottomNavigation/BottomNav";
-import './Nearby.css';
 import { useTheme } from '@mui/material/styles';
 import { FindReplaceOutlined } from "@mui/icons-material";
 import ShopListDrawer from './ShopListDrawer';
