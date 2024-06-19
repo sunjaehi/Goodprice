@@ -8,7 +8,7 @@ import BottomNav from '../../component/BottomNavigation/BottomNav';
 
 const CarouselItem = ({ data, defaultImage, handleCardClick }) => (
     <div style={{ padding: '0 10px' }}>
-        <Card sx={{ margin: '0 auto', maxWidth: 345, marginBottom: '3px', minHeight: 310 }}>
+        <Card sx={{ margin: '0 auto', maxWidth: 345, marginBottom: '2px', minHeight: 290 }}>
             <CardActionArea onClick={() => handleCardClick(`/detail/${data.shopId}`)}>
                 <div style={{ width: '100%', paddingTop: '56.25%', position: 'relative' }}>
                     <img
@@ -37,42 +37,82 @@ const CarouselItem = ({ data, defaultImage, handleCardClick }) => (
     </div>
 );
 
+const NextArrow = (props) => {
+    const { className, style, onClick } = props;
+    return (
+        <div
+            className={className}
+            style={{ ...style, display: "block", right: 25, zIndex: 1, backgroundColor: 'rgba(0,0 ,255, 0.8)', borderRadius: '50%', padding: '10px' }}
+            onClick={onClick}
+        >
+        </div>
+    );
+};
+
+const PrevArrow = (props) => {
+    const { className, style, onClick } = props;
+    return (
+        <div
+            className={className}
+            style={{ ...style, display: "block", left: 25, zIndex: 1, backgroundColor: 'rgba(0, 0, 255, 0.8)', borderRadius: '50%', padding: '10px' }}
+            onClick={onClick}
+        >
+        </div>
+    );
+};
+
+
+
 const CustomCarousel = ({ title, data, defaultImage, handleCardClick }) => {
     const settings = {
         infinite: true,
         speed: 500,
-        slidesToShow: 1,
+        slidesToShow: 3, // 큰 화면에서 3개의 슬라이드를 표시
         slidesToScroll: 1,
         centerMode: true,
-        centerPadding: '20%',
-        arrows: false,
+        centerPadding: '0', // 중앙 정렬을 위해 패딩을 0으로 설정
+        arrows: true,
+        nextArrow: <NextArrow />,
+        prevArrow: <PrevArrow />,
         responsive: [
             {
-                breakpoint: 768,
+                breakpoint: 1024, // 태블릿 크기
                 settings: {
-                    slidesToShow: 1,
+                    slidesToShow: 2,
                     centerPadding: '15%',
+                    arrows: false
                 }
             },
             {
-                breakpoint: 480,
+                breakpoint: 768, // 모바일 크기
+                settings: {
+                    slidesToShow: 2,
+                    centerPadding: '15%',
+                    arrows: false
+                }
+            },
+            {
+                breakpoint: 480, // 작은 모바일 크기
                 settings: {
                     slidesToShow: 1,
                     centerPadding: '10%',
+                    arrows: false
                 }
             }
         ]
     };
 
     return (
-        <Box my={4}>
+        <Box>
             {data.length > 0 &&
-                (<Typography gutterBottom variant="h6" component="div">
-                    {title}
-                </Typography>)
+                (<Container maxWidth="lg">
+                    <Typography gutterBottom variant="h6" component="div" sx={{ ml: 1 }}>
+                        {title}
+                    </Typography>
+                </Container>)
             }
             {data.length > 1 ? (
-                <>
+                <Container maxWidth="lg" sx={{ padding: { xs: 0, md: 2 } }}>
                     <Slider {...settings}>
                         {data.map((item) => (
                             <CarouselItem
@@ -83,7 +123,7 @@ const CustomCarousel = ({ title, data, defaultImage, handleCardClick }) => {
                             />
                         ))}
                     </Slider>
-                </>
+                </Container>
             ) : (
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     {data.map((item) => (
@@ -138,72 +178,79 @@ function Mainpage() {
     }, []);
 
     return (
-        <Container maxWidth="sm">
-            {newShopDatas && (
-                <CustomCarousel
-                    title="새로 추가된 가게"
-                    data={newShopDatas}
-                    defaultImage={defaultImage}
-                    handleCardClick={handleCardClick}
-                />
-            )}
+        <>
+            <Box sx={{ marginY: '64px' }}>
+                {newShopDatas && (
+                    <Box sx={{ mx: 0, my: 2 }}>
+                        <CustomCarousel
+                            title="새로 추가된 가게"
+                            data={newShopDatas}
+                            defaultImage={defaultImage}
+                            handleCardClick={handleCardClick}
+                        />
+                    </Box>
+                )}
 
-            {dailyShops && (
-                <CustomCarousel
-                    title="오늘의 착한 가격 업소"
-                    data={dailyShops}
-                    defaultImage={defaultImage}
-                    handleCardClick={handleCardClick}
-                />
-            )}
+                {dailyShops && (
+                    <Box sx={{ mx: 0, my: 2 }}>
+                        <CustomCarousel
+                            title="오늘의 착한 가격 업소"
+                            data={dailyShops}
+                            defaultImage={defaultImage}
+                            handleCardClick={handleCardClick}
+                        />
+                    </Box>
+                )}
 
-            <Box my={6}>
-                <Typography gutterBottom variant="h6" component="div">
-                    업종별 베스트 가게
-                </Typography>
-                <Grid container spacing={2}>
-                    {bestShops && bestShops.map(bestShop => (
-                        <Grid item xs={12} sm={6} md={6} key={bestShop.shopId}>
-                            <Typography variant="body2" color="text.secondary">
-                                {sectors && sectors.find(sector => sector.id === bestShop.sector)?.name}
-                            </Typography>
-                            <Card>
-                                <CardActionArea onClick={() => handleCardClick(`/detail/${bestShop.shopId}`)}>
-                                    <div style={{ width: '100%', paddingTop: '56.25%', position: 'relative' }}>
-                                        <img
-                                            src={bestShop.imgUrl}
-                                            alt="상점 이미지"
-                                            style={{
-                                                width: '100%',
-                                                height: '100%',
-                                                position: 'absolute',
-                                                top: 0,
-                                                left: 0,
-                                                objectFit: 'cover'
-                                            }}
-                                            onError={(e) => {
-                                                e.target.onerror = null;
-                                                e.target.src = defaultImage;
-                                            }}
-                                        />
-                                    </div>
-                                    <CardContent>
-                                        <Typography gutterBottom variant="h6" component="div">
-                                            {bestShop.name}
-                                        </Typography>
-                                        <Typography variant="body2" color="text.secondary">
-                                            {bestShop.address}
-                                        </Typography>
-                                    </CardContent>
-                                </CardActionArea>
-                            </Card>
+                <Container maxWidth="sm">
+                    <Box>
+                        <Typography gutterBottom variant="h6" component="div" sx={{ ml: 1 }}>
+                            업종별 베스트 가게
+                        </Typography>
+                        <Grid container spacing={2}>
+                            {bestShops && bestShops.map(bestShop => (
+                                <Grid item xs={12} sm={6} md={6} key={bestShop.shopId}>
+                                    <Typography variant="body2" color="text.secondary">
+                                        {sectors && sectors.find(sector => sector.id === bestShop.sector)?.name}
+                                    </Typography>
+                                    <Card>
+                                        <CardActionArea onClick={() => handleCardClick(`/detail/${bestShop.shopId}`)}>
+                                            <div style={{ width: '100%', paddingTop: '56.25%', position: 'relative' }}>
+                                                <img
+                                                    src={bestShop.imgUrl}
+                                                    alt="상점 이미지"
+                                                    style={{
+                                                        width: '100%',
+                                                        height: '100%',
+                                                        position: 'absolute',
+                                                        top: 0,
+                                                        left: 0,
+                                                        objectFit: 'cover'
+                                                    }}
+                                                    onError={(e) => {
+                                                        e.target.onerror = null;
+                                                        e.target.src = defaultImage;
+                                                    }}
+                                                />
+                                            </div>
+                                            <CardContent>
+                                                <Typography gutterBottom variant="h6" component="div">
+                                                    {bestShop.name}
+                                                </Typography>
+                                                <Typography variant="body2" color="text.secondary">
+                                                    {bestShop.address}
+                                                </Typography>
+                                            </CardContent>
+                                        </CardActionArea>
+                                    </Card>
+                                </Grid>
+                            ))}
                         </Grid>
-                    ))}
-                </Grid>
+                    </Box>
+                </Container>
             </Box>
-
             <BottomNav value={bottomNavValue} onChange={setBottomNavValue} />
-        </Container>
+        </>
     );
 }
 
