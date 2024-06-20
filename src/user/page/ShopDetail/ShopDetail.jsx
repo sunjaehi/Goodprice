@@ -66,28 +66,30 @@ function ShopDetail() {
     }, []);
 
     const shareKakao = (datas) => {
-        Kakao.Share.sendDefault({
-            objectType: 'feed',
-            content: {
-                title: `${datas.shopName}`,
-                description: `${datas.address}`,
-                imageUrl:
-                    `${datas.shopImgUrls[0]}`,
-                link: {
-                    mobileWebUrl: `https://good-companion.shop/detail/${datas.shopId}`,
-                },
-            },
-            buttons: [
-                {
-                    title: '상세보기',
+        if (Kakao.isInstalled()) {
+            Kakao.Share.sendDefault({
+                objectType: 'feed',
+                content: {
+                    title: `${datas.shopName}`,
+                    description: `${datas.address}`,
+                    imageUrl: `${datas.shopImgUrls[0]}`,
                     link: {
                         mobileWebUrl: `https://good-companion.shop/detail/${datas.shopId}`,
                     },
                 },
-            ],
-        })
+                buttons: [
+                    {
+                        title: '상세보기',
+                        link: {
+                            mobileWebUrl: `https://good-companion.shop/detail/${datas.shopId}`,
+                        },
+                    },
+                ],
+            });
+        } else {
+            alert('카카오톡이 설치되어 있지 않습니다.');
+        }
     }
-
     const handleChange = (event, newValue) => {
         /*3번 인덱스인 소식을 눌렀을 경우 탭 전환 방지*/
         if (newValue === 3) {
