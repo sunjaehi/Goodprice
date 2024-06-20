@@ -12,6 +12,7 @@ const Search = () => {
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
     const [bottomNavValue, setBottomNavValue] = useState(2);
+    const [showEmptyQueryMessage, setShowEmptyQueryMessage] = useState(true);
 
     const observer = useRef();
     const navigate = useNavigate();
@@ -23,6 +24,13 @@ const Search = () => {
     }, [query, page]);
 
     const handleSearch = () => {
+        if (!query) {
+            setShowEmptyQueryMessage(true);
+            setResults([]);
+            setHasMore(false);
+            return;
+        }
+        setShowEmptyQueryMessage(false);
         setResults([]);
         setPage(0);
         setHasMore(true);
@@ -88,7 +96,13 @@ const Search = () => {
                         </IconButton>
                     </Box>
                 </Box>
-                {results.length === 0 && !hasMore ? (
+                {showEmptyQueryMessage ? (
+                    <Box display="flex" justifyContent="center" alignItems="center" height="50vh">
+                        <Typography variant="h6" color="textSecondary">
+                            검색어를 입력해주세요
+                        </Typography>
+                    </Box>
+                ) : results.length === 0 && !hasMore ? (
                     <Box display="flex" justifyContent="center" alignItems="center" height="50vh">
                         <Typography variant="h6" color="textSecondary">
                             해당하는 가게가 없습니다
