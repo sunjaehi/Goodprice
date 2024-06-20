@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Box, MenuItem, Select, Stack } from "@mui/material";
+import { Box, MenuItem, Select, Stack, Checkbox, FormControlLabel } from "@mui/material";
 import Avatar from '@mui/material/Avatar';
 import TextField from "@mui/material/TextField";
 import InputLabel from '@mui/material/InputLabel';
@@ -39,6 +39,7 @@ function Servicecenter() {
     const [isFormValid, setIsFormValid] = useState(false);
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
+    const [is24Hours, setIs24Hours] = useState(false);
 
     useEffect(() => {
         const atk = sessionStorage.getItem('atk')
@@ -51,8 +52,7 @@ function Servicecenter() {
             .then(json => setSectors(json));
     }, []);
 
-    useEffect(() => checkValidation(), [startTime]);
-    useEffect(() => checkValidation(), [endTime]);
+    useEffect(() => checkValidation(), [startTime, endTime, is24Hours]);
 
     const open = useDaumPostcodePopup(postcodeScriptUrl);
     const handleComplete = (data) => {
@@ -69,8 +69,7 @@ function Servicecenter() {
     const checkValidation = () => {
         setIsFormValid(
             Object.values(inputItem).every(value => value.trim() !== '')
-            && startTime !== null
-            && endTime !== null
+            && (is24Hours || (startTime !== null && endTime !== null))
         );
     }
 
@@ -91,10 +90,19 @@ function Servicecenter() {
         return time.format('HH:mm');
     };
 
+    const handle24HoursChange = (event) => {
+        setIs24Hours(event.target.checked);
+        if (event.target.checked) {
+            setStartTime(null);
+            setEndTime(null);
+        }
+        checkValidation();
+    };
+
     function submit(e) {
         e.preventDefault();
         console.log(inputItem);
-        const businessHours = `${formatTime(startTime)} - ${formatTime(endTime)}`;
+        const businessHours = is24Hours ? "00:00 - 24:00" : `${formatTime(startTime)} - ${formatTime(endTime)}`;
         const bodyString = JSON.stringify({
             ...inputItem,
             businessHours: businessHours
@@ -212,24 +220,35 @@ function Servicecenter() {
                     value={inputItem.shopPhone}
                     onChange={handleInput}
                 />
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <LocalizationProvider dateAdapter={AdapterDayjs} localeText={{ timePickerToolbarTitle: '시작 시간' }}>
                     <Stack fullWidth gap={1}>
                         <TimePicker
                             label="시작시간"
-                            defaultValue={startTime}
+                            value={startTime}
                             onChange={(newValue) => setStartTime(newValue)}
-                        />
-                        <TimePicker
-                            label="종료시간"
-                            defaultValue={endTime}
-                            onChange={(newValue) => setEndTime(newValue)}
-                            fullWidth
+                            renderInput={(params) => <TextField {...params} />}
+                            disabled={is24Hours}
                         />
                     </Stack>
                 </LocalizationProvider>
+                <LocalizationProvider dateAdapter={AdapterDayjs} localeText={{ timePickerToolbarTitle: '종료 시간' }}>
+                    <Stack fullWidth gap={1}>
+                        <TimePicker
+                            label="종료시간"
+                            value={endTime}
+                            onChange={(newValue) => setEndTime(newValue)}
+                            renderInput={(params) => <TextField {...params} />}
+                            disabled={is24Hours}
+                        />
+                    </Stack>
+                </LocalizationProvider>
+                <FormControlLabel
+                    control={<Checkbox checked={is24Hours} onChange={handle24HoursChange} />}
+                    label="24시간"
+                />
                 <TextField
                     id="reason"
-                    label="이유"
+                    label="요청 사유"
                     multiline
                     rows={3}
                     fullWidth
