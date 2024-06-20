@@ -99,7 +99,7 @@ function Mypage() {
                     </CustomListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
-                    <CustomListItemButton onClick={() => handleNavigation("/requests")} divider>
+                    <CustomListItemButton onClick={() => handleNavigation("/proposal-history")} divider>
                         <ListItemIcon>
                             <AddCircleIcon fontSize="large" />
                         </ListItemIcon>
