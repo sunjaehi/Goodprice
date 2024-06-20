@@ -54,7 +54,7 @@ function Header() {
             <Divider />
             <List>
                 <ListItemButton onClick={navigateToServicecenter}>
-                    <ListItemText primary="고객센터" />
+                    <ListItemText primary="가게 등록 요청" />
                 </ListItemButton>
             </List>
         </Box>
