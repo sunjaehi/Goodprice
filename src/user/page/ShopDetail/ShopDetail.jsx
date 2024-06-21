@@ -66,7 +66,7 @@ function ShopDetail() {
     }, []);
 
     const shareKakao = (datas) => {
-        if (Kakao.isInstalled()) {
+        if (Kakao.isInitialized()) {
             Kakao.Share.sendDefault({
                 objectType: 'feed',
                 content: {
