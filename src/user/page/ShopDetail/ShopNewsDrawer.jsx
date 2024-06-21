@@ -37,7 +37,7 @@ const Puller = styled('div')(({ theme }) => ({
 const ShopNewsDrawer = ({ open, onClose, onOpen, shopNewsDatas, fetchMoreData }) => {
     const observerRef = useRef();
     const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.up('sm'));
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -66,16 +66,16 @@ const ShopNewsDrawer = ({ open, onClose, onOpen, shopNewsDatas, fetchMoreData })
             open={open}
             onClose={onClose}
             onOpen={onOpen}
-            swipeAreaWidth={drawerBleeding}
+            swipeAreaWidth={isSmallScreen ? drawerBleeding : 0}
             disableSwipeToOpen={false}
             ModalProps={{
                 keepMounted: true,
             }}
             PaperProps={{
                 sx: {
-                    height: `calc(80% - ${drawerBleeding}px)`,
+                    height: `calc(80% - ${isSmallScreen ? drawerBleeding : 0}px)`,
                     overflow: 'visible',
-                    maxWidth: isSmallScreen ? theme.breakpoints.values.sm : '100%',
+                    maxWidth: isSmallScreen ? '100%' : theme.breakpoints.values.sm,
                     margin: '0 auto',
                 },
             }}
@@ -83,7 +83,7 @@ const ShopNewsDrawer = ({ open, onClose, onOpen, shopNewsDatas, fetchMoreData })
             <StyledBox
                 sx={{
                     position: 'absolute',
-                    top: -drawerBleeding,
+                    top: isSmallScreen ? -drawerBleeding : 0,
                     borderTopLeftRadius: 8,
                     borderTopRightRadius: 8,
                     visibility: 'visible',
@@ -91,7 +91,7 @@ const ShopNewsDrawer = ({ open, onClose, onOpen, shopNewsDatas, fetchMoreData })
                     left: 0,
                 }}
             >
-                <Puller />
+                {isSmallScreen && <Puller />}
                 <Typography sx={{ p: 2, color: 'text.secondary' }}>가게 소식</Typography>
             </StyledBox>
             <StyledBox
