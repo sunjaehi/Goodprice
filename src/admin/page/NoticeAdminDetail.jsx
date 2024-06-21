@@ -17,7 +17,7 @@ export default function NoticeAdminDetail() {
                 console.log(json);
                 setNotice(json);
             })
-    }, [])
+    }, [id]);
 
     const deleteNotice = () => {
         console.log('test');
@@ -27,13 +27,14 @@ export default function NoticeAdminDetail() {
                 "Authorization": "Bearer " + sessionStorage.getItem('atk')
             }
         }).then(response => {
-            if (response.status == 200) {
-                alert("삭제 성공")
+            if (response.status === 200) {
+                alert("삭제 성공");
+                navigate("/noticeAdmin"); // 삭제 후 목록 페이지로 이동
             } else {
-                alert("삭제 실패")
+                alert("삭제 실패");
             }
-        })
-    }
+        });
+    };
 
     return (
         <Box sx={{
@@ -42,21 +43,32 @@ export default function NoticeAdminDetail() {
         }}>
             <Adminlist />
             <div>
-                <Typography variant="h4" sx={{marginTop:2}}>제목 : {notice && notice.title}</Typography>
+                <Typography variant="h4" sx={{ marginTop: 2 }}>제목 : {notice && notice.title}</Typography>
                 <hr />
-                <Typography variant="body2" sx={{whiteSpace:'pre-wrap'}}>내용 : {notice && notice.content}</Typography>
+                <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>내용 : {notice && notice.content}</Typography>
                 {
-                    notice && notice.imgUrls.map(imgUrl => (
-                        <img src={imgUrl} style={{ width: '30%', height: '40%' }} />
+                    notice && notice.imgUrls.map((imgUrl, index) => (
+                        <img
+                            key={index}
+                            src={imgUrl}
+                            alt={`notice-img-${index}`}
+                            style={{
+                                maxWidth: '850px',
+                                maxHeight: '850px',
+                                objectFit: 'cover',
+                                objectPosition: 'center',
+                                width: '100%',
+                                height: 'auto'
+                            }}
+                        />
                     ))
                 }
-                <br/>
-                <Box sx={{marginTop:3}}>
-                    <Button variant="contained" sx={{mr:2}} onClick={() => navigate(`/noticeAdminEdit/${id}`)}>수정</Button>
-                    <Button variant="outlined" sx={{color:'black', borderColor:'black'}} onClick={deleteNotice}>삭제</Button>
+                <br />
+                <Box sx={{ marginTop: 3 }}>
+                    <Button variant="contained" sx={{ mr: 2 }} onClick={() => navigate(`/noticeAdminEdit/${id}`)}>수정</Button>
+                    <Button variant="outlined" sx={{ color: 'black', borderColor: 'black' }} onClick={deleteNotice}>삭제</Button>
                 </Box>
-                
             </div>
-        </Box >
+        </Box>
     );
 }
