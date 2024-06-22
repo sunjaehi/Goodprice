@@ -36,12 +36,12 @@ export default function NoticeTable() {
             .then(result => result.json())
             .then(json => {
                 setResponse(json);
-                if (json && json.shops) {
-                    setNotices(json.shops);
+                if (json && json.notices) {
+                    setNotices(json.notices);
                 } else {
                     setNotices([]);
                 }
-            })
+            });
     };
     return (
 

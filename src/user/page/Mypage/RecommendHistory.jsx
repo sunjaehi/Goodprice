@@ -114,10 +114,10 @@ export default function RecommendHistory() {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
-                        취소
+                        아니요
                     </Button>
                     <Button onClick={handleDelete} color="primary" autoFocus>
-                        확인
+                        예
                     </Button>
                 </DialogActions>
             </Dialog>

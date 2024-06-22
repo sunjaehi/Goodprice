@@ -7,8 +7,11 @@ const backend = process.env.REACT_APP_BACKEND_ADDR;
 
 function Myregion() {
     const [selected, setSelcted] = useState(new Set());
+    const [sortedRegions, setSortedRegions] = useState([]);
 
     useEffect(() => {
+        const sorted = [...regionSample].sort((a, b) => a.name.localeCompare(b.name));
+        setSortedRegions(sorted);
         fetch(`${backend}/api/v1/regionMark/`, {
             headers: {
                 "Authorization": "Bearer " + sessionStorage.getItem("atk")
@@ -77,7 +80,7 @@ function Myregion() {
                 </Button>
             </Box>
             <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                {regionSample.map((region) => (
+                {sortedRegions.map((region) => (
                     <React.Fragment key={region.id}>
                         <ListItem disablePadding>
                             <ListItemButton role={undefined}>

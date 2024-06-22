@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Adminlist from "../section/Adminlist";
-import { Box, Stack, TextField, Button, Typography, Card, CardContent, Divider } from "@mui/material";
+import { Box, Stack, TextField, Button, Typography, Card, CardContent, Divider, Autocomplete, Chip, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
+import { debounce } from 'lodash';
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
 
@@ -10,6 +11,12 @@ export default function MemberAdminDetail() {
     const { id } = useParams();
     const [memberInfo, setMemberInfo] = useState(null);
     const [fcmToken, setFcmToken] = useState('');
+    const [shopKeyword, setShopKeyword] = useState('');
+    const [shopOptions, setShopOptions] = useState([]);
+    const [selectedShop, setSelectedShop] = useState(null);
+    const [shopManagerList, setShopManagerList] = useState([]);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [selectedShopManagerId, setSelectedShopManagerId] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -25,6 +32,18 @@ export default function MemberAdminDetail() {
         }
         fetchData();
     }, [id, navigate]);
+
+    useEffect(() => {
+        fetchShopManagerList();
+    }, [id]);
+
+    const fetchShopManagerList = async () => {
+        let result = await fetch(`${backend}/api/v1/shop-manager/list?memberId=${id}`);
+        if (result.status === 200) {
+            let json = await result.json();
+            setShopManagerList(json);
+        }
+    };
 
     const handleFcmTokenChange = (event) => {
         setFcmToken(event.target.value);
@@ -49,6 +68,87 @@ export default function MemberAdminDetail() {
 
     const navigateToMainadmin = () => {
         navigate("/Mainadmin");
+    };
+
+    const fetchShopNames = async (keyword) => {
+        const page = 0;
+        let result = await fetch(`${backend}/api/v1/shop/search?keyword=${keyword}&page=${page}`);
+        if (result.status === 200) {
+            let json = await result.json();
+            setShopOptions(json.shops || []);
+        }
+    };
+
+    const debouncedFetchShopNames = useCallback(debounce(fetchShopNames, 1000), []);
+
+    const handleShopInputChange = (event, value) => {
+        setShopKeyword(value);
+        if (value) {
+            debouncedFetchShopNames(value);
+        } else {
+            setShopOptions([]);
+        }
+    };
+
+    const handleShopSelect = (event, value) => {
+        setSelectedShop(value);
+    };
+
+    const handleAddButtonClick = async () => {
+        if (selectedShop) {
+            const shopManagerRequest = {
+                shopId: selectedShop.id,
+                memberId: id
+            };
+
+            const response = await fetch(`${backend}/api/v1/shop-manager`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(shopManagerRequest)
+            });
+
+            if (response.status === 201) {
+                alert(`추가 완료`);
+                fetchShopManagerList();
+            } else {
+                alert('가게 추가 실패');
+            }
+        } else {
+            alert('가게를 선택해주세요.');
+        }
+    };
+
+    const handleOpenDialog = (shopManagerId) => {
+        setSelectedShopManagerId(shopManagerId);
+        setOpenDialog(true);
+    };
+
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+        setSelectedShopManagerId(null);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (selectedShopManagerId) {
+            const response = await fetch(`${backend}/api/v1/shop-manager/${selectedShopManagerId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                if (result) {
+                    setShopManagerList((prevList) => prevList.filter((shop) => shop.id !== selectedShopManagerId));
+                    alert(`삭제 완료`);
+                } else {
+                    alert(`삭제 실패`);
+                }
+            } else {
+                alert(`삭제 실패`);
+            }
+            handleCloseDialog();
+        }
     };
 
     return (
@@ -77,6 +177,57 @@ export default function MemberAdminDetail() {
                                 onChange={handleFcmTokenChange}
                                 fullWidth
                             />
+                            <Typography variant="h6" gutterBottom>담당 가게 추가</Typography>
+                            <Stack direction="row" spacing={2}>
+                                <Autocomplete
+                                    options={shopOptions}
+                                    getOptionLabel={(option) => option.name}
+                                    onInputChange={handleShopInputChange}
+                                    onChange={handleShopSelect}
+                                    renderOption={(props, option) => (
+                                        <li {...props}>
+                                            {option.name} ({option.address})
+                                        </li>
+                                    )}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="가게 이름 검색"
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                    )}
+                                    sx={{ flex: 1 }}
+                                />
+                                <Button
+                                    variant="contained"
+                                    sx={{
+                                        borderRadius: "15px",
+                                        backgroundColor: "black",
+                                        ":hover": { backgroundColor: "grey" }
+                                    }}
+                                    onClick={handleAddButtonClick}
+                                >
+                                    추가
+                                </Button>
+                            </Stack>
+                            <Typography variant="h6" gutterBottom>담당 가게 목록</Typography>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                                {shopManagerList.map((shop) => (
+                                    <Chip
+                                        key={shop.id}
+                                        label={
+                                            <Box sx={{ whiteSpace: 'normal', textAlign: 'center' }}>
+                                                <Typography variant="body2">{shop.shopName}</Typography>
+                                                <Typography variant="caption" color="textSecondary">{shop.shopAddress}</Typography>
+                                            </Box>
+                                        }
+                                        variant="outlined"
+                                        onDelete={() => handleOpenDialog(shop.id)}
+                                        sx={{ height: 'auto' }}
+                                    />
+                                ))}
+                            </Box>
                         </Stack>
                         <Stack direction="row-reverse" gap={2} mt={3}>
                             <Button
@@ -106,6 +257,27 @@ export default function MemberAdminDetail() {
                     </CardContent>
                 </Card>
             )}
+            <Dialog
+                open={openDialog}
+                onClose={handleCloseDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">삭제 확인</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        이 가게의 관리 권한을 삭제하시겠습니까?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog} color="primary">
+                        아니오
+                    </Button>
+                    <Button onClick={handleConfirmDelete} color="primary" autoFocus>
+                        예
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 }

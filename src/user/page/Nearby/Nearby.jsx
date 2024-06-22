@@ -3,7 +3,6 @@ import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import { Button, Fab, useMediaQuery } from '@mui/material';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import BottomNav from "../../component/BottomNavigation/BottomNav";
-import './Nearby.css';
 import { useTheme } from '@mui/material/styles';
 import { FindReplaceOutlined } from "@mui/icons-material";
 import ShopListDrawer from './ShopListDrawer';
@@ -29,6 +28,7 @@ function Nearby() {
     });
     const [level, setLevel] = useState(5);
     const [savedCoordinates, setSavedCoordinates] = useState(null);
+    const [isSearchPerformed, setIsSearchPerformed] = useState(false);
     const mapRef = useRef();
 
     const handleChange = (event) => {
@@ -38,23 +38,23 @@ function Nearby() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        getCoordinates();
+        const map = mapRef.current;
+        const currentLat = map.getCenter().getLat();
+        const currentLng = map.getCenter().getLng();
+        performSearch(currentLat, currentLng);
     };
 
     const filterData = () => {
         setFiltered(datas.filter(data => data.sectorId === sector));
     };
 
-    const getCoordinates = () => {
-        const map = mapRef.current;
-        const currentLat = map.getCenter().getLat();
-        const currentLng = map.getCenter().getLng();
-
-        fetch(`${backend}/api/v1/shop/?longitude=${currentLng}&latitude=${currentLat}&radius=2`)
+    const performSearch = (lat, lng) => {
+        fetch(`${backend}/api/v1/shop/?longitude=${lng}&latitude=${lat}&radius=2`)
             .then(response => response.json())
             .then(json => {
                 setData(json);
                 setFiltered(json);
+                setIsSearchPerformed(true);
             });
     };
 
@@ -89,6 +89,21 @@ function Nearby() {
             }));
         }
     }, []);
+
+    useEffect(() => {
+        if (savedCoordinates) {
+            setState(prev => ({
+                ...prev,
+                center: savedCoordinates,
+            }));
+        }
+    }, [savedCoordinates]);
+
+    useEffect(() => {
+        if (!state.isLoading && state.center) {
+            performSearch(state.center.lat, state.center.lng);
+        }
+    }, [state.center, state.isLoading]);
 
     const toggleDrawer = (open) => (event) => {
         if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -152,15 +167,7 @@ function Nearby() {
                     })}
                     {!state.isLoading && (
                         <MapMarker position={state.center}>
-                            <div style={{
-                                padding: "3px",
-                                margin: "10px",
-                                color: "#000",
-                                textAlign: "center",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center"
-                            }}>
+                            <div style={{ width: "150px", paddingTop: "px", color: "#000", textAlign: "center" }}>
                                 {state.errMsg ? state.errMsg : "현재 위치"}
                             </div>
                         </MapMarker>
@@ -181,30 +188,32 @@ function Nearby() {
                         mt: 1,
                         color: 'black',
                         bgcolor: 'white',
-                        ":hover": { bgcolor: 'grey' }
+                        ":hover": { bgcolor: 'white' }
                     }}
                 >
                     여기서 재검색
                 </Button>
-                <Button
-                    size="large"
-                    variant="contained"
-                    onClick={toggleDrawer(true)}
-                    sx={{
-                        position: 'absolute',
-                        bottom: '10px',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        zIndex: 10,
-                        borderRadius: 3,
-                        width: '200px',
-                        color: 'black',
-                        bgcolor: 'white',
-                        ":hover": { bgcolor: 'grey' }
-                    }}
-                >
-                    목록 보기
-                </Button>
+                {isSearchPerformed && (
+                    <Button
+                        size="large"
+                        variant="contained"
+                        onClick={toggleDrawer(true)}
+                        sx={{
+                            position: 'absolute',
+                            bottom: '10px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            zIndex: 10,
+                            borderRadius: 3,
+                            width: '200px',
+                            color: 'black',
+                            bgcolor: 'white',
+                            ":hover": { bgcolor: 'white' }
+                        }}
+                    >
+                        목록 보기
+                    </Button>
+                )}
                 <Fab
                     color="primary"
                     aria-label="current location"
@@ -216,7 +225,7 @@ function Nearby() {
                         zIndex: 10,
                         color: 'black',
                         bgcolor: 'white',
-                        ":hover": { bgcolor: 'grey' }
+                        ":hover": { bgcolor: 'white' }
                     }}
                 >
                     <MyLocationIcon />

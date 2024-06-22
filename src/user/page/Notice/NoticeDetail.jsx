@@ -23,21 +23,21 @@ function NoticeDetail() {
     }, [])
     return (
         <Container maxWidth="sm">
-            {notice && (<Typography variant="h3" sx={{marginTop:8}}>{notice.title}</Typography>)}
+            {notice && (<Typography variant="h6" sx={{ marginTop: 8 }}>{notice.title}</Typography>)}
             {/* {notice && (<p>{notice.author}</p>)} */}
-            <Box sx={{display:'flex', justifyContent:' space-between', alignItems: 'center'}}>
-                {notice && (<Typography variant="body1" sx={{marginTop:2, marginBottom:1}}>{notice.createdAt}</Typography>)}
-                {notice && (<Typography variant="caption" sx={{marginTop:2,  marginBottom:1, textAlign:'right'}}>조회수 : {notice.viewCount}</Typography>)}
+            <Box sx={{ display: 'flex', justifyContent: ' space-between', alignItems: 'center' }}>
+                {notice && (<Typography variant="body1" sx={{ marginTop: 2, marginBottom: 1 }}>{notice.createdAt}</Typography>)}
+                {notice && (<Typography variant="caption" sx={{ marginTop: 2, marginBottom: 1, textAlign: 'right' }}>조회수 : {notice.viewCount}</Typography>)}
             </Box>
-                
+
             <Divider />
-            {notice && (<Typography variant="body2" sx={{whiteSpace:'pre-wrap', marginBottom:1, marginTop:1}}>{notice.content}</Typography>)}
-            <Divider sx={{marginBottom:1}}/>
+            {notice && (<Typography variant="body2" sx={{ whiteSpace: 'pre-wrap', marginBottom: 1, marginTop: 1 }}>{notice.content}</Typography>)}
+            <Divider sx={{ marginBottom: 1 }} />
             {notice && notice.imgUrls.map(imgUrl => (
-                <img src={imgUrl} style={{ width: '30%', height: '40%'}} />
+                <img src={imgUrl} style={{ width: '100%', height: '100%' }} />
             ))}
-            <Divider sx={{marginTop:1}}/>
-            <Button startIcon={<ArrowBackOutlinedIcon/>} onClick={navigateToNotice}>목록으로</Button>
+            <Divider sx={{ marginTop: 1 }} />
+            <Button startIcon={<ArrowBackOutlinedIcon />} onClick={navigateToNotice}>목록으로</Button>
         </Container>
     );
 }

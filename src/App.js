@@ -46,6 +46,7 @@ import MemberManage from './admin/page/MemberManage';
 import MemberAdminDetail from './admin/page/MemberAdminDetail';
 import RecommendHistory from './user/page/Mypage/RecommendHistory';
 import ReviewHistory from './user/page/Mypage/ReviewHistory';
+import ProposalHistory from './user/page/Mypage/PropsalHistory';
 
 
 function App() {
@@ -97,7 +98,7 @@ function App() {
         <Route path="/member-admin-detail/:id" element={<MemberAdminDetail />}></Route>
         <Route path="/recommend-history" element={<RecommendHistory />}></Route>
         <Route path="/review-history" element={<ReviewHistory />}></Route>
-
+        <Route path="/proposal-history" element={<ProposalHistory />}></Route>
       </Routes>
     </BrowserRouter >
   );

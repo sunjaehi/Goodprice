@@ -37,7 +37,7 @@ const Puller = styled('div')(({ theme }) => ({
 const ShopNewsDrawer = ({ open, onClose, onOpen, shopNewsDatas, fetchMoreData }) => {
     const observerRef = useRef();
     const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.up('sm'));
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -66,16 +66,16 @@ const ShopNewsDrawer = ({ open, onClose, onOpen, shopNewsDatas, fetchMoreData })
             open={open}
             onClose={onClose}
             onOpen={onOpen}
-            swipeAreaWidth={drawerBleeding}
+            swipeAreaWidth={isSmallScreen ? drawerBleeding : 0}
             disableSwipeToOpen={false}
             ModalProps={{
                 keepMounted: true,
             }}
             PaperProps={{
                 sx: {
-                    height: `calc(80% - ${drawerBleeding}px)`,
+                    height: `calc(80% - ${isSmallScreen ? drawerBleeding : 0}px)`,
                     overflow: 'visible',
-                    maxWidth: isSmallScreen ? theme.breakpoints.values.sm : '100%',
+                    maxWidth: isSmallScreen ? '100%' : theme.breakpoints.values.sm,
                     margin: '0 auto',
                 },
             }}
@@ -83,7 +83,7 @@ const ShopNewsDrawer = ({ open, onClose, onOpen, shopNewsDatas, fetchMoreData })
             <StyledBox
                 sx={{
                     position: 'absolute',
-                    top: -drawerBleeding,
+                    top: isSmallScreen ? -drawerBleeding : 0,
                     borderTopLeftRadius: 8,
                     borderTopRightRadius: 8,
                     visibility: 'visible',
@@ -91,7 +91,7 @@ const ShopNewsDrawer = ({ open, onClose, onOpen, shopNewsDatas, fetchMoreData })
                     left: 0,
                 }}
             >
-                <Puller />
+                {isSmallScreen && <Puller />}
                 <Typography sx={{ p: 2, color: 'text.secondary' }}>가게 소식</Typography>
             </StyledBox>
             <StyledBox
@@ -102,27 +102,31 @@ const ShopNewsDrawer = ({ open, onClose, onOpen, shopNewsDatas, fetchMoreData })
                     overflow: 'auto',
                 }}
             >
-                {shopNewsDatas.map((news, index) => (
-                    <Card key={index} sx={{ mb: 2 }}>
-                        <CardContent>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <Typography variant="body" color="text.secondary">{news.shopName}</Typography>
-                                <Typography variant='body2' color="text.secondary">{news.createdAt}</Typography>
-                            </Box>
-                            <Typography variant="h6">{news.title}</Typography>
-                            <Typography variant="body2" color="text.secondary">{news.content}</Typography>
-                            {news.imgUrls && news.imgUrls.length > 0 && (
-                                <Carousel autoPlay={false} animation="slide" timeout={1000}>
-                                    {news.imgUrls.map((url, idx) => (
-                                        <ImageContainer key={idx}>
-                                            <Image src={url} alt={`뉴스 이미지 ${idx + 1}`} />
-                                        </ImageContainer>
-                                    ))}
-                                </Carousel>
-                            )}
-                        </CardContent>
-                    </Card>
-                ))}
+                {shopNewsDatas.length === 0 ? (
+                    <Typography sx={{ p: 2, color: 'text.secondary' }}>아직 가게 소식이 없어요</Typography>
+                ) : (
+                    shopNewsDatas.map((news, index) => (
+                        <Card key={index} sx={{ mb: 2 }}>
+                            <CardContent>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Typography variant="body" color="text.secondary">{news.shopName}</Typography>
+                                    <Typography variant='body2' color="text.secondary">{news.createdAt}</Typography>
+                                </Box>
+                                <Typography variant="h6">{news.title}</Typography>
+                                <Typography variant="body2" color="text.secondary">{news.content}</Typography>
+                                {news.imgUrls && news.imgUrls.length > 0 && (
+                                    <Carousel autoPlay={false} animation="slide" timeout={1000}>
+                                        {news.imgUrls.map((url, idx) => (
+                                            <ImageContainer key={idx}>
+                                                <Image src={url} alt={`뉴스 이미지 ${idx + 1}`} />
+                                            </ImageContainer>
+                                        ))}
+                                    </Carousel>
+                                )}
+                            </CardContent>
+                        </Card>
+                    ))
+                )}
                 <div ref={observerRef} />
             </StyledBox>
         </SwipeableDrawer>
