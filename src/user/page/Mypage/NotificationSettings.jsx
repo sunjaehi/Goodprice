@@ -31,7 +31,10 @@ const NotificationSettings = () => {
         setPushNotifications(!pushNotifications);
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
+        if (window.isFlutterInAppWebView) {
+            window.flutter_inappwebview.callHandler('saveNotificationSettings');
+        }
         fetch(`${backend}/api/v1/member/change-notification-setting`, {
             method: 'PATCH',
             headers: {
