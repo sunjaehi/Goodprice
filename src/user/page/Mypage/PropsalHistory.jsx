@@ -13,6 +13,13 @@ export default function ProposalHistory() {
     const [proposals, setProposals] = useState([]);
     const [details, setDetails] = useState({});
     const accessToken = sessionStorage.getItem('atk');
+    const [sectors, setSectors] = useState([]);
+
+    useEffect(() => {
+        fetch(`${backend}/api/v1/sector/`)
+            .then(response => response.json())
+            .then(json => setSectors(json));
+    }, []);
 
     useEffect(() => {
         fetch(`${backend}/api/v1/proposal/list`, {
@@ -36,6 +43,11 @@ export default function ProposalHistory() {
                 .then(data => setDetails(prevDetails => ({ ...prevDetails, [id]: data })))
                 .catch(error => console.error(`Error fetching details for proposal ${id}:`, error));
         }
+    };
+
+    const getSectorName = (sectorId) => {
+        const sector = sectors.find(sector => sector.id === sectorId);
+        return sector ? sector.name : 'Unknown';
     };
 
     return (
@@ -65,7 +77,7 @@ export default function ProposalHistory() {
                                     <strong>영업 시간:</strong> {details[proposal.id].businessHours}<br />
                                     <strong>기타 정보:</strong> {details[proposal.id].info}<br />
                                     <strong>요청 사유:</strong> {details[proposal.id].reason}<br />
-                                    <strong>Sector ID:</strong> {details[proposal.id].sectorId}<br />
+                                    <strong>업종명:</strong> {getSectorName(details[proposal.id].sectorId)}<br />
                                     <strong>우편번호:</strong> {details[proposal.id].zipcode}<br />
                                     <strong>상태:</strong> {details[proposal.id].status}<br />
                                 </Typography>
