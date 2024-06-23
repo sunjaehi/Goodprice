@@ -132,7 +132,7 @@ function RegisterShop() {
             body: formDataToSend,
         }).then((response) => {
             if (response.status === 200) {
-                navigate("/");
+                navigate("/shopmanage");
             } else {
                 alert("등록 실패");
             }
@@ -280,7 +280,7 @@ function RegisterShop() {
                             bgcolor: "grey",
                         }}
                         onClick={submit}
-                        disabled={!isFormValid()} // 버튼 비활성화 조건 추가
+                        disabled={!isFormValid()}
                     >
                         등록
                     </Button>
