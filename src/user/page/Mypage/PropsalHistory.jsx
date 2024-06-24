@@ -6,6 +6,8 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@mui/material';
 
 const backend = process.env.REACT_APP_BACKEND_ADDR;
 
@@ -14,6 +16,7 @@ export default function ProposalHistory() {
     const [details, setDetails] = useState({});
     const accessToken = sessionStorage.getItem('atk');
     const [sectors, setSectors] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetch(`${backend}/api/v1/sector/`)
@@ -50,12 +53,25 @@ export default function ProposalHistory() {
         return sector ? sector.name : 'Unknown';
     };
 
+    const handleBack = () => {
+        navigate(-1);
+    };
+
     return (
-        <Container maxWidth="sm" sx={{ marginTop: '72px' }}>
-            <Box mt={5}>
+        <Container maxWidth="sm" sx={{ paddingTop: '16px' }}>
+            <Box>
                 <Typography variant="h6" gutterBottom>
                     착한 가게로 등록 요청한 내역들이에요
                 </Typography>
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleBack}
+                    fullWidth
+                    sx={{ marginBottom: 2 }}
+                >
+                    뒤로 가기
+                </Button>
                 {proposals.map((proposal) => (
                     <Accordion key={proposal.id} onChange={handleAccordionChange(proposal.id)}>
                         <AccordionSummary
