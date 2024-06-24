@@ -80,6 +80,7 @@ export default function ProposalHistory() {
                                     <strong>업종명:</strong> {getSectorName(details[proposal.id].sectorId)}<br />
                                     <strong>우편번호:</strong> {details[proposal.id].zipcode}<br />
                                     <strong>상태:</strong> {details[proposal.id].status}<br />
+                                    <strong>처리내용:</strong> {details[proposal.id].memo}<br />
                                 </Typography>
                             ) : (
                                 <Typography>Loading...</Typography>
