@@ -1,5 +1,4 @@
-<p align="center">
-## Goodprice
+# Goodprice
 
 
 
@@ -14,4 +13,3 @@
 * Kakao maps api를 활용하여 현재 위치를 파악하고 주변의 착한가격업소를 확인할 수 있습니다.
 <img src="https://github.com/user-attachments/assets/9bbccdcc-4a83-4842-9dc0-ec830df86c49" align="center" width="30%" height="20%">
 
-</p>
